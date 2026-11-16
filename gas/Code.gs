@@ -44,6 +44,11 @@ function setup() {
   else { ss = SpreadsheetApp.create(STORE.name + ' 予約台帳・紹介ノート'); props.setProperty('SHEET_ID', ss.getId()); }
   Object.keys(SHEETS).forEach(function (name, i) {
     var sh = ss.getSheetByName(name) || (i === 0 && /^(シート1|Sheet1)$/.test(ss.getSheets()[0].getName()) ? ss.getSheets()[0].setName(name) : ss.insertSheet(name));
+    // 前の版の見出しのシートがあれば「（旧）」に名前を変えて残し、新しく作る（前の版から乗りかえるとき）
+    if (sh.getLastRow() > 0 && sh.getRange(1, 1, 1, SHEETS[name].length).getValues()[0].join('|') !== SHEETS[name].join('|')) {
+      sh.setName(name + '（旧）');
+      sh = ss.insertSheet(name);
+    }
     if (sh.getLastRow() === 0) { sh.appendRow(SHEETS[name]); sh.setFrozenRows(1); }
   });
   // 選べる値
