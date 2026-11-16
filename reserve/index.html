@@ -135,7 +135,7 @@
 </head>
 <body>
 <header>
-  <span class="name">空調のホットライン</span>
+  <span class="name" id="shopName">空調のホットライン</span>
   <span class="est" id="hdrEst" hidden><small>概算</small>¥<span id="hdrTotal">6,200</span></span>
   <button type="button" id="reset">選び直し</button>
 </header>
@@ -221,6 +221,8 @@
 (function () {
   'use strict';
   var S = window.SHOP, P = S.prices;
+  document.title = 'かんたん予約｜' + S.name;
+  document.getElementById('shopName').textContent = S.name;
   var $ = function (id) { return document.getElementById(id); };
   var yen = function (n) { return n.toLocaleString('ja-JP'); };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -249,7 +251,7 @@
   function applyRef() { if (refFromUrl) { $('ref_code').value = refFromUrl; $('refnote').hidden = false; } }
 
   var MSG = {
-    first: refFromUrl ? 'ご紹介ありがとうございます。空調のホットラインです。\nエアコンクリーニングのご予約でよろしいですか？' : 'ご覧いただきありがとうございます。空調のホットラインです。\nエアコンクリーニングのご予約でよろしいですか？',
+    first: refFromUrl ? 'ご紹介ありがとうございます。' + S.name + 'です。\nエアコンクリーニングのご予約でよろしいですか？' : 'ご覧いただきありがとうございます。' + S.name + 'です。\nエアコンクリーニングのご予約でよろしいですか？',
     yes: 'ありがとうございます。台数を選ぶと、その場で概算が出ます。\n下のフォームにご入力をお願いします。',
     no: '料金はこちらです。気になるものの「これで予約」を押すと、そのままフォームに進めます。'
   };
@@ -382,7 +384,8 @@
       + '<div class="link"><input readonly value="' + url.replace(/"/g, '&quot;') + '" aria-label="あなたの紹介リンク"><button type="button">コピー</button></div>'
       + '<a class="line" href="https://line.me/R/share?text=' + encodeURIComponent(text) + '" target="_blank" rel="noopener">LINEで送る</a>'
       + '<p>あなたの紹介コード：<b style="display:inline">' + id + '</b></p>'
-      + '<p>SNSに載せるときは、紹介料が出ることがわかるよう「PR」と書いてください。</p>';
+      + '<p>SNSに載せるときは、紹介料が出ることがわかるよう「PR」と書いてください。</p>'
+      + '<p><a href="' + base + 'signup.html?from=' + encodeURIComponent(id) + '" style="font-weight:700">紹介料を受け取るための登録（無料）はこちら</a></p>';
     box.querySelector('button').addEventListener('click', function (e) {
       try { navigator.clipboard.writeText(url).then(function () { e.target.textContent = 'コピーしました'; }, function () { box.querySelector('input').select(); e.target.textContent = '選択しました'; }); }
       catch (_) { box.querySelector('input').select(); e.target.textContent = '選択しました'; }
@@ -424,7 +427,7 @@
   if (new URLSearchParams(location.search).get('thanks') === 'test') {
     hideAll(); st = { wall: 2, auto: 1, bunkai: 1 };
     var t = new Date(Date.now() + 9 * 36e5 + 7 * 864e5).toISOString().slice(0, 10);
-    var d0 = { area: '東区', address: '（試しの住所）', housing: '戸建て', date1: t, time1: '午前（9〜12時）', parking: '敷地内に駐車可', units: '壁掛け2台（うちお掃除機能付き1台・完全分解1台）', estimate: total() };
+    var d0 = { area: S.areas[Object.keys(S.areas)[0]][0], address: '（試しの住所）', housing: '戸建て', date1: t, time1: '午前（9〜12時）', parking: '敷地内に駐車可', units: '壁掛け2台（うちお掃除機能付き1台・完全分解1台）', estimate: total() };
     $('donePanel').hidden = false; $('doneTitle').textContent = '（試しの画面）予約のあとの質問コーナー';
     $('doneText').textContent = '予約は送っていません。'; $('doneSum').textContent = '受付番号 R0000-0（試し）';
     startThanks('R0000-0', d0, '');

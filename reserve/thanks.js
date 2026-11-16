@@ -673,7 +673,7 @@
         + (LG() ? '<p>' + esc(T('ui_ja_only', '')) + '</p>' : '') // 電話・LINE・当日のスタッフは日本語
         + '<a class="btn primary wide" href="tel:' + esc(o.phone.replace(/-/g, '')) + '">' + esc(T('ui_call', '電話する')) + ' ' + esc(o.phone) + '</a>'
         + (o.lineUrl ? '<a class="btn line wide" href="' + esc(o.lineUrl) + '" target="_blank" rel="noopener">' + esc(T('ui_line', 'LINE で聞く')) + '</a>'
-          : '<p>' + esc(T('ui_line_note', 'LINE 公式「ありがとうエアコンサポート」のトークでも受け付けます。')) + '</p>')
+          : '<p>' + esc(T('ui_line_note', 'LINE 公式「' + ((window.SHOP && window.SHOP.name) || '') + '」のトークでも受け付けます。')) + '</p>')
         + '<button type="button" class="tc-link" data-copy="1">' + esc(T('ui_copy_msg', '「' + msg + '」をコピー', {msg: msg})) + '</button></div>',
       bind: function () {
         on('[data-copy]', function (b) {
