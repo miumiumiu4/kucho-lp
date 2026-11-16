@@ -191,6 +191,9 @@
       <input id="f_model" name="model" placeholder="例：ダイキン AN22XXX">
       <label for="f_note">気になること・ご要望</label>
       <textarea id="f_note" name="note" placeholder="においが気になる、10年以上使っている、業務用も見てほしい など"></textarea>
+      <label for="ref_code">紹介コード <span style="font-weight:400;font-size:12px">（任意・ご家族やお知り合いから紹介された方）</span></label>
+      <input id="ref_code" name="ref_code" placeholder="例：R1116-12" autocomplete="off">
+      <p class="note" id="refnote" hidden>ご紹介ありがとうございます。紹介コードが入っています。</p>
       <div class="ng" id="formMsg" hidden></div>
       <button type="submit" class="btn primary" style="width:100%;margin-top:16px">この内容で予約する</button>
       <p class="note">送信のあと、担当者からお電話かメールで日にちを決めるご連絡をします。お支払いは作業のあとです。</p>
@@ -231,8 +234,22 @@
     var v = (q.get(k) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 100); if (v) from.push(k + '=' + v);
   });
 
+  // 紹介リンク（?ref=受付番号）から来た方：コードを90日この端末に覚えて、フォームに入れる
+  var refFromUrl = (function () {
+    var KEY = 'kucho_ref', DAYS = 90, code = (q.get('ref') || '').replace(/[^A-Za-z0-9-]/g, '').slice(0, 30);
+    try {
+      if (code) localStorage.setItem(KEY, JSON.stringify({ code: code, at: Date.now() }));
+      else {
+        var v = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (v && v.code && Date.now() - v.at < DAYS * 864e5) code = String(v.code).slice(0, 30);
+      }
+    } catch (_) {}
+    return code;
+  })();
+  function applyRef() { if (refFromUrl) { $('ref_code').value = refFromUrl; $('refnote').hidden = false; } }
+
   var MSG = {
-    first: 'ご覧いただきありがとうございます。空調のホットラインです。\nエアコンクリーニングのご予約でよろしいですか？',
+    first: refFromUrl ? 'ご紹介ありがとうございます。空調のホットラインです。\nエアコンクリーニングのご予約でよろしいですか？' : 'ご覧いただきありがとうございます。空調のホットラインです。\nエアコンクリーニングのご予約でよろしいですか？',
     yes: 'ありがとうございます。台数を選ぶと、その場で概算が出ます。\n下のフォームにご入力をお願いします。',
     no: '料金はこちらです。気になるものの「これで予約」を押すと、そのままフォームに進めます。'
   };
@@ -295,7 +312,7 @@
   $('date1').min = tmr; $('date2').min = tmr;
 
   function showForm() {
-    hideAll(); render();
+    hideAll(); render(); applyRef();
     $('formPanel').hidden = false; $('hdrEst').hidden = false;
     var y = $('formPanel').getBoundingClientRect().top + scrollY - 60;
     scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
@@ -353,6 +370,26 @@
   document.querySelectorAll('.js-tel').forEach(function (a) { a.href = 'tel:' + S.phone.replace(/-/g, ''); });
   if (S.lineUrl) { $('lineBtn').href = S.lineUrl; $('lineBtn').hidden = false; }
 
+  // ---- 紹介リンク（質問コーナーの「おしまい」で出る） ----
+  function showShare(id, into) {
+    var base = location.origin + location.pathname.replace(/reserve\/(index\.html)?$/, '');
+    var url = base + '?ref=' + encodeURIComponent(id);
+    var text = '【紹介リンク・PR】エアコンクリーニングはここに頼みました。予約はこちらから → ' + url;
+    var box = document.createElement('div');
+    box.className = 'share';
+    box.innerHTML = '<b>ご家族やお知り合いに紹介しませんか</b>'
+      + '<p>このリンクから予約した方の作業とお支払いが終わると、あなたに紹介料として通常価格の20%をお支払いします。</p>'
+      + '<div class="link"><input readonly value="' + url.replace(/"/g, '&quot;') + '" aria-label="あなたの紹介リンク"><button type="button">コピー</button></div>'
+      + '<a class="line" href="https://line.me/R/share?text=' + encodeURIComponent(text) + '" target="_blank" rel="noopener">LINEで送る</a>'
+      + '<p>あなたの紹介コード：<b style="display:inline">' + id + '</b></p>'
+      + '<p>SNSに載せるときは、紹介料が出ることがわかるよう「PR」と書いてください。</p>';
+    box.querySelector('button').addEventListener('click', function (e) {
+      try { navigator.clipboard.writeText(url).then(function () { e.target.textContent = 'コピーしました'; }, function () { box.querySelector('input').select(); e.target.textContent = '選択しました'; }); }
+      catch (_) { box.querySelector('input').select(); e.target.textContent = '選択しました'; }
+    });
+    into.appendChild(box);
+  }
+
   // ---- 予約のあとの質問コーナー（ありがとうエアコンと同じ thanks.js を使う） ----
   function startThanks(id, d, sum) {
     if (!window.ThanksChat) return;
@@ -370,7 +407,8 @@
       ctx: { units: st.wall, auto: st.auto, total: d.estimate, slot: d.time1 || '', housing: d.housing || '' },
       mine: { wall: st.wall, auto: st.auto, bunkai: st.bunkai, parking: d.parking || '', date1: d.date1 || '', time1: d.time1 || '', model: d.model || '', detail: detail },
       faqbotUrl: '', lineUrl: S.lineUrl, phone: S.phone, mailTo: '',
-      track: function () {}
+      track: function () {},
+      showShare: function (el) { showShare(id, el); }
     });
   }
 

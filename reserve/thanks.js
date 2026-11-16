@@ -158,7 +158,7 @@
     return S.ctl;
   }
   function MENU() { return '<button type="button" class="tc-link" data-menu="1">' + esc(T('ui_menu', 'ほかの質問')) + '</button>'; }
-  function BYE() { return '<button type="button" class="tc-link" data-bye="1">' + esc(T('ui_bye', 'おしまい')) + '</button>'; }
+  function BYE() { return '<button type="button" class="tc-link" data-bye="1">' + esc(T('ui_bye', 'おしまい（特典あり）')) + '</button>'; }
   function on(sel, fn) { S.ctl.querySelectorAll(sel).forEach(function (b) { b.addEventListener('click', function (e) { fn(b, e); }); }); }
 
   // ---------- 1. 案内係を選ぶ ----------
@@ -288,7 +288,7 @@
     return r.join(LG() ? ' ' : '');
   }
   var PAY = { onsite: '作業当日に現金', paypay: '作業当日に PayPay', paypal: 'PayPal の請求書（メールで届きます）' };
-  var ARRIVE = {}; // 空調のホットライン：到着の幅は担当者から連絡
+  var ARRIVE = { '9時〜12時': '8〜9時', '12時〜15時': '12〜14時', '15時〜18時': '15〜18時' };
   // 外国の言葉では、時間帯を 9:00–12:00 の形に（どの言葉でも読める）
   function slot(s) { return LG() ? String(s || '').replace(/時/g, ':00').replace('〜', '–').replace(/^(\d+)–/, '$1:00–') : s; }
   function dayLabel(d) {
@@ -302,12 +302,12 @@
       var auto = Math.min(m.auto || 0, m.wall || 0), normal = (m.wall || 0) - auto, c = S.opts.ctx || {};
       if (!normal && !auto) return null;
       var n = function (k) { return +(m[k] != null ? m[k] : c[k]) || 0; };
-      var OPT = []; // 空調のホットライン：オプションなし。完全分解は1台につき+60〜120分の目安
-      var opts = [];
-      var add = 0, bk = Math.min(m.bunkai || 0, m.wall || 0);
-      var lo = normal * 60 + auto * 90 + bk * 60, hi = normal * 120 + auto * 180 + bk * 120;
+      var OPT = [['set3', '3点セット', 15], ['omatome', 'おまとめセット', 10], ['coat', '防カビ・抗菌コート', 10], ['outdoor', '室外機クリーニング', 10], ['drain', 'ドレンホース洗浄', 10]];
+      var opts = OPT.filter(function (o) { return n(o[0]) > 0; });
+      var add = opts.reduce(function (s, o) { return s + n(o[0]) * o[2]; }, 0);
+      var lo = normal * 60 + auto * 90 + add, hi = normal * 90 + auto * 120 + add;
       var list = opts.map(function (o) { return T('o_' + o[0], o[1]) + ' ' + T('v_units', n(o[0]) + '台', {n: n(o[0])}); }).join(T('u_list', '・'));
-      var what = T('v_ac', 'エアコン' + (normal + auto) + '台', {n: normal + auto}) + (auto ? T('v_auto', '（うちお掃除機能付き' + auto + '台）', {n: auto}) : '') + (bk ? '（うち完全分解' + bk + '台）' : '') + (opts.length ? T('v_opts', '、オプションは' + list, {list: list}) : '');
+      var what = T('v_ac', 'エアコン' + (normal + auto) + '台', {n: normal + auto}) + (auto ? T('v_auto', '（うちお掃除機能付き' + auto + '台）', {n: auto}) : '') + (opts.length ? T('v_opts', '、オプションは' + list, {list: list}) : '');
       var span = hm(lo) + T('u_to', '〜') + hm(hi), wo = opts.length ? 'オプションも入れて、' : '';
       var r = [V({
         buruyan: 'お客さんの予約は、' + what + 'やな。', buruko: 'ご予約は、' + what + 'ですね。',
@@ -546,7 +546,7 @@
     if (S.guess) { S.guess = false; return confirmGuess(it); }
     say([ch().check], function () {
       // 「いいえ」はやめて「おしまい（特典あり）」に。人と話したい人は、その下の小さいボタンから（11/13 三浦さん）
-      controls('<div class="choices tc-yn"><button type="button" class="btn primary" data-y="1">' + esc(T('ui_yes', 'はい')) + '</button><button type="button" class="btn ghost" data-bye="1">' + esc(T('ui_bye', 'おしまい')) + '</button></div>'
+      controls('<div class="choices tc-yn"><button type="button" class="btn primary" data-y="1">' + esc(T('ui_yes', 'はい')) + '</button><button type="button" class="btn ghost" data-bye="1">' + esc(T('ui_bye', 'おしまい（特典あり）')) + '</button></div>'
         + '<div class="tc-foot"><button type="button" class="tc-link" data-human="1">' + esc(T('ui_human_out', '人と話したい')) + '</button></div>');
       on('[data-y]', function () { S.opts.track('解決', 'はい:' + S.last); row('out', esc(T('ui_yes', 'はい'))); controls(''); say([ch().more], menu); });
       on('[data-bye]', function () { S.opts.track('解決', 'おしまい:' + S.last); bye(); });
@@ -673,7 +673,7 @@
         + (LG() ? '<p>' + esc(T('ui_ja_only', '')) + '</p>' : '') // 電話・LINE・当日のスタッフは日本語
         + '<a class="btn primary wide" href="tel:' + esc(o.phone.replace(/-/g, '')) + '">' + esc(T('ui_call', '電話する')) + ' ' + esc(o.phone) + '</a>'
         + (o.lineUrl ? '<a class="btn line wide" href="' + esc(o.lineUrl) + '" target="_blank" rel="noopener">' + esc(T('ui_line', 'LINE で聞く')) + '</a>'
-          : '<p>' + esc(T('ui_line_note', 'LINE 公式アカウントのトークでも受け付けます。')) + '</p>')
+          : '<p>' + esc(T('ui_line_note', 'LINE 公式「ありがとうエアコンサポート」のトークでも受け付けます。')) + '</p>')
         + '<button type="button" class="tc-link" data-copy="1">' + esc(T('ui_copy_msg', '「' + msg + '」をコピー', {msg: msg})) + '</button></div>',
       bind: function () {
         on('[data-copy]', function (b) {

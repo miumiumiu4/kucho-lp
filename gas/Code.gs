@@ -12,7 +12,7 @@
  */
 
 var HEADERS = ['受付日時', 'お名前', '電話番号', 'メール', '地域', 'ご住所', 'お住まい',
-  '台数', '概算（円）', '第1希望', '第2希望', '駐車場', 'メーカー・型番', 'ご要望', '流入元'];
+  '台数', '概算（円）', '第1希望', '第2希望', '駐車場', 'メーカー・型番', 'ご要望', '流入元', '紹介コード'];
 
 function setup() {
   var props = PropertiesService.getScriptProperties();
@@ -38,7 +38,7 @@ function doPost(e) {
     var clip = function (v, n) { return String(v || '').slice(0, n || 300); };
     var row = [new Date(), clip(d.name, 60), clip(d.phone, 20), clip(d.email, 120), clip(d.area, 40), clip(d.address),
       clip(d.housing, 30), clip(d.units, 120), Number(d.estimate) || '', clip(d.date1, 20) + ' ' + clip(d.time1, 20),
-      d.date2 ? clip(d.date2, 20) + ' ' + clip(d.time2, 20) : '', clip(d.parking, 40), clip(d.model, 80), clip(d.note, 1000), clip(d.from, 300)];
+      d.date2 ? clip(d.date2, 20) + ' ' + clip(d.time2, 20) : '', clip(d.parking, 40), clip(d.model, 80), clip(d.note, 1000), clip(d.from, 300), clip(d.ref_code, 30)];
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SHEET_ID'));
     var sh = ss.getSheetByName('予約');
     sh.appendRow(row);
