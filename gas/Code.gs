@@ -40,12 +40,15 @@ function doPost(e) {
       clip(d.housing, 30), clip(d.units, 120), Number(d.estimate) || '', clip(d.date1, 20) + ' ' + clip(d.time1, 20),
       d.date2 ? clip(d.date2, 20) + ' ' + clip(d.time2, 20) : '', clip(d.parking, 40), clip(d.model, 80), clip(d.note, 1000), clip(d.from, 300)];
     var ss = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SHEET_ID'));
-    ss.getSheetByName('予約').appendRow(row);
+    var sh = ss.getSheetByName('予約');
+    sh.appendRow(row);
+    // 受付番号：R + 月日4桁 + - + 行番号（例 R1116-12）。お客様の質問コーナーで使う
+    var id = 'R' + Utilities.formatDate(new Date(), 'Asia/Tokyo', 'MMdd') + '-' + sh.getLastRow();
 
-    var body = HEADERS.map(function (h, i) { return h + '：' + (row[i] instanceof Date ? Utilities.formatDate(row[i], 'Asia/Tokyo', 'yyyy/MM/dd HH:mm') : row[i]); }).join('\n')
+    var body = '受付番号：' + id + '\n' + HEADERS.map(function (h, i) { return h + '：' + (row[i] instanceof Date ? Utilities.formatDate(row[i], 'Asia/Tokyo', 'yyyy/MM/dd HH:mm') : row[i]); }).join('\n')
       + '\n\n予約台帳：' + ss.getUrl();
-    MailApp.sendEmail(Session.getEffectiveUser().getEmail(), '【新しい予約】' + row[1] + ' 様（' + row[4] + '）', body);
-    return json_({ ok: true });
+    MailApp.sendEmail(Session.getEffectiveUser().getEmail(), '【新しい予約】' + id + ' ' + row[1] + ' 様（' + row[4] + '）', body);
+    return json_({ ok: true, id: id });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   } finally {
