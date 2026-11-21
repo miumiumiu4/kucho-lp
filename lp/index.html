@@ -169,6 +169,8 @@
   .done .sms{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
   .done .call{border:2px solid var(--g);color:var(--g-d);background:#fff}
   .done .form{font-size:13px;color:var(--muted);font-weight:700;padding:6px}
+  #faqlog{margin-bottom:4px}
+  #faqlog .opts button{font-size:15px}
   @media (prefers-reduced-motion:reduce){.msg,.opts,form.ask{animation:none}.typing i{animation:none}}
   @media (prefers-reduced-motion:reduce){.btn.web::after{animation:none;display:none}}
 </style>
@@ -284,14 +286,18 @@
   </ol>
 </section>
 
-<!-- 7. よくある質問 -->
+<!-- 7. よくある質問（会話型） -->
 <section class="sec" style="background:var(--cream)">
   <h2 class="big">よくあるご質問</h2>
-  <details class="qa"><summary>作業のあとで、追加料金がかかることはありますか？</summary><div>ありません。作業の前に現物を確認し、お見積りをご説明してから始めます。ご予約の内容と現物が違った場合も、作業を始める前にご相談します。</div></details>
-  <details class="qa"><summary>キャンセルしたいときは？</summary><div>作業日の3日前までのご連絡は、キャンセル料をいただきません。それ以降は料金を全額頂戴しております。やむを得ないご事情のときは、一度お電話でご相談ください。</div></details>
-  <details class="qa"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
-  <details class="qa"><summary>お掃除機能付きかどうか、分かりません</summary><div>分からなくて大丈夫です。予約フォームの備考欄に「お掃除機能付きか分からない」と書いていただければ、折り返しのご連絡のときに確認します。</div></details>
-  <details class="qa"><summary>駐車場がありません</summary><div>近くのコインパーキングを利用します。その料金はお客様のご負担となります。停められる場所があれば、ご予約のときにお知らせください。</div></details>
+  <p style="text-align:center;font-size:14px;margin:-6px 0 12px">気になる質問を押すと、その場でお答えします</p>
+  <div class="log" id="faqlog" aria-live="polite"></div>
+  <div id="faqsrc">
+  <details class="qa" data-short="追加料金は？"><summary>作業のあとで、追加料金がかかることはありますか？</summary><div>ありません。作業の前に現物を確認し、お見積りをご説明してから始めます。ご予約の内容と現物が違った場合も、作業を始める前にご相談します。</div></details>
+  <details class="qa" data-short="キャンセルは？"><summary>キャンセルしたいときは？</summary><div>作業日の3日前までのご連絡は、キャンセル料をいただきません。それ以降は料金を全額頂戴しております。やむを得ないご事情のときは、一度お電話でご相談ください。</div></details>
+  <details class="qa" data-short="傷がついたら？"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
+  <details class="qa" data-short="お掃除機能付きか分からない"><summary>お掃除機能付きかどうか、分かりません</summary><div>分からなくて大丈夫です。料金のチャットで「分からない」を選んでいただければ、折り返しのご連絡のときに一緒に確認します。</div></details>
+  <details class="qa" data-short="駐車場がない"><summary>駐車場がありません</summary><div>近くのコインパーキングを利用します。その料金はお客様のご負担となります。停められる場所があれば、ご予約のときにお知らせください。</div></details>
+  </div>
   <p style="text-align:center;font-size:13px;margin:12px 0 0"><a href="https://kucho-hotline.jp/faq/" target="_blank" rel="noopener">ほかのご質問はこちら</a></p>
 </section>
 
@@ -475,6 +481,69 @@
   });
 
   run();
+
+  // ===== よくある質問も会話で =====
+  (function(){
+    var flog = document.getElementById("faqlog"), src = document.getElementById("faqsrc");
+    if (!flog || !src) return;
+    var QS = [].map.call(src.querySelectorAll("details.qa"), function(d){
+      return { q: d.querySelector("summary").textContent, short: d.dataset.short || d.querySelector("summary").textContent, a: d.querySelector("div").innerHTML, asked: false };
+    });
+    src.hidden = true;
+    var live = false;
+    function bot(html, typing){
+      var m = document.createElement("div");
+      m.className = "msg";
+      m.innerHTML = '<div class="ava"><img src="' + ICON + '" alt=""></div><div class="bub"></div>';
+      flog.appendChild(m);
+      var b = m.querySelector(".bub");
+      if (!typing) { b.innerHTML = html; return Promise.resolve(m); }
+      b.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+      show(m);
+      return wait(600).then(function(){ b.innerHTML = html; show(m); return m; });
+    }
+    function user(t){
+      var m = document.createElement("div");
+      m.className = "msg me";
+      m.innerHTML = '<div class="bub"></div>';
+      m.querySelector(".bub").textContent = t;
+      flog.appendChild(m);
+    }
+    function chips(){
+      var box = document.createElement("div");
+      box.className = "opts";
+      QS.forEach(function(x){
+        if (x.asked) return;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "wide";
+        b.textContent = x.short;
+        b.onclick = function(){ box.remove(); answer(x); };
+        box.appendChild(b);
+      });
+      var go = document.createElement("button");
+      go.type = "button"; go.className = "main wide";
+      go.innerHTML = "料金を出して予約へ進む<small>ボタンで答えるだけ・30秒</small>";
+      go.onclick = function(){ document.querySelector("[data-web]").click(); };
+      box.appendChild(go);
+      var tel = document.createElement("button");
+      tel.type = "button"; tel.className = "wide";
+      tel.innerHTML = "電話で聞く<small>" + PHONE + "</small>";
+      tel.onclick = function(){ location.href = "tel:" + TEL; };
+      box.appendChild(tel);
+      flog.appendChild(box);
+      if (live) show(box);
+    }
+    function answer(x){
+      live = true; x.asked = true;
+      user(x.q);
+      var left = QS.filter(function(y){ return !y.asked; }).length;
+      bot("<p>" + x.a + "</p>", true).then(function(){
+        return bot(left ? "<p>ほかに気になることはありますか？</p>" : "<p>ご質問はぜんぶ見ていただきました。ほかに気になることは、お電話でお気軽にどうぞ。</p>", true);
+      }).then(chips);
+    }
+    bot("<p>ご予約の前に、よく聞かれることをまとめました。<b>気になる質問を押してください</b>。</p>", false).then(chips);
+  })();
 
   // ビフォーアフター：つまみ・指・マウスで左右に動かす。画面に入ったら一度だけ揺れて「動かせる」と気づかせる
   document.querySelectorAll(".cmp").forEach(function(box){
