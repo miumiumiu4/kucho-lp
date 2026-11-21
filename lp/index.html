@@ -118,6 +118,44 @@
   .fixbar small{display:block;font-size:10px;font-weight:700}
   .fixbar .t{background:#fff;color:var(--g-d);border:2px solid var(--g)}
   .fixbar .w{background:linear-gradient(#f5a12a,#e46f00);color:#fff;border:2px solid #e46f00;flex:1.3}
+
+  /* ===== 案内係との会話 ===== */
+  .talk{background:linear-gradient(#F2F8EE,#fff);padding:26px 12px 18px;scroll-margin-top:64px}
+  .talk-hd{text-align:center;margin:0 0 14px}
+  .talk-hd b{display:inline-block;background:var(--red);color:#fff;font-size:13px;border-radius:999px;padding:2px 12px}
+  .talk-hd h2{margin:6px 0 0;font-size:24px;font-weight:900;line-height:1.35}
+  .talk-hd h2 span{color:var(--g)}
+  .log{display:flex;flex-direction:column;gap:10px}
+  .msg{display:flex;gap:8px;align-items:flex-start;animation:pop .25s ease-out}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .ava{flex:0 0 42px;height:42px;border-radius:50%;background:#fff;border:2px solid var(--g-l);display:flex;align-items:center;justify-content:center}
+  .ava img{width:32px}
+  .bub{background:#fff;border:2px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 13px;max-width:calc(100% - 52px);font-size:15px}
+  .bub p{margin:0 0 .4em}.bub p:last-child{margin:0}
+  .bub strong{color:var(--red)}
+  .msg.me{justify-content:flex-end}
+  .msg.me .bub{background:var(--g);border-color:var(--g);color:#fff;border-radius:16px 4px 16px 16px;font-weight:700}
+  .typing i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:#9fb59a;animation:blink 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 4px 50px;animation:pop .25s ease-out}
+  .opts button{font:inherit;font-weight:900;font-size:16px;background:#fff;color:var(--g-d);border:2px solid var(--g);border-radius:12px;padding:11px 14px;cursor:pointer;min-height:48px;line-height:1.3;flex:1 1 calc(50% - 8px)}
+  .opts button.wide{flex-basis:100%}
+  .opts button.main{background:linear-gradient(#f5a12a,#e46f00);border-color:#e46f00;color:#fff}
+  .opts button small{display:block;font-size:11px;font-weight:700;opacity:.8}
+  .est{background:#FFF8D6;border:2px dashed #e0b400;border-radius:12px;padding:10px 12px;margin-top:6px;font-size:14px}
+  .est .sum{font-size:30px;font-weight:900;color:var(--red);line-height:1.1}
+  .est .sum small{font-size:13px;color:var(--ink)}
+  form.ask{margin:2px 0 4px 50px;background:#fff;border:2px solid var(--g);border-radius:12px;padding:12px;animation:pop .25s ease-out}
+  form.ask label{display:block;font-weight:700;font-size:13px;margin:0 0 10px}
+  form.ask input{display:block;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px}
+  form.ask button{width:100%;font:inherit;font-weight:900;font-size:17px;border:0;border-radius:999px;padding:13px;color:#fff;background:linear-gradient(#f5a12a,#e46f00);cursor:pointer}
+  form.ask .err{color:var(--red);font-size:13px;margin:0 0 6px;min-height:1em}
+  .done a{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:999px;padding:13px;margin:6px 0 0}
+  .done .sms{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
+  .done .call{border:2px solid var(--g);color:var(--g-d);background:#fff}
+  .done .form{font-size:13px;color:var(--muted);font-weight:700;padding:6px}
+  @media (prefers-reduced-motion:reduce){.msg,.opts,form.ask{animation:none}.typing i{animation:none}}
   @media (prefers-reduced-motion:reduce){.btn.web::after{animation:none;display:none}}
 </style>
 </head>
@@ -139,6 +177,13 @@
 <div class="shot"><a href="#" data-web><img src="img/01-hero.jpg" alt="福岡市・近郊 エアコンクリーニング 6,700円〜（税込）。分解した部品をその場でお見せします。家庭用も業務用もOK、土日祝も受付"></a></div>
 
 <div class="band"><small>福岡市内＋近郊</small><b>年間取扱 2,000台</b></div>
+
+<!-- ★ 会話：案内係と話して、料金チェック → 申し込み -->
+<section class="talk" id="talk">
+  <div class="talk-hd"><b>ボタンを押すだけ・30秒</b><h2>あなたのエアコン、<br><span>いくらになる？</span></h2></div>
+  <div class="log" id="log" aria-live="polite"></div>
+</section>
+
 
 <!-- 2. 要注意チェック（Canva） -->
 <div class="shot" style="margin-top:14px"><img src="img/02-check.jpg" alt="1つでもあてはまったら要注意。効きが悪い、変なにおい、咳やくしゃみ、赤ちゃんやペットがいる、何年も掃除していない。これ、1台のエアコンから出た水です" loading="lazy"></div>
@@ -249,9 +294,161 @@
 </div></div>
 
 <script>
-  // 申し込み先：本サイトの予約フォーム（広告の効果が分かるように印を付ける）
-  var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";
-  document.querySelectorAll("[data-web]").forEach(function(a){ a.href = RESERVE_URL; });
+(function(){
+  // ===== 設定 =====
+  var PHONE = "090-4143-4127", TEL = "09041434127";
+  var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";   // 本サイトの予約フォーム
+  var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000 };          // 税込・壁掛け1台
+  var ICON = "https://kucho-hotline.jp/_astro/logo.Bkw95_dZ_Z1w7PSA.webp";
+
+  var log = document.getElementById("log");
+  var A = { units: 0, osouji: 0, osoujiUnknown: false, bunkai: "", area: "" };
+  var started = false, booked = false;
+
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+  function yen(n){ return n.toLocaleString("ja-JP"); }
+  function show(el){ var r = el.getBoundingClientRect(); if (r.bottom > innerHeight - 90 || r.top < 60) el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+
+  async function say(html){
+    var m = document.createElement("div");
+    m.className = "msg";
+    m.innerHTML = '<div class="ava"><img src="' + ICON + '" alt=""></div><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div>';
+    log.appendChild(m);
+    if (started) show(m);
+    await wait(started ? 500 : 0);
+    m.querySelector(".bub").innerHTML = html;
+    return m;
+  }
+  function me(t){
+    var m = document.createElement("div");
+    m.className = "msg me";
+    m.innerHTML = '<div class="bub"></div>';
+    m.querySelector(".bub").textContent = t;
+    log.appendChild(m);
+  }
+  function ask(list){
+    return new Promise(function(res){
+      var box = document.createElement("div");
+      box.className = "opts";
+      list.forEach(function(o){
+        var b = document.createElement("button");
+        b.type = "button";
+        if (o.cls) b.className = o.cls;
+        b.innerHTML = o.label + (o.sub ? "<small>" + o.sub + "</small>" : "");
+        b.onclick = function(){ started = true; box.remove(); me(o.label.replace(/<[^>]+>/g, "")); res(o.v); };
+        box.appendChild(b);
+      });
+      log.appendChild(box);
+      if (started) show(box);
+    });
+  }
+
+  async function run(){
+    await say("<p>こんにちは！空調のホットラインです。</p><p>ボタンで答えるだけで、<strong>その場で料金</strong>が分かります。まず、クリーニングしたいエアコンは<b>何台</b>ですか？</p>");
+    A.units = await ask([
+      { v: 1, label: "1台" }, { v: 2, label: "2台" }, { v: 3, label: "3台" }, { v: 4, label: "4台以上" }
+    ]);
+    var n = A.units;
+
+    var q = [{ v: 0, label: "ふつうのタイプ", sub: "フィルターを自分で外して洗う" }];
+    if (n === 1) q.push({ v: 1, label: "お掃除機能付き", sub: "フィルター自動おそうじ" });
+    else for (var i = 1; i <= Math.min(n, 4); i++) q.push({ v: i, label: (i === n ? "全部" : i + "台") + "お掃除機能付き" });
+    q.push({ v: -1, label: "分からない", sub: "大丈夫です。お電話で確認します", cls: "wide" });
+    await say(n === 1
+      ? "<p>その1台は、<b>お掃除機能付き</b>ですか？</p><p style=\"font-size:13px\">本体に「自動おそうじ」などの表示があれば機能付きです。</p>"
+      : "<p>そのうち、<b>お掃除機能付き</b>は何台ありますか？</p>");
+    var o = await ask(q);
+    A.osoujiUnknown = (o === -1);
+    A.osouji = o === -1 ? 0 : o;
+
+    await say("<p>最後に、<b>完全分解洗浄</b>もしますか？</p><p style=\"font-size:13px\">ドレンパンと送風ファンを本体から外して、ふつうでは届かない奥まで洗います。<b>何年も掃除していない</b>・<b>においやカビが戻ってきた</b>方に、いちばんのおすすめです。1台＋8,000円。</p>");
+    A.bunkai = await ask([
+      { v: "yes", label: "完全分解もする", sub: "いちばんキレイ" },
+      { v: "no", label: "ふつうのクリーニング" },
+      { v: "ask", label: "おすすめを聞いてから決めたい", cls: "wide" }
+    ]);
+    await estimate();
+  }
+
+  function calc(){
+    var n = A.units, os = A.osouji, base = (n - os) * PRICE.normal + os * PRICE.osouji;
+    var add = A.bunkai === "yes" ? n * PRICE.bunkai : 0;
+    return { base: base, add: add, total: base + add };
+  }
+
+  async function estimate(){
+    var c = calc(), n = A.units;
+    var lines = "通常タイプ " + (n - A.osouji) + "台" + (A.osouji ? "／お掃除機能付き " + A.osouji + "台" : "");
+    var note = [];
+    if (n === 4) note.push("5台以上のときは、お電話で台数をお伝えください");
+    if (A.osoujiUnknown) note.push("お掃除機能付きだった場合は、1台につき＋6,000円になります（作業前に確認してお伝えします）");
+    if (A.bunkai === "ask") note.push("完全分解洗浄（1台＋8,000円）にするかは、エアコンを見てからご相談できます");
+    note.push("作業の前に現物を確認してお見積りをご説明します。そこから金額は増えません");
+    await say("<p>ありがとうございます！概算はこちらです。</p>" +
+      '<div class="est">' + lines + (A.bunkai === "yes" ? "＋完全分解洗浄" : "") +
+      '<div class="sum">' + yen(c.total) + '<small>円（税込）' + (n === 4 || A.osoujiUnknown ? "〜" : "") + '</small></div>' +
+      '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:12px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul></div>");
+    await wait(300);
+    await say("<p>対応エリアは<b>福岡市と近郊</b>です。お住まいはどちらですか？</p>");
+    A.area = await ask([
+      { v: "福岡市内", label: "福岡市内" },
+      { v: "福岡市の近郊", label: "春日・大野城・糟屋郡など近郊" },
+      { v: "それ以外", label: "それ以外の地域", cls: "wide" }
+    ]);
+    if (A.area === "それ以外") await say("<p>エリア外でも、日程によっては伺えることがあります。このまま申し込んでいただければ、こちらから確認のご連絡をします。</p>");
+    await book();
+  }
+
+  async function book(){
+    if (booked) { show(document.querySelector("form.ask")); return; }
+    booked = true; started = true;
+    await say("<p>このまま<b>ご予約</b>できます。下の3つだけ入れてください。<b>折り返しお電話</b>して、日程を決めます。</p>");
+    var f = document.createElement("form");
+    f.className = "ask"; f.noValidate = true;
+    f.innerHTML =
+      '<label>お名前<input name="name" autocomplete="name" placeholder="例）山田 花子"></label>' +
+      '<label>電話番号<input name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="例）090-1234-5678"></label>' +
+      '<label>ご希望の日（いくつでも）<input name="day" placeholder="例）11/28の午前、土日ならいつでも"></label>' +
+      '<p class="err" role="alert"></p><button type="submit">この内容で予約する</button>';
+    log.appendChild(f); show(f);
+    f.addEventListener("submit", function(e){ e.preventDefault(); send(f); });
+  }
+
+  async function send(f){
+    var d = new FormData(f), name = (d.get("name")||"").trim(), tel = (d.get("tel")||"").trim(), day = (d.get("day")||"").trim();
+    var err = f.querySelector(".err");
+    if (!name || tel.replace(/[^0-9]/g, "").length < 10) { err.textContent = "お名前と電話番号を入れてください。"; return; }
+    f.querySelectorAll("input,button").forEach(function(x){ x.disabled = true; });
+    me("この内容で予約します");
+    var c = A.units ? calc() : null;
+    var body = "【エアコンクリーニング予約希望】\nお名前：" + name + "\n電話：" + tel + "\n希望日：" + (day || "相談したい") +
+      (A.units ? "\n台数：" + A.units + (A.units === 4 ? "台以上" : "台") + "（お掃除機能付き：" + (A.osoujiUnknown ? "分からない" : A.osouji + "台") + "）" +
+        "\n完全分解：" + ({ yes: "する", no: "しない", ask: "相談したい" }[A.bunkai]) + "\n地域：" + A.area + "\n概算：" + yen(c.total) + "円" : "") +
+      "\n（チラシのページを見ました）";
+    var sms = "sms:" + TEL + (/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?") + "body=" + encodeURIComponent(body);
+    var m = await say("<p><b>" + esc(name) + "さま、ありがとうございます！</b></p><p>下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しお電話します。</p>" +
+      '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 今すぐ電話で予約する（' + PHONE + '）</a>' +
+      '<a class="form" href="' + RESERVE_URL + '" target="_blank" rel="noopener">パソコンの方は 予約フォームはこちら ›</a></div>');
+    show(m);
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+
+  // 「今すぐ申し込む」はどれも会話へ
+  document.querySelectorAll("[data-web]").forEach(function(a){
+    a.href = "#talk";
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      started = true;
+      var box = log.querySelector(".opts");
+      if (box && !A.units) { document.getElementById("talk").scrollIntoView({ behavior: "smooth" }); return; }
+      if (A.units && !booked) { var b = log.querySelector(".opts"); if (b) b.remove(); book(); return; }
+      document.getElementById("talk").scrollIntoView({ behavior: "smooth" });
+      if (booked) show(log.lastElementChild);
+    });
+  });
+
+  run();
+})();
 </script>
 </body>
 </html>
