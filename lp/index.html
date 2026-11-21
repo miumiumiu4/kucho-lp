@@ -152,7 +152,11 @@
   .msg{display:flex;gap:8px;align-items:flex-start;animation:pop .25s ease-out}
   @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .ava{flex:0 0 42px;height:42px;border-radius:50%;background:#fff;border:2px solid var(--g-l);display:flex;align-items:center;justify-content:center}
-  .ava img{width:32px}
+  .ava{overflow:hidden;background:#fdfdf8}
+  .ava img{width:100%;height:100%;object-fit:cover;display:block}
+  .neko-hi{display:flex;align-items:flex-end;justify-content:center;gap:4px;margin:0 0 6px}
+  .neko-hi img{width:110px;height:auto}
+  .neko-hi span{background:#fff;border:2px solid var(--g-l);border-radius:16px 16px 16px 4px;padding:6px 12px;font-size:14px;font-weight:700;margin-bottom:40px}
   .bub{background:#fff;border:2px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 13px;max-width:calc(100% - 52px);font-size:15px}
   .bub p{margin:0 0 .4em}.bub p:last-child{margin:0}
   .bub strong{color:var(--red)}
@@ -205,7 +209,7 @@
 
 <!-- ★ 会話：案内係と話して、料金チェック → 申し込み -->
 <section class="talk" id="talk">
-  <div class="talk-hd"><b>ボタンを押すだけ・30秒</b><h2>あなたのエアコン、<br><span>いくらになる？</span></h2></div>
+  <div class="talk-hd"><div class="neko-hi"><img src="img/nekobe/nekobe-full.webp" alt="空調のホットラインの案内係 ねこべえ" width="310" height="405"><span>ぼくが案内するにゃ！</span></div><b>ボタンを押すだけ・30秒</b><h2>あなたのエアコン、<br><span>いくらになる？</span></h2></div>
   <div class="log" id="log" aria-live="polite"></div>
 </section>
 
@@ -356,7 +360,7 @@
   var PHONE = "090-4143-4127", TEL = "09041434127";
   var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";   // 本サイトの予約フォーム
   var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300, hi: 5000 };   // hi＝手間のかかるシリーズの上乗せ   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
-  var ICON = "https://kucho-hotline.jp/_astro/logo.Bkw95_dZ_Z1w7PSA.webp";
+  var ICON = "img/nekobe/nekobe-face.webp";
 
   var log = document.getElementById("log");
   var A = { units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", area: "" };
@@ -403,7 +407,7 @@
   }
 
   async function run(){
-    await say("<p>こんにちは！空調のホットラインです。</p><p>ボタンで答えるだけで、<strong>その場で料金</strong>が分かります。まず、クリーニングしたいエアコンは<b>何台</b>ですか？</p>");
+    await say("<p>こんにちは！空調のホットラインの<b>ねこべえ</b>です。</p><p>ボタンで答えるだけで、<strong>その場で料金</strong>が分かります。まず、クリーニングしたいエアコンは<b>何台</b>ですか？</p>");
     A.units = await ask([
       { v: 1, label: "1台" }, { v: 2, label: "2台" }, { v: 3, label: "3台" }, { v: 4, label: "4台以上" }
     ]);
@@ -623,7 +627,7 @@
         return bot(left().length ? "<p>この話題の質問はここまでです。ほかの話題もどうぞ。</p>" : "<p>ご質問はぜんぶ見ていただきました。ほかに気になることは、お電話でお気軽にどうぞ。</p>", true).then(cats);
       });
     }
-    bot("<p>ご予約の前に、<b>これまでお客様からよく聞かれたこと</b>をまとめました。気になる話題を押してください。</p>", false).then(cats);
+    bot("<p>ねこべえがお答えします。ご予約の前に、<b>これまでお客様からよく聞かれたこと</b>をまとめました。気になる話題を押してください。</p>", false).then(cats);
   })();
 
   // ビフォーアフター：つまみ・指・マウスで左右に動かす。画面に入ったら一度だけ揺れて「動かせる」と気づかせる
