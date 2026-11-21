@@ -67,6 +67,20 @@
   .ba .tag{position:absolute;top:8px;left:8px;font-weight:900;font-size:13px;color:#fff;padding:2px 10px;border-radius:999px}
   .tag.bf{background:var(--red)}.tag.af{background:var(--g)}
 
+
+  /* ビフォーアフターの比べる枠（真ん中のつまみを動かす） */
+  .cmp{position:relative;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#ddd;touch-action:pan-y;user-select:none;-webkit-user-select:none;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  .cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+  .cmp-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+  .cmp .tag{position:absolute;top:10px;z-index:3;font-weight:900;font-size:13px;color:#fff;padding:3px 12px;border-radius:999px}
+  .cmp .tag.bf{left:10px;background:rgba(0,0,0,.65)}
+  .cmp .tag.af{right:10px;background:var(--g)}
+  .cmp-line{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;z-index:2;box-shadow:0 0 6px rgba(0,0,0,.35)}
+  .cmp-knob{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--g-d);font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.35);letter-spacing:-2px}
+  .cmp{cursor:ew-resize}
+  .cmp-range{position:absolute;left:0;bottom:0;width:100%;height:1px;margin:0;opacity:0;pointer-events:none}
+  .cmp:focus-within .cmp-line{outline:3px solid var(--y)}
+  .cmp-cap{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;gap:8px}
   /* 料金表 */
   .price{border:3px solid var(--g);border-radius:14px;overflow:hidden;background:#fff}
   .price .row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-top:1px dashed var(--line);gap:10px}
@@ -191,12 +205,16 @@
 <!-- 3. 中の汚れ（本サイトの写真） -->
 <section class="sec" style="background:var(--cream)">
   <h2 class="big">カバーを外すと、<br><em>こうなっています</em></h2>
-  <div class="ba">
-    <figure><span class="tag bf">BEFORE</span><img src="https://kucho-hotline.jp/_astro/dirty-fan.BRDnFXU4_73VO7.webp" alt="黒カビの付いた送風ファン" loading="lazy"><figcaption>送風ファン。黒いものはカビです</figcaption></figure>
-    <figure><span class="tag bf">BEFORE</span><img src="https://kucho-hotline.jp/_astro/dirty-coil.hdx8eGcn_Z19KXFs.webp" alt="ほこりの詰まった熱交換器" loading="lazy"><figcaption>熱交換器。ほこりが詰まっています</figcaption></figure>
+  <div class="cmp" id="cmp" style="--pos:50%">
+    <img class="cmp-after" src="https://kucho-hotline.jp/_astro/kanzen-clean.DtZdfbcO_fJuwK.webp" alt="洗浄後の熱交換器" loading="lazy" draggable="false">
+    <img class="cmp-before" src="https://kucho-hotline.jp/_astro/dirty-coil.hdx8eGcn_Z19KXFs.webp" alt="ほこりの詰まった熱交換器" loading="lazy" draggable="false">
+    <span class="tag bf">BEFORE</span><span class="tag af">AFTER</span>
+    <span class="cmp-line" aria-hidden="true"><span class="cmp-knob">‹ ›</span></span>
+    <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="洗う前と洗った後を比べる">
   </div>
-  <div class="ba" style="grid-template-columns:1fr;margin-top:10px">
-    <figure><span class="tag af">AFTER</span><img src="https://kucho-hotline.jp/_astro/kanzen-clean.DtZdfbcO_fJuwK.webp" alt="洗浄後の熱交換器" style="aspect-ratio:4/3" loading="lazy"><figcaption>洗浄後。ここまで戻ります</figcaption></figure>
+  <div class="cmp-cap"><span>← 指でずらして比べられます →</span><span>熱交換器（エアコンの中）</span></div>
+  <div class="ba" style="grid-template-columns:1fr;margin-top:14px">
+    <figure><span class="tag bf">BEFORE</span><img src="https://kucho-hotline.jp/_astro/dirty-fan.BRDnFXU4_73VO7.webp" alt="黒カビの付いた送風ファン" style="aspect-ratio:4/3" loading="lazy"><figcaption>送風ファン。黒いものはカビです</figcaption></figure>
   </div>
   <p style="font-size:13px;color:var(--muted);text-align:center;margin:8px 0 0">お客様のお宅で実際に撮った写真です</p>
 </section>
@@ -448,6 +466,26 @@
   });
 
   run();
+
+  // ビフォーアフター：つまみ・指・マウスで左右に動かす。最初に少しだけ動いて「動かせる」と気づかせる
+  (function(){
+    var box = document.getElementById("cmp"); if (!box) return;
+    var r = box.querySelector(".cmp-range"), moved = false;
+    function set(v){ v = Math.max(0, Math.min(100, v)); box.style.setProperty("--pos", v + "%"); r.value = v; }
+    r.addEventListener("input", function(){ moved = true; set(+r.value); });
+    function fromX(x){ var b = box.getBoundingClientRect(); set((x - b.left) / b.width * 100); }
+    box.addEventListener("pointerdown", function(e){ moved = true; fromX(e.clientX); box.setPointerCapture(e.pointerId); box._drag = true; });
+    box.addEventListener("pointermove", function(e){ if (box._drag) fromX(e.clientX); });
+    box.addEventListener("pointerup", function(){ box._drag = false; });
+    if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var io = new IntersectionObserver(function(es){
+        if (!es[0].isIntersecting || moved) return; io.disconnect();
+        var t0 = performance.now();
+        (function step(t){ if (moved) return; var k = (t - t0) / 1600; if (k > 1) { set(50); return; } set(50 + Math.sin(k * Math.PI * 2) * 22); requestAnimationFrame(step); })(t0);
+      }, { threshold: 0.6 });
+      io.observe(box);
+    }
+  })();
 })();
 </script>
 </body>
