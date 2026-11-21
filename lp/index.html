@@ -182,6 +182,12 @@
   .opts button{font:inherit;font-weight:900;font-size:16px;background:#fff;color:var(--g-d);border:2px solid var(--g);border-radius:12px;padding:11px 14px;cursor:pointer;min-height:48px;line-height:1.3;flex:1 1 calc(50% - 8px)}
   .opts button.wide{flex-basis:100%}
   .opts button.main{background:linear-gradient(#f5a12a,#e46f00);border-color:#e46f00;color:#fff}
+  .opts.step{flex-direction:column}
+  .stp{display:flex;align-items:center;justify-content:center;gap:14px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px}
+  .stp button{flex:0 0 64px;width:64px;height:64px;border-radius:50%;font-size:34px;line-height:1;padding:0;background:var(--g);color:#fff;border:0;box-shadow:0 3px 0 var(--g-d)}
+  .stp button:disabled{background:#cfd8cc;box-shadow:none}
+  .stp output{font-size:44px;font-weight:900;min-width:60px;text-align:center;color:var(--ink)}
+  .stp span{font-weight:900;margin-left:-8px}
   .opts button small{display:block;font-size:11px;font-weight:700;opacity:.8}
   .est{background:#FFF8D6;border:2px dashed #e0b400;border-radius:12px;padding:10px 12px;margin-top:6px;font-size:14px}
   .est .sum{font-size:30px;font-weight:900;color:var(--red);line-height:1.1}
@@ -306,10 +312,16 @@
     <div class="row rec"><div><b>完全分解洗浄</b><small>ドレンパンと送風ファンを外して奥まで洗う</small></div><div class="yen"><span>＋</span>8,000<span>円</span></div></div>
   </div>
   <div class="price" style="margin-top:10px">
-    <div class="row rec"><div><b>台数割</b><small>2台目から、1台ごとに</small></div><div class="yen"><span>−</span>300<span>円</span></div></div>
+    <div class="row rec"><div><b>台数割</b><small>壁掛けの2台目から、1台ごとに</small></div><div class="yen"><span>−</span>300<span>円</span></div></div>
+  </div>
+  <p style="margin:16px 0 6px;font-weight:900;color:var(--g-d)">お店・事務所の業務用（1台）</p>
+  <div class="price">
+    <div class="row"><div><b>天井埋め込み（4方向）</b><small>飲食店は＋3,000円</small></div><div class="yen">17,000<span>円〜</span></div></div>
+    <div class="row"><div><b>天吊り</b><small>天井から吊るすタイプ</small></div><div class="yen">19,000<span>円〜</span></div></div>
+    <div class="row"><div><b>床置き・ビルトイン</b><small>機種を見てお見積り</small></div><div class="yen" style="font-size:18px">ご相談</div></div>
   </div>
   <ul class="notes">
-    <li>すべて壁掛け1台・税込です。</li>
+    <li>表示はすべて税込です。業務用は機種や設置状況で、作業の前にお見積りします。</li>
     <li>お掃除機能付きか分からなくても大丈夫です。折り返しのお電話で確認します。</li>
     <li>一部の機種（エオリアXなど）は＋5,000円、霧ヶ峰FZ・エアレストは完全分解洗浄のみです。</li>
     <li>駐車場がない場合のコインパーキング代は、お客様のご負担です。</li>
@@ -393,12 +405,13 @@
   // ===== 設定 =====
   var PHONE = "090-4143-4127", TEL = "09041434127";
   var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";   // 本サイトの予約フォーム
-  var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300, hi: 5000 };   // hi＝手間のかかるシリーズの上乗せ   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
+  var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300, hi: 5000, c4: 17000, tsuri: 19000, food: 3000 };   // hi＝手間のかかるシリーズの上乗せ   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
   (function(){ var l=document.getElementById("rvList"), b=document.getElementById("rvMore"); if(!l||!b) return; l.classList.add("closed"); b.onclick=function(){ l.classList.remove("closed"); b.remove(); }; })();
   var ICON = "img/nekobe/nekobe-face.webp";
 
   var log = document.getElementById("log");
-  var A = { units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", area: "" };
+  var A = fresh();
+  function fresh(){ return { kind: "", units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", area: "", biz: { c4: 0, tsuri: 0, other: 0, food: false } }; }
   var started = false, booked = false, gen = 0;
 
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
@@ -441,30 +454,83 @@
     });
   }
 
-  async function run(){
-    await say("<p>こんにちは！空調のホットラインの<b>ねこべえ</b>です。</p><p>ボタンで答えるだけで、<strong>その場で料金</strong>が分かります。まず、クリーニングしたいエアコンは<b>何台</b>ですか？</p>");
-    A.units = await ask([
-      { v: 1, label: "1台" }, { v: 2, label: "2台" }, { v: 3, label: "3台" }, { v: 4, label: "4台以上" }
-    ]);
-    var n = A.units;
+  // ＋−で数を選ぶ（決定で返す）。extra は「分からない」などの追加ボタン
+  function stepper(o){
+    return new Promise(function(res){
+      var v = o.init, box = document.createElement("div");
+      box.className = "opts step";
+      box.innerHTML = '<div class="stp"><button type="button" class="mi" aria-label="1台へらす">−</button><output>' + v + '</output><span>台</span><button type="button" class="pl" aria-label="1台ふやす">＋</button></div>' +
+        '<button type="button" class="main wide ok">' + o.ok + '</button>';
+      var out = box.querySelector("output"), mi = box.querySelector(".mi"), pl = box.querySelector(".pl");
+      function upd(){ out.textContent = v; mi.disabled = v <= o.min; pl.disabled = v >= o.max; }
+      mi.onclick = function(){ if (v > o.min) { v--; upd(); } };
+      pl.onclick = function(){ if (v < o.max) { v++; upd(); } };
+      function done(val, label){ started = true; box.remove(); me(label); res(val); setTimeout(band, 0); }
+      box.querySelector(".ok").onclick = function(){ done(v, o.say(v)); };
+      (o.extra || []).forEach(function(x){
+        var b = document.createElement("button"); b.type = "button"; b.className = "wide";
+        b.innerHTML = x.label + (x.sub ? "<small>" + x.sub + "</small>" : "");
+        b.onclick = function(){ done(x.v, x.label); };
+        box.appendChild(b);
+      });
+      upd(); log.appendChild(box); if (started) show(box);
+    });
+  }
+  function bizN(){ return A.biz.c4 + A.biz.tsuri + A.biz.other; }
+  function anyN(){ return A.units + bizN(); }
 
-    var q = [{ v: 0, label: "ふつうのタイプ", sub: "フィルターを自分で外して洗う" }];
-    if (n === 1) q.push({ v: 1, label: "お掃除機能付き", sub: "フィルター自動おそうじ" });
-    else for (var i = 1; i <= Math.min(n, 4); i++) q.push({ v: i, label: (i === n ? "全部" : i + "台") + "お掃除機能付き" });
-    q.push({ v: -1, label: "分からない", sub: "大丈夫です。お電話で確認します", cls: "wide" });
-    await say(n === 1
-      ? "<p>その1台は、<b>お掃除機能付き</b>ですか？</p><p style=\"font-size:13px\">本体に「自動おそうじ」などの表示があれば機能付きです。</p>"
-      : "<p>そのうち、<b>お掃除機能付き</b>は何台ありますか？</p>");
-    var o = await ask(q);
+  async function run(){
+    await say("<p>こんにちは！空調のホットラインの<b>ねこべえ</b>です。</p><p>ボタンで答えるだけで、<strong>その場で料金</strong>が分かります。まず、クリーニングしたいのは<b>どんなエアコン</b>ですか？</p>");
+    A.kind = await ask([
+      { v: "wall", label: "壁掛け", sub: "ご家庭のふつうのエアコン" },
+      { v: "biz", label: "天井埋め込み・天吊り", sub: "お店・事務所など" },
+      { v: "both", label: "両方ある", cls: "wide" }
+    ]);
+    if (A.kind !== "wall") await bizFlow();
+    if (A.kind !== "biz") await wallFlow();
+    await estimate();
+  }
+
+  async function bizFlow(){
+    for (var tries = 0; ; tries++) {
+    if (tries) await say("<p>台数が0台になっています。もう一度、<b>天井埋め込み</b>の台数からお願いします。</p>");
+    await say("<p><b>天井に埋め込むタイプ</b>（吹き出し口が4方向）は何台ですか？</p><p style=\"font-size:13px\">1台 17,000円〜。ない場合は0のまま進んでください。</p>");
+    A.biz.c4 = await stepper({ min: 0, max: 30, init: A.kind === "biz" ? 1 : 0, ok: "この台数で次へ", say: function(v){ return "天井埋め込み " + v + "台"; } });
+    await say("<p><b>天井から吊るすタイプ</b>（天吊り）は何台ですか？</p><p style=\"font-size:13px\">1台 19,000円〜。</p>");
+    A.biz.tsuri = await stepper({ min: 0, max: 30, init: 0, ok: "この台数で次へ", say: function(v){ return "天吊り " + v + "台"; } });
+    await say("<p><b>床置き・ビルトイン</b>など、ほかの形はありますか？</p><p style=\"font-size:13px\">こちらは機種を見てお見積りします。</p>");
+    A.biz.other = await stepper({ min: 0, max: 30, init: 0, ok: "この台数で次へ", say: function(v){ return "床置き・その他 " + v + "台"; } });
+    if (bizN() > 0 || A.kind === "both") break;
+    }
+    await say("<p>設置場所は<b>飲食店</b>ですか？</p><p style=\"font-size:13px\">油汚れと養生の手間が増えるため、1台につき＋3,000円です。</p>");
+    A.biz.food = await ask([{ v: true, label: "飲食店" }, { v: false, label: "飲食店ではない" }]);
+  }
+
+  async function wallFlow(){
+    await say("<p><b>壁掛け</b>のエアコンは何台ですか？</p><p style=\"font-size:13px\">＋と−で台数を変えられます。2台目から1台300円引きです。</p>");
+    A.units = await stepper({ min: 1, max: 30, init: 1, ok: "この台数で次へ", say: function(v){ return "壁掛け " + v + "台"; } });
+    var n = A.units, o;
+    if (n === 1) {
+      await say("<p>その1台は、<b>お掃除機能付き</b>ですか？</p><p style=\"font-size:13px\">本体に「自動おそうじ」などの表示があれば機能付きです。</p>");
+      o = await ask([
+        { v: 0, label: "ふつうのタイプ", sub: "フィルターを自分で外して洗う" },
+        { v: 1, label: "お掃除機能付き", sub: "フィルター自動おそうじ" },
+        { v: -1, label: "分からない", sub: "大丈夫です。お電話で確認します", cls: "wide" }
+      ]);
+    } else {
+      await say("<p>そのうち、<b>お掃除機能付き</b>は何台ありますか？</p><p style=\"font-size:13px\">本体に「自動おそうじ」などの表示があれば機能付きです。なければ0のまま進んでください。</p>");
+      o = await stepper({ min: 0, max: n, init: 0, ok: "この台数で次へ", say: function(v){ return v ? "お掃除機能付き " + v + "台" : "お掃除機能付きはない"; },
+        extra: [{ v: -1, label: "分からない", sub: "大丈夫です。お電話で確認します" }] });
+    }
     A.osoujiUnknown = (o === -1);
     A.osouji = o === -1 ? 0 : o;
 
     if (A.osouji > 0) {
       await say("<p>そのお掃除機能付きの中に、<b>次のシリーズ</b>はありますか？</p><p style=\"font-size:13px\">エオリア CS-X・白くまくん X・ノクリア AS-X（XW）・霧ヶ峰 FZ<br>部品が多く手間がかかるため、1台につき<b>＋5,000円</b>です。</p>");
-      var hq = [{ v: 0, label: "ない" }];
-      for (var j = 1; j <= A.osouji; j++) hq.push({ v: j, label: (j === A.osouji && j > 1 ? "全部" : j + "台") + "ある" });
-      hq.push({ v: -1, label: "分からない", sub: "型番をお聞きして確認します", cls: "wide" });
-      var h = await ask(hq);
+      var h;
+      if (A.osouji === 1) h = await ask([{ v: 0, label: "ない" }, { v: 1, label: "ある" }, { v: -1, label: "分からない", sub: "型番をお聞きして確認します", cls: "wide" }]);
+      else h = await stepper({ min: 0, max: A.osouji, init: 0, ok: "この台数で次へ", say: function(v){ return v ? "そのシリーズが " + v + "台" : "そのシリーズはない"; },
+        extra: [{ v: -1, label: "分からない", sub: "型番をお聞きして確認します" }] });
       A.hiUnknown = (h === -1);
       A.hi = h === -1 ? 0 : h;
     }
@@ -475,31 +541,47 @@
       { v: "no", label: "ふつうのクリーニング" },
       { v: "ask", label: "おすすめを聞いてから決めたい", cls: "wide" }
     ]);
-    await estimate();
   }
 
   function calc(){
-    var n = A.units, os = A.osouji, base = (n - os) * PRICE.normal + os * PRICE.osouji;
-    var add = A.bunkai === "yes" ? n * PRICE.bunkai : 0;
-    base += (A.hi || 0) * PRICE.hi;
-    var off = (n - 1) * PRICE.multi;
-    return { base: base, add: add, off: off, total: base + add - off };
+    var n = A.units, os = A.osouji, base = 0, add = 0, off = 0, biz = 0, b = A.biz;
+    if (n) {
+      base = (n - os) * PRICE.normal + os * PRICE.osouji + (A.hi || 0) * PRICE.hi;
+      add = A.bunkai === "yes" ? n * PRICE.bunkai : 0;
+      off = (n - 1) * PRICE.multi;
+    }
+    biz = b.c4 * PRICE.c4 + b.tsuri * PRICE.tsuri + (b.food ? (b.c4 + b.tsuri) * PRICE.food : 0);
+    return { base: base, add: add, off: off, biz: biz, total: base + add - off + biz };
+  }
+  function rough(){ return A.osoujiUnknown || A.hiUnknown || A.biz.other > 0 || (A.units > 0 && !A.bunkai); }
+  function summary(){
+    var b = A.biz, s = [];
+    if (A.units) s.push("壁掛け" + A.units + "台" + (A.osouji ? "（お掃除機能付き" + A.osouji + (A.hi ? "・うち高機能" + A.hi : "") + "）" : "") + (A.bunkai === "yes" ? "＋完全分解" : ""));
+    if (b.c4) s.push("天井埋め込み" + b.c4 + "台");
+    if (b.tsuri) s.push("天吊り" + b.tsuri + "台");
+    if (b.other) s.push("床置き・その他" + b.other + "台");
+    return s.join("・");
   }
 
   async function estimate(){
-    var c = calc(), n = A.units;
-    var lines = [n - A.osouji ? "通常タイプ " + (n - A.osouji) + "台" : "", A.osouji ? "お掃除機能付き " + A.osouji + "台" : ""].filter(Boolean).join("／") + (A.hi ? "（うち手間のかかるシリーズ " + A.hi + "台・＋5,000円）" : "");
+    var c = calc(), n = A.units, b = A.biz;
+    var lines = [];
+    if (n) lines.push([n - A.osouji ? "通常タイプ " + (n - A.osouji) + "台" : "", A.osouji ? "お掃除機能付き " + A.osouji + "台" : ""].filter(Boolean).join("／") + (A.hi ? "（うち手間のかかるシリーズ " + A.hi + "台・＋5,000円）" : "") + (A.bunkai === "yes" ? "＋完全分解洗浄" : ""));
+    if (b.c4) lines.push("天井埋め込み（4方向） " + b.c4 + "台");
+    if (b.tsuri) lines.push("天吊り " + b.tsuri + "台");
+    if (b.other) lines.push("床置き・ビルトインなど " + b.other + "台（現地でお見積り）");
+    if ((b.c4 || b.tsuri) && b.food) lines.push("飲食店 ＋3,000円×" + (b.c4 + b.tsuri) + "台");
     var note = [];
-    if (n === 4) note.push("5台以上のときは、お電話で台数をお伝えください");
     if (A.osoujiUnknown) note.push("お掃除機能付きだった場合は、1台につき＋6,000円になります（作業前に確認してお伝えします）");
     if (A.osoujiUnknown || A.hiUnknown) note.push("エオリア CS-X・白くまくん X・ノクリア AS-X（XW）・霧ヶ峰 FZ だった場合は、1台につき＋5,000円です");
     if (A.hi || A.hiUnknown || A.osoujiUnknown) note.push("霧ヶ峰 FZ とシャープのエアレストは、完全分解洗浄のみのお取り扱いです");
     if (A.bunkai === "ask") note.push("完全分解洗浄（1台＋8,000円）にするかは、エアコンを見てからご相談できます");
+    if (b.c4 || b.tsuri || b.other) note.push("業務用は機種や設置状況でお見積りします。お写真を送っていただければ、おおよその金額をお伝えできます");
     note.push("作業の前に現物を確認してお見積りをご説明します。そこから金額は増えません");
     await say("<p>ありがとうございます！概算はこちらです。</p>" +
-      '<div class="est">' + lines + (A.bunkai === "yes" ? "＋完全分解洗浄" : "") +
-      (c.off ? '<div style="color:var(--red);font-weight:900">台数割 −' + yen(c.off) + '円（2台目から1台300円引き）</div>' : "") +
-      '<div class="sum">' + yen(c.total) + '<small>円（税込）' + (n === 4 || A.osoujiUnknown || A.hiUnknown ? "〜" : "") + '</small></div>' +
+      '<div class="est">' + lines.join("<br>") +
+      (c.off ? '<div style="color:var(--red);font-weight:900">台数割 −' + yen(c.off) + '円（壁掛け2台目から1台300円引き）</div>' : "") +
+      (c.total ? '<div class="sum">' + yen(c.total) + '<small>円（税込）' + (rough() || b.c4 || b.tsuri ? "〜" : "") + '</small></div>' : '<div class="sum" style="font-size:22px">現地でお見積り</div>') +
       '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:12px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul></div>");
     await wait(300);
     await say("<p>対応エリアは<b>福岡市と近郊</b>です。お住まいはどちらですか？</p>");
@@ -533,10 +615,12 @@
     if (!name || tel.replace(/[^0-9]/g, "").length < 10) { err.textContent = "お名前と電話番号を入れてください。"; return; }
     f.querySelectorAll("input,button").forEach(function(x){ x.disabled = true; });
     me("この内容で予約します");
-    var c = A.units ? calc() : null;
+    var c = anyN() ? calc() : null;
     var body = "【エアコンクリーニング予約希望】\nお名前：" + name + "\n電話：" + tel + "\n希望日：" + (day || "相談したい") +
-      (A.units ? "\n台数：" + A.units + (A.units === 4 ? "台以上" : "台") + "（お掃除機能付き：" + (A.osoujiUnknown ? "分からない" : A.osouji + "台") + (A.hi ? "・うちエオリアX等 " + A.hi + "台" : A.hiUnknown ? "・エオリアX等か分からない" : "") + "）" +
-        "\n完全分解：" + ({ yes: "する", no: "しない", ask: "相談したい" }[A.bunkai]) + "\n地域：" + A.area + "\n概算：" + yen(c.total) + "円" + (c.off ? "（台数割" + yen(c.off) + "円引き後）" : "") : "") +
+      (A.units ? "\n壁掛け：" + A.units + "台（お掃除機能付き：" + (A.osoujiUnknown ? "分からない" : A.osouji + "台") + (A.hi ? "・うちエオリアX等 " + A.hi + "台" : A.hiUnknown ? "・エオリアX等か分からない" : "") + "）" +
+        "\n完全分解：" + ({ yes: "する", no: "しない", ask: "相談したい" }[A.bunkai]) : "") +
+      (bizN() ? "\n業務用：天井埋め込み" + A.biz.c4 + "台・天吊り" + A.biz.tsuri + "台・床置きなど" + A.biz.other + "台" + (A.biz.food ? "（飲食店）" : "") : "") +
+      (c ? "\n地域：" + A.area + "\n概算：" + (c.total ? yen(c.total) + "円" + (rough() || A.biz.c4 || A.biz.tsuri ? "〜" : "") : "現地でお見積り") + (c.off ? "（台数割" + yen(c.off) + "円引き後）" : "") : "") +
       "\n（チラシのページを見ました）";
     var sms = "sms:" + TEL + (/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?") + "body=" + encodeURIComponent(body);
     var m = await say("<p><b>" + esc(name) + "さま、ありがとうございます！</b></p><p>下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しお電話します。</p>" +
@@ -552,8 +636,8 @@
       e.preventDefault();
       started = true;
       var box = log.querySelector(".opts");
-      if (box && !A.units) { document.getElementById("talk").scrollIntoView({ behavior: "smooth" }); return; }
-      if (A.units && !booked) { var b = log.querySelector(".opts"); if (b) b.remove(); book(); return; }
+      if (box && !anyN()) { document.getElementById("talk").scrollIntoView({ behavior: "smooth" }); return; }
+      if (anyN() && !booked) { var b = log.querySelector(".opts"); if (b) b.remove(); book(); return; }
       document.getElementById("talk").scrollIntoView({ behavior: "smooth" });
       if (booked) show(log.lastElementChild);
     });
@@ -562,16 +646,16 @@
   // ===== 下の帯：いまの概算と「選び直す」 =====
   var pband = document.getElementById("pband"), page = document.querySelector(".page");
   function band(){
-    if (!A.units) { pband.hidden = true; if (page) page.classList.remove("has-band"); return; }
-    var c = calc(), n = A.units, os = A.osouji;
-    var sub = (n === 4 ? "4台以上" : n + "台") + (os ? "（お掃除機能付き" + os + (A.hi ? "・うち高機能" + A.hi : "") + "）" : "") + (A.bunkai === "yes" ? "＋完全分解" : "") + (c.off ? "・台数割−" + yen(c.off) + "円" : "");
-    document.getElementById("pbSum").textContent = yen(c.total) + "円" + (n === 4 || A.osoujiUnknown || A.hiUnknown || !A.bunkai ? "〜" : "");
+    if (!anyN()) { pband.hidden = true; if (page) page.classList.remove("has-band"); return; }
+    var c = calc();
+    var sub = summary() + (c.off ? "・台数割−" + yen(c.off) + "円" : "");
+    document.getElementById("pbSum").textContent = c.total ? yen(c.total) + "円" + (rough() || A.biz.c4 || A.biz.tsuri ? "〜" : "") : "お見積り";
     document.getElementById("pbSub").textContent = sub;
     pband.hidden = false; if (page) page.classList.add("has-band");
   }
   document.getElementById("pbRedo").onclick = function(){
     gen++; booked = false;
-    A = { units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", area: "" };
+    A = fresh();
     log.innerHTML = "";
     band();
     run();
