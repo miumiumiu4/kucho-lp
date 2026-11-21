@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>施工パートナー募集｜空調のホットライン</title>
+<meta name="description" content="未経験から始められるエアコンクリーニングの施工パートナー（業務委託）募集。質問に答えるだけで、あなたに合う働き方と面談のご案内をします。">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#467C27;      /* 本サイトの見出し・ボタンの緑 */
+    --green-l:#82CA57;    /* ロゴの明るい緑 */
+    --green-bg:#F2F8EE;   /* 見出し帯の薄い緑 */
+    --ink:#242927; --muted:#6B7470; --soft:#F7F9F7; --line:#E3EAE0; --white:#fff;
+    --you:#467C27;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:var(--ink);background:var(--white);line-height:1.8;font-size:16px;padding-bottom:92px}
+  img{max-width:100%;display:block}
+  a{color:var(--green)}
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px}
+
+  /* ヘッダー（本サイトと同じ並び） */
+  header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;max-width:1080px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+  .brand img{width:44px;height:auto}
+  .brand b{display:block;font-size:16px;line-height:1.2;color:var(--green)}
+  .brand small{display:block;font-size:11px;color:var(--muted);line-height:1.2}
+  .htel{text-align:right;text-decoration:none;color:var(--ink);line-height:1.2}
+  .htel b{font-size:17px;letter-spacing:.02em}
+  .htel small{display:block;font-size:10px;color:var(--muted)}
+
+  /* ファーストビュー */
+  .hero{background:var(--green-bg);padding:0 0 28px}
+  .hero-img{position:relative;max-width:1080px;margin:0 auto}
+  .hero-img img{width:100%;height:46vh;max-height:420px;min-height:240px;object-fit:cover}
+  .hero-img .tag{position:absolute;left:16px;bottom:16px;background:rgba(255,255,255,.94);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;color:var(--green)}
+  .hero h1{font-size:clamp(24px,6.4vw,34px);line-height:1.4;margin:22px 0 6px;letter-spacing:.04em}
+  .eyebrow{display:inline-block;font-size:12px;letter-spacing:.2em;color:var(--green);font-weight:700}
+  .eyebrow::before{content:"";display:block;width:32px;height:2px;background:var(--green);margin-bottom:8px}
+  .hero p{margin:0;color:var(--muted)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+  .badges li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+
+  /* 会話 */
+  .chat{padding:24px 0 8px}
+  .row{display:flex;gap:10px;margin:0 0 14px;align-items:flex-start;animation:pop .28s ease-out}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .ava{flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid var(--green-l);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .ava img{width:34px}
+  .who{font-size:11px;color:var(--muted);margin:0 0 2px}
+  .bubble{background:var(--soft);border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:12px 14px;max-width:calc(100% - 54px)}
+  .bubble p{margin:0 0 .5em}.bubble p:last-child{margin:0}
+  .bubble b{color:var(--green)}
+  .row.me{justify-content:flex-end}
+  .row.me .bubble{background:var(--you);color:#fff;border-color:var(--you);border-radius:16px 4px 16px 16px}
+  .photo{margin:6px 0 0;border-radius:12px;overflow:hidden}
+  .photo img{width:100%;aspect-ratio:3/2;object-fit:cover}
+  .photo figcaption{font-size:12px;color:var(--muted);padding:4px 2px 0}
+  .pics{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0 0}
+  .pics figure{margin:0}
+  .pics img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}
+  .pics figcaption{font-size:11px;color:var(--muted);line-height:1.4;padding-top:2px}
+  .steps{margin:8px 0 0;padding:0;list-style:none;counter-reset:s}
+  .steps li{position:relative;padding:8px 0 8px 40px;border-top:1px dashed var(--line)}
+  .steps li:first-child{border-top:0}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:10px;width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;text-align:center;line-height:28px;font-size:14px}
+  .steps b{display:block;color:var(--ink)}
+  .terms{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0 0}
+  .terms th{white-space:nowrap;text-align:left;vertical-align:top;padding:6px 10px 6px 0;color:var(--green)}
+  .terms td{padding:6px 0;border-bottom:1px solid var(--line)}
+  .note{font-size:12px;color:var(--muted)}
+
+  /* 選択ボタン */
+  .choices{display:flex;flex-direction:column;gap:8px;margin:4px 0 18px 54px;animation:pop .28s ease-out}
+  .choices button,.btn{font:inherit;font-weight:700;font-size:16px;text-align:left;background:#fff;color:var(--green);border:2px solid var(--green);border-radius:12px;padding:12px 16px;cursor:pointer;min-height:52px;line-height:1.4}
+  .choices button small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+  .choices button:hover,.choices button:focus-visible{background:var(--green-bg)}
+  .choices button.main,.btn.main{background:var(--green);color:#fff}
+  .choices button.main small{color:#e6f2dd}
+
+  /* 面談の申し込み */
+  form.apply{background:#fff;border:2px solid var(--green);border-radius:14px;padding:16px;margin:0 0 18px 54px;animation:pop .28s ease-out}
+  form.apply label{display:block;font-weight:700;font-size:14px;margin:0 0 12px}
+  form.apply label span{font-size:11px;font-weight:700;color:#fff;background:#d9480f;border-radius:4px;padding:1px 6px;margin-left:6px}
+  form.apply label span.opt{background:#aab3ae}
+  form.apply input,form.apply select{display:block;width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid #cfd8cb;border-radius:8px;margin-top:4px;background:#fff}
+  .times{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .times label{font-weight:500;margin:0;border:1px solid #cfd8cb;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
+  .times input{display:inline;width:auto;margin:0 4px 0 0}
+  form.apply .btn{width:100%;text-align:center;margin-top:4px}
+  .err{color:#d9480f;font-size:13px;min-height:1em;margin:0 0 6px}
+
+  .done-acts{display:flex;flex-direction:column;gap:8px;margin:4px 0 18px 54px}
+  .done-acts a{display:block;text-decoration:none;text-align:center}
+
+  /* 下の募集要項（読みたい人向け） */
+  details.all{margin:24px 0 40px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+  details.all summary{cursor:pointer;padding:14px 16px;font-weight:700;color:var(--green)}
+  details.all .in{padding:0 16px 16px;font-size:15px}
+  details.all h3{font-size:16px;margin:18px 0 4px}
+
+  footer{background:var(--soft);border-top:1px solid var(--line);padding:20px 16px;font-size:12px;color:var(--muted);text-align:center}
+
+  /* いつも下にある電話の帯 */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center}
+  .bar a,.bar button{flex:1;max-width:320px;text-decoration:none;text-align:center;font:inherit;font-weight:700;font-size:15px;border-radius:12px;padding:12px 8px;line-height:1.25;cursor:pointer}
+  .bar .tel{background:#fff;color:var(--green);border:2px solid var(--green)}
+  .bar .go{background:var(--green);color:#fff;border:2px solid var(--green)}
+  .bar small{display:block;font-size:10px;font-weight:500;opacity:.85}
+  .typing{display:inline-flex;gap:4px;padding:4px 0}
+  .typing i{width:7px;height:7px;border-radius:50%;background:#9fb59a;animation:blink 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.row,.choices,form.apply{animation:none}.typing i{animation:none}}
+  @media (min-width:760px){ .htel b{font-size:19px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="https://kucho-hotline.jp/" target="_blank" rel="noopener">
+      <img src="https://kucho-hotline.jp/_astro/logo.Bkw95_dZ_Z1w7PSA.webp" alt="">
+      <span><b>空調のホットライン</b><small>〜清潔な空気を保つ〜</small></span>
+    </a>
+    <a class="htel" href="tel:09041434127" data-tel><b data-phone>090-4143-4127</b><small>9:00〜18:00／土日祝も対応</small></a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-img">
+    <img src="https://kucho-hotline.jp/_astro/hero.TSLTnN2r_2ncPVP.webp" alt="エアコンのカバーを開けて内部を確認しているところ">
+    <div class="tag">施工パートナー募集（業務委託）</div>
+  </div>
+  <div class="wrap">
+    <h1><span class="eyebrow">RECRUIT</span>一緒に働く仲間を<br>探しています</h1>
+    <p>未経験から始められます。質問に答えるだけで、あなたに合う働き方と面談のご案内をします。</p>
+    <ul class="badges"><li>未経験OK</li><li>研修あり</li><li>直行直帰</li><li>働き方を3つから選べる</li></ul>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="chat" id="chat" aria-live="polite"></div>
+  <noscript><p>このページは会話形式です。お電話（090-4143-4127）でもご応募いただけます。</p></noscript>
+
+  <details class="all">
+    <summary>募集の内容を、全部まとめて読む</summary>
+    <div class="in">
+      <h3>身につけたことを、次の人に教えていく</h3>
+      <p>空調のホットラインが大切にしている言葉は「メンテナンスのコツ、お教えします！」です。この考え方は、お客様に対してだけでなく、一緒に働く人に対しても同じです。代表が自分の手で覚えたことを、次に入る人へ渡していく。経験は問いません。分からないまま現場に出ていただくことはありません。</p>
+      <h3>働き方は、3つから選べます</h3>
+      <p>1. 独立を目指す　2. 一緒に会社を大きくする　3. 自分のペースで働く。途中で変わっても構いません。</p>
+      <h3>未経験からの流れ</h3>
+      <p>オンライン研修（知識）→ 実務研修（実機で分解・洗浄）→ 現場研修（5〜10日、お客様宅に同行）。独り立ちしたあとも、迷ったときに聞ける体制があります。</p>
+      <h3>どんな仕事か</h3>
+      <p>ご家庭やお店に伺ってエアコンをクリーニングする仕事です。家庭用の壁掛けから、店舗・事務所の業務用まで扱います。直行直帰で、主に日中。標準的な機種なら1台65〜70分が目安です。</p>
+      <h3>応募の前に、お伝えしておきます</h3>
+      <table class="terms">
+        <tr><th>契約</th><td>業務委託契約です。雇用契約ではありません。</td></tr>
+        <tr><th>報酬</th><td>施工した内容に応じた出来高制です。決め方は面接でご説明します。</td></tr>
+        <tr><th>お支払い</th><td>月末締め、翌月末払いです。</td></tr>
+        <tr><th>研修期間中</th><td>報酬は発生しません。</td></tr>
+        <tr><th>車・道具</th><td>ご本人のご負担です。自家用車をお仕事に使えることが応募の条件です。</td></tr>
+        <tr><th>勤務地</th><td>ご自宅からの直行直帰です。事務所への出社はありません。</td></tr>
+      </table>
+      <p class="note">参考：未経験から始めたパートナーが、4か月目に報酬総額51万円になった例があります。※車両費・道具代などの経費を差し引く前の金額です。個人の実績であり、同じ金額をお約束するものではありません。</p>
+    </div>
+  </details>
+</main>
+
+<footer>© 空調のホットライン　<a href="https://kucho-hotline.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a></footer>
+
+<div class="bar">
+  <a class="tel" href="tel:09041434127" data-tel>📞 電話で話を聞く<small>9:00〜18:00 土日祝OK</small></a>
+  <button class="go" type="button" id="jump">面談を申し込む<small>1分で入力できます</small></button>
+</div>
+
+<script src="../config.js"></script>
+<script>
+(function(){
+  // ===== 設定 =====
+  var S = window.SHOP || {};
+  var PHONE = S.phone || "090-4143-4127";
+  var TEL = PHONE.replace(/[^0-9]/g, "");
+  // 申し込みの受け口（Googleフォーム・GASなど）。空のあいだは「電話」か「SMS」で届ける試作モード
+  var RECRUIT_ENDPOINT = (window.RECRUIT && window.RECRUIT.endpoint) || "";
+  var IMG = "https://kucho-hotline.jp/_astro/";
+  var GUIDE = { name: "採用係", icon: IMG + "logo.Bkw95_dZ_Z1w7PSA.webp" };
+
+  document.querySelectorAll("[data-tel]").forEach(function(a){ a.href = "tel:" + TEL; });
+  document.querySelectorAll("[data-phone]").forEach(function(b){ b.textContent = PHONE; });
+
+  var chat = document.getElementById("chat");
+  var ans = { exp: "", path: "", worry: [] };
+  var formShown = false;
+
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+  function scrollDown(el){ (el || chat.lastElementChild).scrollIntoView({ behavior: "smooth", block: "start" }); }
+
+  var stopped = false; // 「面談を申し込む」を先に押したら、途中の会話は止める
+  async function say(html, opt){
+    opt = opt || {};
+    if (stopped && !opt.force) return new Promise(function(){});
+    var row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = '<div class="ava"><img src="' + GUIDE.icon + '" alt=""></div><div><div class="who">' + GUIDE.name + '</div><div class="bubble"><span class="typing"><i></i><i></i><i></i></span></div></div>';
+    chat.appendChild(row);
+    if (!opt.noScroll) scrollDown(row);
+    await wait(opt.fast ? 250 : 550);
+    row.querySelector(".bubble").innerHTML = html;
+    return row;
+  }
+  function me(text){
+    var row = document.createElement("div");
+    row.className = "row me";
+    row.innerHTML = '<div class="bubble"></div>';
+    row.querySelector(".bubble").textContent = text;
+    chat.appendChild(row);
+  }
+  function ask(list){
+    if (stopped) return new Promise(function(){});
+    return new Promise(function(resolve){
+      var box = document.createElement("div");
+      box.className = "choices";
+      list.forEach(function(c){
+        var b = document.createElement("button");
+        b.type = "button";
+        if (c.main) b.className = "main";
+        b.innerHTML = c.label + (c.sub ? "<small>" + c.sub + "</small>" : "");
+        b.onclick = function(){ box.remove(); me(c.label.replace(/<[^>]+>/g, "")); resolve(c.v); };
+        box.appendChild(b);
+      });
+      chat.appendChild(box);
+      scrollDown(box);
+    });
+  }
+  function photo(file, alt){
+    return '<figure class="photo"><img loading="lazy" src="' + IMG + file + '" alt="' + alt + '"><figcaption>' + alt + '</figcaption></figure>';
+  }
+
+  // ===== 会話の流れ =====
+  async function start(){
+    await say("<p>こんにちは。空調のホットラインの<b>施工パートナー募集</b>のページです。</p><p>いくつかボタンを押すだけで、あなたに合う働き方と、面談の申し込みまでご案内します。だいたい<b>1分</b>です。</p>", { noScroll: true, fast: true });
+    var v = await ask([
+      { v: "go", label: "はじめる", sub: "ボタンを押すだけ・名前はまだ聞きません", main: true },
+      { v: "now", label: "もう決めている。面談を申し込みたい" }
+    ]);
+    if (v === "now") return apply();
+    await expStep();
+  }
+
+  async function expStep(){
+    await say("<p>まず、エアコンの仕事の経験はありますか？</p>");
+    ans.exp = await ask([
+      { v: "none", label: "まったくの未経験です" },
+      { v: "some", label: "少し触ったことがある" },
+      { v: "pro", label: "クリーニングや空調の経験者です" }
+    ]);
+    if (ans.exp === "none") {
+      await say("<p>大丈夫です。今いるパートナーにも、<b>未経験から始めた人</b>がいます。</p><p>分からないまま現場に出ることはありません。<b>知識 → 技術 → 現場</b>の順に、3段階で覚えていただきます。</p>" + trainingHtml());
+    } else if (ans.exp === "some") {
+      await say("<p>少しでも触ったことがあると、覚えるのが早いです。</p><p>それでも、うちのやり方は最初から順番にお伝えします。<b>知識 → 技術 → 現場</b>の3段階です。</p>" + trainingHtml());
+    } else {
+      await say("<p>経験者の方は大歓迎です。家庭用の壁掛けから、<b>店舗・事務所の業務用</b>まで扱えるのは、うちの強みのひとつです。</p><p>研修は、うちのやり方（分解の手順やお客様へのご説明）に合わせるところを中心に進めます。</p>" + photo("flow-6.CzUVOzbq_Z1QW8Rc.webp", "取り外した部材を、1点ずつ洗う"));
+    }
+    await pathStep();
+  }
+
+  function trainingHtml(){
+    return '<ol class="steps">' +
+      '<li><b>オンライン研修</b>エアコンの構造、機種ごとの違い、薬剤の扱い、お客様へのご説明の仕方まで。</li>' +
+      '<li><b>実務研修</b>実機で分解と洗浄の手順を身につけます。手が動くようになるまで繰り返します。</li>' +
+      '<li><b>現場研修（5〜10日）</b>実際のお客様宅に同行して、段取り・養生・ご説明まで本番の流れで覚えます。</li>' +
+      '</ol><p class="note">独り立ちしたあとも、迷う現場は必ずあります。一人で抱え込まずに聞ける体制があります。</p>';
+  }
+
+  async function pathStep(){
+    await say("<p>次に、働き方です。うちでは<b>3つから選べて、途中で変わっても構いません</b>。いちばん近いのはどれですか？</p>");
+    ans.path = await ask([
+      { v: "indep", label: "① いずれ独立したい", sub: "自分の看板でやりたい" },
+      { v: "grow", label: "② 一緒に会社を大きくしたい", sub: "拠点づくり・人の育成に関わる" },
+      { v: "pace", label: "③ 自分のペースで働きたい", sub: "日や時間を相談して決めたい" },
+      { v: "undecided", label: "まだ決めていない" }
+    ]);
+    var msg = {
+      indep: "<p>独立を目指す方には、<b>個人事業主としての考え方</b>からお伝えします。</p><p>独立したあとも、同じ業界の仲間として付き合っていける関係を目指しています。</p>",
+      grow: "<p>幹部として、<b>拠点づくりや人の育成</b>に関わっていただけます。</p><p>会社の広がりに合わせて、運営の側にも入っていただく働き方です。</p>",
+      pace: "<p><b>稼働日や時間帯は、ご相談のうえ調整</b>できます。</p><p>人を教える役割を持たず、現場に集中する働き方も選べます。</p>",
+      undecided: "<p>それで大丈夫です。どれを選んでも、途中で変わっても構いません。</p><p>面談のときに、一緒に考えましょう。</p>"
+    }[ans.path];
+    await say(msg);
+    await workStep();
+  }
+
+  async function workStep(){
+    await say("<p>仕事の中身を、写真で少しだけ。</p><p>ご家庭やお店に伺って、エアコンを分解してクリーニングします。<b>直行直帰</b>で、作業は主に日中。標準的な機種なら<b>1台65〜70分</b>が目安です。</p>" +
+      '<div class="pics">' +
+      '<figure><img loading="lazy" src="' + IMG + 'flow-2.DJLjOSzQ_LFnOQ.webp" alt=""><figcaption>カバーを開けて、今の状態をお見せする</figcaption></figure>' +
+      '<figure><img loading="lazy" src="' + IMG + 'flow-5.DrcES7Ja_ZMohsN.webp" alt=""><figcaption>内部の高圧洗浄</figcaption></figure>' +
+      '<figure><img loading="lazy" src="' + IMG + 'flow-7.BOT5qTzh_2nQ1NV.webp" alt=""><figcaption>拭き上げて、組み上げる</figcaption></figure>' +
+      '<figure><img loading="lazy" src="' + IMG + 'kanzen-osui.DiS72qGb_1JIece.webp" alt=""><figcaption>洗浄で出た汚水をお見せする</figcaption></figure>' +
+      '</div>');
+    await say("<p>分解した部品をその場でお見せして、どこがどれだけ汚れていたかをご説明します。</p><p>その場で<b>「来てもらってよかった」</b>と言っていただける仕事です。</p>" + photo("strength-2.JZlcwHfH_Z1N6p2l.webp", "お手入れの仕方をお客様にご説明しているところ"));
+    await worryStep(true);
+  }
+
+  var WORRY = {
+    money: { label: "報酬はどれくらい？", a: "<p>施工した内容に応じた<b>出来高制</b>です。決め方は面談で具体的にご説明します。</p><p>参考までに、<b>未経験から始めたパートナーが、4か月目に報酬総額51万円</b>になった例があります。</p><p class=\"note\">※車両費・道具代などの経費を差し引く前の金額です。個人の実績であり、同じ金額をお約束するものではありません。</p><p>お支払いは<b>月末締め・翌月末払い</b>です。</p>" },
+    contract: { label: "雇用？それとも業務委託？", a: "<p><b>業務委託契約</b>です。雇用契約ではありません。</p><p>面談で「そうだったのか」とならないよう、先にお伝えしています。</p>" },
+    training: { label: "研修中のお金は？", a: "<p>正直にお伝えすると、<b>研修期間中は報酬が発生しません</b>。</p><p>そのぶん、現場に出たときに困らないところまで、しっかりお教えします。現場研修は5〜10日が目安です。</p>" },
+    car: { label: "車や道具はどうするの？", a: "<p>車・道具は<b>ご本人のご負担</b>です。<b>自家用車をお仕事に使えること</b>が応募の条件になります。</p><p>どんな道具をそろえればよいかは、面談でご案内します。</p>" },
+    place: { label: "事務所に通うの？", a: "<p>通いません。<b>ご自宅からの直行直帰</b>です。作業の時間帯はお客様のご予約に合わせて決まり、主に日中です。</p>" }
+  };
+
+  async function worryStep(first){
+    await say(first
+      ? "<p>応募の前に、気になることはありますか？<b>ちょっと聞きにくいこと</b>も、先にお答えしておきます。</p>"
+      : "<p>ほかに気になることはありますか？</p>");
+    var list = [];
+    Object.keys(WORRY).forEach(function(k){ if (ans.worry.indexOf(k) < 0) list.push({ v: k, label: WORRY[k].label }); });
+    list.unshift({ v: "apply", label: "大丈夫。面談で話を聞いてみたい", sub: "1分で申し込めます", main: true });
+    var v = await ask(list);
+    if (v === "apply") return apply();
+    ans.worry.push(v);
+    await say(WORRY[v].a);
+    if (ans.worry.length >= Object.keys(WORRY).length) return apply();
+    return worryStep(false);
+  }
+
+  async function apply(){
+    if (formShown) { scrollDown(document.querySelector("form.apply")); return; }
+    formShown = true; stopped = true;
+    await say("<p>ありがとうございます。<b>「自分にできるだろうか」という段階で構いません。</b></p><p>仕事の中身や報酬の決め方は、お会いしたときに具体的にご説明します。下の5つだけ教えてください。こちらからお電話します。</p>", { force: true });
+    var f = document.createElement("form");
+    f.className = "apply";
+    f.noValidate = true;
+    f.innerHTML =
+      '<label>お名前<span>必須</span><input name="name" autocomplete="name" placeholder="例）山田 太郎"></label>' +
+      '<label>電話番号<span>必須</span><input name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="例）090-1234-5678"></label>' +
+      '<label>お住まいの地域<span>必須</span><input name="area" autocomplete="address-level2" placeholder="例）福岡市東区"></label>' +
+      '<label>お電話してよい時間帯<span class="opt">いくつでも</span><div class="times">' +
+        ["平日の午前", "平日の午後", "平日の夕方以降", "土日祝", "いつでも"].map(function(t){ return '<label><input type="checkbox" name="time" value="' + t + '">' + t + '</label>'; }).join("") +
+      '</div></label>' +
+      '<label>自家用車を仕事に使えますか<span>必須</span><select name="car"><option value="">選んでください</option><option>使える</option><option>これから用意する予定</option><option>使えない</option></select></label>' +
+      '<p class="err" role="alert"></p>' +
+      '<button class="btn main" type="submit">面談を申し込む</button>' +
+      '<p class="note" style="margin:8px 0 0">いただいた内容は、面談のご連絡だけに使います。</p>';
+    chat.appendChild(f);
+    scrollDown(f);
+    f.addEventListener("submit", function(e){ e.preventDefault(); submit(f); });
+  }
+
+  function pathLabel(){
+    return { indep: "独立を目指す", grow: "一緒に会社を大きくする", pace: "自分のペースで働く", undecided: "まだ決めていない" }[ans.path] || "（未回答）";
+  }
+  function expLabel(){
+    return { none: "未経験", some: "少しある", pro: "経験者" }[ans.exp] || "（未回答）";
+  }
+
+  async function submit(f){
+    var d = new FormData(f);
+    var name = (d.get("name") || "").trim(), tel = (d.get("tel") || "").trim(), area = (d.get("area") || "").trim(), car = d.get("car") || "";
+    var times = d.getAll("time");
+    var err = f.querySelector(".err");
+    if (!name || !tel || !area || !car) { err.textContent = "お名前・電話番号・お住まいの地域・車について、入力をお願いします。"; return; }
+    if (tel.replace(/[^0-9]/g, "").length < 10) { err.textContent = "電話番号をもう一度ご確認ください。"; return; }
+    err.textContent = "";
+    var data = { kind: "recruit", name: name, tel: tel, area: area, times: times.join("・") || "いつでも", car: car, exp: expLabel(), path: pathLabel(), asked: ans.worry.map(function(k){ return WORRY[k].label; }).join("・") };
+    var body = "【施工パートナー募集・面談希望】\nお名前：" + data.name + "\n電話：" + data.tel + "\n地域：" + data.area + "\n連絡してよい時間：" + data.times + "\n車：" + data.car + "\n経験：" + data.exp + "\n働き方：" + data.path + "\n（ホームページの募集を見ました）";
+
+    var sent = false;
+    if (RECRUIT_ENDPOINT) {
+      try {
+        await fetch(RECRUIT_ENDPOINT, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(data) });
+        sent = true;
+      } catch (e) { sent = false; }
+    }
+    f.querySelectorAll("input,select,button").forEach(function(x){ x.disabled = true; });
+    me("面談を申し込みます");
+
+    if (sent) {
+      await say("<p><b>" + escapeHtml(name) + "さん、お申し込みありがとうございます。</b></p><p>" + escapeHtml(data.times) + "に、" + escapeHtml(tel) + " へお電話します。作業中で出られないこともありますが、必ず折り返します。</p>", { force: true });
+      return;
+    }
+    // 試作モード：受け口がまだ無いので、SMSか電話で届けてもらう
+    var sms = "sms:" + TEL + (/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?") + "body=" + encodeURIComponent(body);
+    await say("<p><b>" + escapeHtml(name) + "さん、ありがとうございます。</b>最後にひと押しだけお願いします。</p><p>下のボタンを押すと、入力した内容が<b>ショートメッセージ</b>に入った状態で開きます。そのまま送信してください。</p>", { force: true });
+    var box = document.createElement("div");
+    box.className = "done-acts";
+    box.innerHTML = '<a class="btn main" href="' + sms + '">💬 ショートメッセージで送る</a><a class="btn" href="tel:' + TEL + '">📞 今すぐ電話で話す（9:00〜18:00）</a><p class="note" style="margin:0">お電話のときは「ホームページの募集を見た」とお伝えください。作業中は出られないことがありますので、その場合は折り返しご連絡します。</p>';
+    chat.appendChild(box);
+    scrollDown(box);
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+
+  document.getElementById("jump").addEventListener("click", function(){
+    var c = chat.querySelector(".choices");
+    if (c && !formShown) c.remove();
+    if (!formShown) me("面談を申し込みたい");
+    apply();
+  });
+
+  start();
+})();
+</script>
+</body>
+</html>
