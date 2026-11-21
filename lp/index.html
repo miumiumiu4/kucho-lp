@@ -16,7 +16,7 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0}
-  body{font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:var(--ink);background:#e9efe6;line-height:1.75;font-size:16px}
+  body{font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:var(--ink);background:#e9efe6;line-height:1.75;font-size:18px}
   img{max-width:100%;display:block}
   a{color:inherit}
   .page{max-width:640px;margin:0 auto;background:#fff;box-shadow:0 0 30px rgba(0,0,0,.08);padding-bottom:84px}
@@ -30,6 +30,9 @@
   .hd-r{display:flex;align-items:center;gap:6px}
   .hd-tel{font-weight:900;font-size:14px;color:var(--g-d);text-decoration:none;white-space:nowrap}
   .hd-go{background:linear-gradient(#f39a1e,#e46f00);color:#fff;font-weight:900;font-size:13px;text-decoration:none;padding:7px 10px;border-radius:6px;white-space:nowrap}
+  .brand span{white-space:nowrap}
+  @media (max-width:440px){ .hd-tel{display:none} }
+  @media (max-width:360px){ .brand b{font-size:13px} .brand img{width:36px} }
 
   /* 画像の積み重ね（ペライチ型） */
   .shot{position:relative}
@@ -40,8 +43,8 @@
   .cta{padding:18px 16px 22px;background:var(--g-bg);text-align:center}
   .cta p{margin:0 0 10px;font-weight:900;color:var(--g-d)}
   .cta p .y{background:linear-gradient(transparent 55%,var(--y) 55%)}
-  .btn{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:900;border-radius:999px;padding:16px 10px;font-size:20px;line-height:1.2;box-shadow:0 5px 0 rgba(0,0,0,.18);margin:0 auto 12px;max-width:520px;position:relative;overflow:hidden}
-  .btn small{display:block;font-size:12px;font-weight:700;opacity:.9}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:900;border-radius:999px;padding:16px 10px;font-size:22px;line-height:1.2;box-shadow:0 5px 0 rgba(0,0,0,.18);margin:0 auto 12px;max-width:520px;position:relative;overflow:hidden}
+  .btn small{display:block;font-size:14px;font-weight:700;opacity:.9}
   .btn.web{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
   .btn.tel{background:#fff;color:var(--g-d);border:3px solid var(--g)}
   .btn.web::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 2.8s infinite}
@@ -51,7 +54,7 @@
   /* 見出し帯（ペライチの黒帯） */
   .band{background:#2b2b2b;color:#fff;text-align:center;padding:14px 12px 18px;position:relative}
   .band b{display:block;font-size:22px;font-weight:900;line-height:1.35}
-  .band small{display:block;font-size:13px;color:#ddd}
+  .band small{display:block;font-size:15px;color:#ddd}
   .band::after{content:"";position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);border:14px solid transparent;border-bottom:0;border-top-color:#2b2b2b}
 
   section.sec{padding:30px 16px}
@@ -63,8 +66,8 @@
   .ba{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .ba figure{margin:0;position:relative}
   .ba img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px}
-  .ba figcaption{font-size:13px;font-weight:700;text-align:center;margin-top:4px}
-  .ba .tag{position:absolute;top:8px;left:8px;font-weight:900;font-size:13px;color:#fff;padding:2px 10px;border-radius:999px}
+  .ba figcaption{font-size:15px;font-weight:700;text-align:center;margin-top:4px}
+  .ba .tag{position:absolute;top:8px;left:8px;font-weight:900;font-size:15px;color:#fff;padding:2px 10px;border-radius:999px}
   .tag.bf{background:var(--red)}.tag.af{background:var(--g)}
 
 
@@ -72,71 +75,71 @@
   .cmp{position:relative;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#ddd;touch-action:pan-y;user-select:none;-webkit-user-select:none;box-shadow:0 6px 18px rgba(0,0,0,.18)}
   .cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
   .cmp-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-  .cmp .tag{position:absolute;top:10px;z-index:3;font-weight:900;font-size:13px;color:#fff;padding:3px 12px;border-radius:999px}
+  .cmp .tag{position:absolute;top:10px;z-index:3;font-weight:900;font-size:15px;color:#fff;padding:3px 12px;border-radius:999px}
   .cmp .tag.bf{left:10px;background:rgba(0,0,0,.65)}
   .cmp .tag.af{right:10px;background:var(--g)}
   .cmp-line{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;z-index:2;box-shadow:0 0 6px rgba(0,0,0,.35)}
-  .cmp-knob{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--g-d);font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.35);letter-spacing:-2px}
+  .cmp-knob{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--g-d);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.35);letter-spacing:-2px}
   .cmp{cursor:ew-resize}
   .cmp-range{position:absolute;left:0;bottom:0;width:100%;height:1px;margin:0;opacity:0;pointer-events:none}
   .cmp:focus-within .cmp-line{outline:3px solid var(--y)}
-  .cmp-cap{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;gap:8px}
+  .cmp-cap{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-top:6px;gap:8px}
   /* 料金表 */
   .price{border:3px solid var(--g);border-radius:14px;overflow:hidden;background:#fff}
   .price .row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-top:1px dashed var(--line);gap:10px}
   .price .row:first-child{border-top:0}
-  .price .row b{font-size:17px}
-  .price .row small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+  .price .row b{font-size:19px}
+  .price .row small{display:block;font-size:14px;color:var(--muted);font-weight:500}
   .price .yen{font-size:30px;font-weight:900;color:var(--red);white-space:nowrap;line-height:1}
-  .price .yen span{font-size:14px;color:var(--ink)}
+  .price .yen span{font-size:16px;color:var(--ink)}
   .price .rec{background:#FFF8D6}
-  .price .rec b::before{content:"いちばんのおすすめ";display:block;font-size:11px;background:var(--red);color:#fff;border-radius:4px;padding:1px 6px;width:max-content;margin-bottom:4px}
-  .notes{font-size:13px;color:var(--muted);margin:12px 0 0;padding-left:1.2em}
+  .price .rec b::before{content:"いちばんのおすすめ";display:block;font-size:13px;background:var(--red);color:#fff;border-radius:4px;padding:1px 6px;width:max-content;margin-bottom:4px}
+  .notes{font-size:15px;color:var(--muted);margin:12px 0 0;padding-left:1.2em}
   .notes li{margin:2px 0}
 
   /* 安心ポイント */
   .safe{display:grid;grid-template-columns:1fr;gap:10px}
   .safe div{background:var(--g-bg);border-radius:12px;padding:12px 14px 12px 58px;position:relative}
   .safe div::before{content:"✓";position:absolute;left:14px;top:12px;width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;font-weight:900;text-align:center;line-height:32px}
-  .safe b{display:block;font-size:17px;color:var(--g-d)}
-  .safe span{font-size:14px}
+  .safe b{display:block;font-size:19px;color:var(--g-d)}
+  .safe span{font-size:16px}
 
   /* 作業の流れ */
   .flow{list-style:none;margin:0;padding:0;counter-reset:f}
   .flow li{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
   .flow li:first-child{border-top:0}
   .flow img{width:120px;height:90px;object-fit:cover;border-radius:8px}
-  .flow b{display:block;font-size:15px}
-  .flow b::before{counter-increment:f;content:"STEP " counter(f);display:block;font-size:11px;color:var(--g);letter-spacing:.08em}
-  .flow span{font-size:13px;color:var(--muted)}
+  .flow b{display:block;font-size:17px}
+  .flow b::before{counter-increment:f;content:"STEP " counter(f);display:block;font-size:13px;color:var(--g);letter-spacing:.08em}
+  .flow span{font-size:15px;color:var(--muted)}
 
   /* よくある質問 */
   details.qa{border:1px solid var(--line);border-radius:10px;margin:0 0 8px;background:#fff}
   details.qa summary{cursor:pointer;padding:12px 14px 12px 44px;font-weight:700;position:relative;list-style:none}
   details.qa summary::-webkit-details-marker{display:none}
-  details.qa summary::before{content:"Q";position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;background:var(--g);color:#fff;text-align:center;line-height:24px;font-size:13px}
-  details.qa div{padding:0 14px 14px 44px;font-size:14px;position:relative}
-  details.qa div::before{content:"A";position:absolute;left:12px;top:0;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;text-align:center;line-height:24px;font-size:13px;font-weight:700}
+  details.qa summary::before{content:"Q";position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;background:var(--g);color:#fff;text-align:center;line-height:24px;font-size:15px}
+  details.qa div{padding:0 14px 14px 44px;font-size:16px;position:relative}
+  details.qa div::before{content:"A";position:absolute;left:12px;top:0;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;text-align:center;line-height:24px;font-size:15px;font-weight:700}
 
-  .area{background:var(--cream);border-radius:12px;padding:14px 16px;font-size:14px}
-  .rv-src{text-align:center;font-size:13px;margin:-6px 0 12px;color:var(--muted)}
-  .rv-src b{color:#E8A400;font-size:16px}
-  .rv-src b.rv-cnt{color:var(--red);font-size:18px}
+  .area{background:var(--cream);border-radius:12px;padding:14px 16px;font-size:16px}
+  .rv-src{text-align:center;font-size:15px;margin:-6px 0 12px;color:var(--muted)}
+  .rv-src b{color:#E8A400;font-size:18px}
+  .rv-src b.rv-cnt{color:var(--red);font-size:20px}
   .rv-free-img{display:block;width:100%;height:auto;border-radius:12px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
   .rv-list{display:grid;gap:12px}
   figure.rv{margin:0;background:#fff;border-radius:14px;padding:14px 14px 12px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:4px solid var(--g-l)}
   figure.rv:nth-child(even){border-top-color:#F4A6B8}
-  .rv-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:12px;color:var(--muted);margin-bottom:6px}
-  .rv-st{color:#F5B400;font-size:15px;letter-spacing:1px}
+  .rv-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:14px;color:var(--muted);margin-bottom:6px}
+  .rv-st{color:#F5B400;font-size:17px;letter-spacing:1px}
   .rv-free{background:var(--red);color:#fff;font-weight:900;border-radius:999px;padding:1px 9px}
-  figure.rv blockquote{margin:0;font-size:14.5px;line-height:1.85}
+  figure.rv blockquote{margin:0;font-size:16.5px;line-height:1.85}
   figure.rv mark{background:linear-gradient(transparent 45%,#FFE14D 45%);font-weight:900;color:inherit;padding:0 1px}
   .rv-list.closed figure.more{display:none}
-  .rv-more{display:block;width:100%;margin:14px 0 0;font:inherit;font-weight:900;font-size:16px;color:var(--g-d);background:#fff;border:2px solid var(--g);border-radius:12px;min-height:50px;cursor:pointer}
-  .area h3{margin:8px 0 2px;font-size:15px;color:var(--g-d)}
+  .rv-more{display:block;width:100%;margin:14px 0 0;font:inherit;font-weight:900;font-size:18px;color:var(--g-d);background:#fff;border:2px solid var(--g);border-radius:12px;min-height:50px;cursor:pointer}
+  .area h3{margin:8px 0 2px;font-size:17px;color:var(--g-d)}
   .area p{margin:0}
 
-  footer{background:#2b2b2b;color:#ccc;text-align:center;font-size:12px;padding:16px}
+  footer{background:#2b2b2b;color:#ccc;text-align:center;font-size:14px;padding:16px}
   footer a{color:#fff}
 
   /* 下に固定のボタン */
@@ -145,21 +148,21 @@
   .pband{display:flex;align-items:center;gap:8px;width:100%;max-width:620px;background:#FFF8D6;border:2px solid #e0b400;border-radius:10px;padding:5px 8px 5px 12px;margin:0 0 7px;box-sizing:border-box}
   .pband[hidden]{display:none}
   .pb-l{flex:1;min-width:0;line-height:1.2}
-  .pb-l small{display:block;font-size:10px;font-weight:700;color:var(--muted)}
+  .pb-l small{display:block;font-size:12px;font-weight:700;color:var(--muted)}
   .pb-l b{display:block;font-size:32px;font-weight:900;color:var(--red);line-height:1.1;letter-spacing:-.01em}
-  .pb-l span{display:block;font-size:11px;font-weight:700}
-  .pband button{font:inherit;font-size:17px;font-weight:900;color:#fff;background:var(--g);border:0;border-radius:12px;padding:12px 14px;min-height:56px;cursor:pointer;white-space:nowrap;box-shadow:0 3px 0 var(--g-d);line-height:1.15}
-  .pband button small{display:block;font-size:10px;font-weight:700;opacity:.9}
+  .pb-l span{display:block;font-size:13px;font-weight:700}
+  .pband button{font:inherit;font-size:19px;font-weight:900;color:#fff;background:var(--g);border:0;border-radius:12px;padding:12px 14px;min-height:56px;cursor:pointer;white-space:nowrap;box-shadow:0 3px 0 var(--g-d);line-height:1.15}
+  .pband button small{display:block;font-size:12px;font-weight:700;opacity:.9}
   .page.has-band{padding-bottom:175px}
-  .fixbar a{flex:1;text-align:center;text-decoration:none;font-weight:900;border-radius:10px;padding:10px 4px;font-size:15px;line-height:1.2}
-  .fixbar small{display:block;font-size:10px;font-weight:700}
+  .fixbar a{flex:1;text-align:center;text-decoration:none;font-weight:900;border-radius:10px;padding:10px 4px;font-size:17px;line-height:1.2}
+  .fixbar small{display:block;font-size:12px;font-weight:700}
   .fixbar .t{background:#fff;color:var(--g-d);border:2px solid var(--g)}
   .fixbar .w{background:linear-gradient(#f5a12a,#e46f00);color:#fff;border:2px solid #e46f00;flex:1.3}
 
   /* ===== 案内係との会話 ===== */
   .talk{background:linear-gradient(#F2F8EE,#fff);padding:26px 12px 18px;scroll-margin-top:64px}
   .talk-hd{text-align:center;margin:0 0 14px}
-  .talk-hd b{display:inline-block;background:var(--red);color:#fff;font-size:13px;border-radius:999px;padding:2px 12px}
+  .talk-hd b{display:inline-block;background:var(--red);color:#fff;font-size:15px;border-radius:999px;padding:2px 12px}
   .talk-hd h2{margin:6px 0 0;font-size:24px;font-weight:900;line-height:1.35}
   .talk-hd h2 span{color:var(--g)}
   .log{display:flex;flex-direction:column;gap:10px}
@@ -170,8 +173,8 @@
   .ava img{width:100%;height:100%;object-fit:cover;display:block}
   .neko-hi{display:flex;align-items:flex-end;justify-content:center;gap:4px;margin:0 0 6px}
   .neko-hi img{width:110px;height:auto}
-  .neko-hi span{background:#fff;border:2px solid var(--g-l);border-radius:16px 16px 16px 4px;padding:6px 12px;font-size:14px;font-weight:700;margin-bottom:40px}
-  .bub{background:#fff;border:2px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 13px;max-width:calc(100% - 52px);font-size:15px}
+  .neko-hi span{background:#fff;border:2px solid var(--g-l);border-radius:16px 16px 16px 4px;padding:6px 12px;font-size:16px;font-weight:700;margin-bottom:40px}
+  .bub{background:#fff;border:2px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 13px;max-width:calc(100% - 52px);font-size:17px}
   .bub p{margin:0 0 .4em}.bub p:last-child{margin:0}
   .bub strong{color:var(--red)}
   .msg.me{justify-content:flex-end}
@@ -180,20 +183,20 @@
   .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
   @keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
   .opts{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 4px 50px;animation:pop .25s ease-out}
-  .opts button{font:inherit;font-weight:900;font-size:16px;background:#fff;color:var(--g-d);border:2px solid var(--g);border-radius:12px;padding:11px 14px;cursor:pointer;min-height:48px;line-height:1.3;flex:1 1 calc(50% - 8px)}
+  .opts button{font:inherit;font-weight:900;font-size:18px;background:#fff;color:var(--g-d);border:2px solid var(--g);border-radius:12px;padding:11px 14px;cursor:pointer;min-height:48px;line-height:1.3;flex:1 1 calc(50% - 8px)}
   .opts button.wide{flex-basis:100%}
   .opts button.main{background:linear-gradient(#f5a12a,#e46f00);border-color:#e46f00;color:#fff}
-  .est-t{margin:0 0 6px;font-size:12px;font-weight:900;color:var(--g-d)}
+  .est-t{margin:0 0 6px;font-size:14px;font-weight:900;color:var(--g-d)}
   .erow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed #e6d48a}
   .erow.sub{padding-left:12px}
-  .erow.sub .el b{font-size:13px}
-  .el{flex:1;min-width:0}.el b{display:block;font-size:14px;line-height:1.35}.el small{font-size:11px;color:var(--muted)}
+  .erow.sub .el b{font-size:15px}
+  .el{flex:1;min-width:0}.el b{display:block;font-size:16px;line-height:1.35}.el small{font-size:13px;color:var(--muted)}
   .es{display:flex;align-items:center;gap:6px;flex:0 0 auto}
   .es button{width:40px;height:40px;border-radius:50%;border:0;background:var(--g);color:#fff;font-size:24px;font-weight:900;line-height:1;padding:0;cursor:pointer;box-shadow:0 2px 0 var(--g-d)}
   .es button:disabled{background:#d6dcd3;box-shadow:none}
   .es output{min-width:28px;text-align:center;font-size:22px;font-weight:900}
-  .ebiz{display:block;width:100%;margin:8px 0 0;font:inherit;font-size:13px;font-weight:900;color:var(--g-d);background:#fff;border:2px dashed var(--g);border-radius:10px;padding:8px;cursor:pointer}
-  .efood{display:flex;gap:6px;align-items:center;margin:8px 0 0;font-size:13px;font-weight:700}
+  .ebiz{display:block;width:100%;margin:8px 0 0;font:inherit;font-size:15px;font-weight:900;color:var(--g-d);background:#fff;border:2px dashed var(--g);border-radius:10px;padding:8px;cursor:pointer}
+  .efood{display:flex;gap:6px;align-items:center;margin:8px 0 0;font-size:15px;font-weight:700}
   .efood input{width:20px;height:20px}
   .eoff{color:var(--red);font-weight:900;margin-top:8px}
   .opts.step{flex-direction:column}
@@ -202,21 +205,21 @@
   .stp button:disabled{background:#cfd8cc;box-shadow:none}
   .stp output{font-size:44px;font-weight:900;min-width:60px;text-align:center;color:var(--ink)}
   .stp span{font-weight:900;margin-left:-8px}
-  .opts button small{display:block;font-size:11px;font-weight:700;opacity:.8}
-  .est{background:#FFF8D6;border:2px dashed #e0b400;border-radius:12px;padding:10px 12px;margin-top:6px;font-size:14px}
+  .opts button small{display:block;font-size:13px;font-weight:700;opacity:.8}
+  .est{background:#FFF8D6;border:2px dashed #e0b400;border-radius:12px;padding:10px 12px;margin-top:6px;font-size:16px}
   .est .sum{font-size:30px;font-weight:900;color:var(--red);line-height:1.1}
-  .est .sum small{font-size:13px;color:var(--ink)}
+  .est .sum small{font-size:15px;color:var(--ink)}
   form.ask{margin:2px 0 4px 50px;background:#fff;border:2px solid var(--g);border-radius:12px;padding:12px;animation:pop .25s ease-out}
-  form.ask label{display:block;font-weight:700;font-size:13px;margin:0 0 10px}
-  form.ask input{display:block;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px}
-  form.ask button{width:100%;font:inherit;font-weight:900;font-size:17px;border:0;border-radius:999px;padding:13px;color:#fff;background:linear-gradient(#f5a12a,#e46f00);cursor:pointer}
-  form.ask .err{color:var(--red);font-size:13px;margin:0 0 6px;min-height:1em}
+  form.ask label{display:block;font-weight:700;font-size:15px;margin:0 0 10px}
+  form.ask input{display:block;width:100%;font:inherit;font-size:18px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px}
+  form.ask button{width:100%;font:inherit;font-weight:900;font-size:19px;border:0;border-radius:999px;padding:13px;color:#fff;background:linear-gradient(#f5a12a,#e46f00);cursor:pointer}
+  form.ask .err{color:var(--red);font-size:15px;margin:0 0 6px;min-height:1em}
   .done a{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:999px;padding:13px;margin:6px 0 0}
   .done .sms{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
   .done .call{border:2px solid var(--g);color:var(--g-d);background:#fff}
-  .done .form{font-size:13px;color:var(--muted);font-weight:700;padding:6px}
+  .done .form{font-size:15px;color:var(--muted);font-weight:700;padding:6px}
   #faqlog{margin-bottom:4px}
-  #faqlog .opts button{font-size:15px}
+  #faqlog .opts button{font-size:17px}
   @media (prefers-reduced-motion:reduce){.msg,.opts,form.ask{animation:none}.typing i{animation:none}}
   @media (prefers-reduced-motion:reduce){.btn.web::after{animation:none;display:none}}
 </style>
@@ -273,7 +276,7 @@
   <div class="ba" style="grid-template-columns:1fr;margin-top:14px">
     <figure><span class="tag bf">BEFORE</span><img src="https://kucho-hotline.jp/_astro/dirty-fan.BRDnFXU4_73VO7.webp" alt="黒カビの付いた送風ファン" style="aspect-ratio:4/3" loading="lazy"><figcaption>送風ファン。黒いものはカビです</figcaption></figure>
   </div>
-  <p style="font-size:13px;color:var(--muted);text-align:center;margin:8px 0 0">お客様のお宅で実際に撮った写真です</p>
+  <p style="font-size:15px;color:var(--muted);text-align:center;margin:8px 0 0">お客様のお宅で実際に撮った写真です</p>
 </section>
 
 <div class="cta">
@@ -332,7 +335,7 @@
   <div class="price">
     <div class="row"><div><b>天井埋め込み（4方向）</b><small>飲食店は＋3,000円</small></div><div class="yen">17,000<span>円〜</span></div></div>
     <div class="row"><div><b>天吊り</b><small>天井から吊るすタイプ</small></div><div class="yen">19,000<span>円〜</span></div></div>
-    <div class="row"><div><b>床置き・ビルトイン</b><small>機種を見てお見積り</small></div><div class="yen" style="font-size:18px">ご相談</div></div>
+    <div class="row"><div><b>床置き・ビルトイン</b><small>機種を見てお見積り</small></div><div class="yen" style="font-size:20px">ご相談</div></div>
   </div>
   <ul class="notes">
     <li>表示はすべて税込です。業務用は機種や設置状況で、作業の前にお見積りします。</li>
@@ -366,7 +369,7 @@
 <!-- 7. よくある質問（会話型） -->
 <section class="sec" style="background:var(--cream)">
   <h2 class="big">よくあるご質問</h2>
-  <p style="text-align:center;font-size:14px;margin:-6px 0 12px">これまでお客様からいただいた質問を、多い順にまとめました。<br>気になる話題を押すと、その場でお答えします</p>
+  <p style="text-align:center;font-size:16px;margin:-6px 0 12px">これまでお客様からいただいた質問を、多い順にまとめました。<br>気になる話題を押すと、その場でお答えします</p>
   <div class="log" id="faqlog" aria-live="polite"></div>
   <div id="faqsrc">
   <details class="qa" data-cat="料金・お支払い" data-short="お掃除機能付きか分からない"><summary>お掃除機能付きかどうか分かりません／型番を見てお掃除機能付きか教えてほしい</summary><div>分からなくて大丈夫です。料金のチャットで「分からない」を選んでいただければ、折り返しのご連絡のときに一緒に確認します。型番が読めるときは写真を送ってください。</div></details>
@@ -396,7 +399,7 @@
     <h3>福岡市</h3><p>東区 / 博多区 / 中央区 / 南区 / 城南区 / 早良区 / 西区</p>
     <h3>福岡市近郊</h3><p>春日市 / 大野城市 / 那珂川市 / 太宰府市 / 筑紫野市 / 古賀市 / 福津市 / 宗像市</p>
     <h3>糟屋郡</h3><p>宇美町 / 篠栗町 / 志免町 / 須恵町 / 新宮町 / 久山町 / 粕屋町</p>
-    <p style="margin-top:10px;font-size:13px;color:var(--muted)">エリア外の方も、日程によっては伺えることがあります。一度ご相談ください。</p>
+    <p style="margin-top:10px;font-size:15px;color:var(--muted)">エリア外の方も、日程によっては伺えることがあります。一度ご相談ください。</p>
   </div>
 </section>
 
@@ -508,31 +511,31 @@
   async function bizFlow(){
     for (var tries = 0; ; tries++) {
     if (tries) await say("<p>台数が0台になっています。もう一度、<b>天井埋め込み</b>の台数からお願いします。</p>");
-    await say("<p><b>天井に埋め込むタイプ</b>（吹き出し口が4方向）は何台ですか？</p><p style=\"font-size:13px\">1台 17,000円〜。ない場合は0のまま進んでください。</p>");
+    await say("<p><b>天井に埋め込むタイプ</b>（吹き出し口が4方向）は何台ですか？</p><p style=\"font-size:15px\">1台 17,000円〜。ない場合は0のまま進んでください。</p>");
     A.biz.c4 = await stepper({ min: 0, max: 30, init: A.kind === "biz" ? 1 : 0, ok: "この台数で次へ", say: function(v){ return "天井埋め込み " + v + "台"; } });
-    await say("<p><b>天井から吊るすタイプ</b>（天吊り）は何台ですか？</p><p style=\"font-size:13px\">1台 19,000円〜。</p>");
+    await say("<p><b>天井から吊るすタイプ</b>（天吊り）は何台ですか？</p><p style=\"font-size:15px\">1台 19,000円〜。</p>");
     A.biz.tsuri = await stepper({ min: 0, max: 30, init: 0, ok: "この台数で次へ", say: function(v){ return "天吊り " + v + "台"; } });
-    await say("<p><b>床置き・ビルトイン</b>など、ほかの形はありますか？</p><p style=\"font-size:13px\">こちらは機種を見てお見積りします。</p>");
+    await say("<p><b>床置き・ビルトイン</b>など、ほかの形はありますか？</p><p style=\"font-size:15px\">こちらは機種を見てお見積りします。</p>");
     A.biz.other = await stepper({ min: 0, max: 30, init: 0, ok: "この台数で次へ", say: function(v){ return "床置き・その他 " + v + "台"; } });
     if (bizN() > 0 || A.kind === "both") break;
     }
-    await say("<p>設置場所は<b>飲食店</b>ですか？</p><p style=\"font-size:13px\">油汚れと養生の手間が増えるため、1台につき＋3,000円です。</p>");
+    await say("<p>設置場所は<b>飲食店</b>ですか？</p><p style=\"font-size:15px\">油汚れと養生の手間が増えるため、1台につき＋3,000円です。</p>");
     A.biz.food = await ask([{ v: true, label: "飲食店" }, { v: false, label: "飲食店ではない" }]);
   }
 
   async function wallFlow(){
-    await say("<p><b>壁掛け</b>のエアコンは何台ですか？</p><p style=\"font-size:13px\">＋と−で台数を変えられます。2台目から1台300円引きです。</p>");
+    await say("<p><b>壁掛け</b>のエアコンは何台ですか？</p><p style=\"font-size:15px\">＋と−で台数を変えられます。2台目から1台300円引きです。</p>");
     A.units = await stepper({ min: 1, max: 30, init: 1, ok: "この台数で次へ", say: function(v){ return "壁掛け " + v + "台"; } });
     var n = A.units, o;
     if (n === 1) {
-      await say("<p>その1台は、<b>お掃除機能付き</b>ですか？</p><p style=\"font-size:13px\">本体に「自動おそうじ」などの表示があれば機能付きです。</p>");
+      await say("<p>その1台は、<b>お掃除機能付き</b>ですか？</p><p style=\"font-size:15px\">本体に「自動おそうじ」などの表示があれば機能付きです。</p>");
       o = await ask([
         { v: 0, label: "ふつうのタイプ", sub: "フィルターを自分で外して洗う" },
         { v: 1, label: "お掃除機能付き", sub: "フィルター自動おそうじ" },
         { v: -1, label: "分からない", sub: "大丈夫です。お電話で確認します", cls: "wide" }
       ]);
     } else {
-      await say("<p>そのうち、<b>お掃除機能付き</b>は何台ありますか？</p><p style=\"font-size:13px\">本体に「自動おそうじ」などの表示があれば機能付きです。なければ0のまま進んでください。</p>");
+      await say("<p>そのうち、<b>お掃除機能付き</b>は何台ありますか？</p><p style=\"font-size:15px\">本体に「自動おそうじ」などの表示があれば機能付きです。なければ0のまま進んでください。</p>");
       o = await stepper({ min: 0, max: n, init: 0, ok: "この台数で次へ", say: function(v){ return v ? "お掃除機能付き " + v + "台" : "お掃除機能付きはない"; },
         extra: [{ v: -1, label: "分からない", sub: "大丈夫です。お電話で確認します" }] });
     }
@@ -540,7 +543,7 @@
     A.osouji = o === -1 ? 0 : o;
 
     if (A.osouji > 0) {
-      await say("<p>そのお掃除機能付きの中に、<b>次のシリーズ</b>はありますか？</p><p style=\"font-size:13px\">エオリア CS-X・白くまくん X・ノクリア AS-X（XW）・霧ヶ峰 FZ<br>部品が多く手間がかかるため、1台につき<b>＋5,000円</b>です。</p>");
+      await say("<p>そのお掃除機能付きの中に、<b>次のシリーズ</b>はありますか？</p><p style=\"font-size:15px\">エオリア CS-X・白くまくん X・ノクリア AS-X（XW）・霧ヶ峰 FZ<br>部品が多く手間がかかるため、1台につき<b>＋5,000円</b>です。</p>");
       var h;
       if (A.osouji === 1) h = await ask([{ v: 0, label: "ない" }, { v: 1, label: "ある" }, { v: -1, label: "分からない", sub: "型番をお聞きして確認します", cls: "wide" }]);
       else h = await stepper({ min: 0, max: A.osouji, init: 0, ok: "この台数で次へ", say: function(v){ return v ? "そのシリーズが " + v + "台" : "そのシリーズはない"; },
@@ -549,7 +552,7 @@
       A.hi = h === -1 ? 0 : h;
     }
 
-    await say("<p>最後に、<b>完全分解洗浄</b>もしますか？</p><p style=\"font-size:13px\">ドレンパンと送風ファンを本体から外して、ふつうでは届かない奥まで洗います。<b>何年も掃除していない</b>・<b>においやカビが戻ってきた</b>方に、いちばんのおすすめです。1台＋8,000円。</p>");
+    await say("<p>最後に、<b>完全分解洗浄</b>もしますか？</p><p style=\"font-size:15px\">ドレンパンと送風ファンを本体から外して、ふつうでは届かない奥まで洗います。<b>何年も掃除していない</b>・<b>においやカビが戻ってきた</b>方に、いちばんのおすすめです。1台＋8,000円。</p>");
     A.bunkai = await ask([
       { v: "yes", label: "完全分解もする", sub: "いちばんキレイ" },
       { v: "no", label: "ふつうのクリーニング" },
@@ -616,7 +619,7 @@
     if (A.bunkai === "ask" && !A.bk) note.push("完全分解洗浄（1台＋8,000円）にするかは、エアコンを見てからご相談できます");
     if (bizN()) note.push("業務用は機種や設置状況でお見積りします。お写真を送っていただければ、おおよその金額をお伝えできます");
     note.push("作業の前に現物を確認してお見積りをご説明します。そこから金額は増えません");
-    h += '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:12px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul>";
+    h += '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:14px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul>";
     estEl.innerHTML = h;
     estEl.querySelectorAll(".es button").forEach(function(btn){
       btn.onclick = function(){ var r = R[+btn.dataset.i]; var v = Math.max(0, Math.min(r.max, r.get() + (+btn.dataset.d))); r.set(v); renderEst(); band(); };
