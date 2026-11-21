@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>福岡のエアコンクリーニング 6,700円〜｜空調のホットライン</title>
+<meta name="description" content="福岡市・近郊のエアコンクリーニング。壁掛け1台6,700円（税込）から。分解した部品をその場でお見せし、お手入れのコツまでお伝えします。家庭用も業務用も、土日祝も受付。">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --g:#467C27; --g-d:#19541B; --g-l:#82CA57; --g-bg:#F2F8EE;
+    --y:#FFE14D; --red:#D93025; --ink:#242927; --muted:#6B7470; --line:#E3EAE0; --cream:#FBF8EF;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:var(--ink);background:#e9efe6;line-height:1.75;font-size:16px}
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  .page{max-width:640px;margin:0 auto;background:#fff;box-shadow:0 0 30px rgba(0,0,0,.08);padding-bottom:84px}
+
+  /* ヘッダー */
+  header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:6px 10px;gap:8px}
+  .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+  .brand img{width:42px}
+  .brand b{display:block;color:var(--g);font-size:15px;line-height:1.2}
+  .brand small{display:block;color:var(--muted);font-size:10px;line-height:1.2}
+  .hd-r{display:flex;align-items:center;gap:6px}
+  .hd-tel{font-weight:900;font-size:14px;color:var(--g-d);text-decoration:none;white-space:nowrap}
+  .hd-go{background:linear-gradient(#f39a1e,#e46f00);color:#fff;font-weight:900;font-size:13px;text-decoration:none;padding:7px 10px;border-radius:6px;white-space:nowrap}
+
+  /* 画像の積み重ね（ペライチ型） */
+  .shot{position:relative}
+  .shot img{width:100%;height:auto}
+  .shot a.hit{position:absolute;display:block}
+
+  /* 申し込みボタン帯 */
+  .cta{padding:18px 16px 22px;background:var(--g-bg);text-align:center}
+  .cta p{margin:0 0 10px;font-weight:900;color:var(--g-d)}
+  .cta p .y{background:linear-gradient(transparent 55%,var(--y) 55%)}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:900;border-radius:999px;padding:16px 10px;font-size:20px;line-height:1.2;box-shadow:0 5px 0 rgba(0,0,0,.18);margin:0 auto 12px;max-width:520px;position:relative;overflow:hidden}
+  .btn small{display:block;font-size:12px;font-weight:700;opacity:.9}
+  .btn.web{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
+  .btn.tel{background:#fff;color:var(--g-d);border:3px solid var(--g)}
+  .btn.web::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 2.8s infinite}
+  @keyframes shine{0%{left:-60%}55%,100%{left:130%}}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+
+  /* 見出し帯（ペライチの黒帯） */
+  .band{background:#2b2b2b;color:#fff;text-align:center;padding:14px 12px 18px;position:relative}
+  .band b{display:block;font-size:22px;font-weight:900;line-height:1.35}
+  .band small{display:block;font-size:13px;color:#ddd}
+  .band::after{content:"";position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);border:14px solid transparent;border-bottom:0;border-top-color:#2b2b2b}
+
+  section.sec{padding:30px 16px}
+  h2.big{font-size:26px;font-weight:900;text-align:center;line-height:1.35;margin:0 0 18px}
+  h2.big em{font-style:normal;color:var(--red)}
+  h2.big .g{color:var(--g)}
+
+  /* ビフォーアフター写真 */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ba figure{margin:0;position:relative}
+  .ba img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px}
+  .ba figcaption{font-size:13px;font-weight:700;text-align:center;margin-top:4px}
+  .ba .tag{position:absolute;top:8px;left:8px;font-weight:900;font-size:13px;color:#fff;padding:2px 10px;border-radius:999px}
+  .tag.bf{background:var(--red)}.tag.af{background:var(--g)}
+
+  /* 料金表 */
+  .price{border:3px solid var(--g);border-radius:14px;overflow:hidden;background:#fff}
+  .price .row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-top:1px dashed var(--line);gap:10px}
+  .price .row:first-child{border-top:0}
+  .price .row b{font-size:17px}
+  .price .row small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+  .price .yen{font-size:30px;font-weight:900;color:var(--red);white-space:nowrap;line-height:1}
+  .price .yen span{font-size:14px;color:var(--ink)}
+  .price .rec{background:#FFF8D6}
+  .price .rec b::before{content:"いちばんのおすすめ";display:block;font-size:11px;background:var(--red);color:#fff;border-radius:4px;padding:1px 6px;width:max-content;margin-bottom:4px}
+  .notes{font-size:13px;color:var(--muted);margin:12px 0 0;padding-left:1.2em}
+  .notes li{margin:2px 0}
+
+  /* 安心ポイント */
+  .safe{display:grid;grid-template-columns:1fr;gap:10px}
+  .safe div{background:var(--g-bg);border-radius:12px;padding:12px 14px 12px 58px;position:relative}
+  .safe div::before{content:"✓";position:absolute;left:14px;top:12px;width:32px;height:32px;border-radius:50%;background:var(--g);color:#fff;font-weight:900;text-align:center;line-height:32px}
+  .safe b{display:block;font-size:17px;color:var(--g-d)}
+  .safe span{font-size:14px}
+
+  /* 作業の流れ */
+  .flow{list-style:none;margin:0;padding:0;counter-reset:f}
+  .flow li{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+  .flow li:first-child{border-top:0}
+  .flow img{width:120px;height:90px;object-fit:cover;border-radius:8px}
+  .flow b{display:block;font-size:15px}
+  .flow b::before{counter-increment:f;content:"STEP " counter(f);display:block;font-size:11px;color:var(--g);letter-spacing:.08em}
+  .flow span{font-size:13px;color:var(--muted)}
+
+  /* よくある質問 */
+  details.qa{border:1px solid var(--line);border-radius:10px;margin:0 0 8px;background:#fff}
+  details.qa summary{cursor:pointer;padding:12px 14px 12px 44px;font-weight:700;position:relative;list-style:none}
+  details.qa summary::-webkit-details-marker{display:none}
+  details.qa summary::before{content:"Q";position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;background:var(--g);color:#fff;text-align:center;line-height:24px;font-size:13px}
+  details.qa div{padding:0 14px 14px 44px;font-size:14px;position:relative}
+  details.qa div::before{content:"A";position:absolute;left:12px;top:0;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;text-align:center;line-height:24px;font-size:13px;font-weight:700}
+
+  .area{background:var(--cream);border-radius:12px;padding:14px 16px;font-size:14px}
+  .area h3{margin:8px 0 2px;font-size:15px;color:var(--g-d)}
+  .area p{margin:0}
+
+  footer{background:#2b2b2b;color:#ccc;text-align:center;font-size:12px;padding:16px}
+  footer a{color:#fff}
+
+  /* 下に固定のボタン */
+  .fixbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+  .fixbar .in{display:flex;gap:8px;width:100%;max-width:620px}
+  .fixbar a{flex:1;text-align:center;text-decoration:none;font-weight:900;border-radius:10px;padding:10px 4px;font-size:15px;line-height:1.2}
+  .fixbar small{display:block;font-size:10px;font-weight:700}
+  .fixbar .t{background:#fff;color:var(--g-d);border:2px solid var(--g)}
+  .fixbar .w{background:linear-gradient(#f5a12a,#e46f00);color:#fff;border:2px solid #e46f00;flex:1.3}
+  @media (prefers-reduced-motion:reduce){.btn.web::after{animation:none;display:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <a class="brand" href="https://kucho-hotline.jp/" target="_blank" rel="noopener">
+    <img src="https://kucho-hotline.jp/_astro/logo.Bkw95_dZ_Z1w7PSA.webp" alt="空調のホットライン">
+    <span><b>空調のホットライン</b><small>〜清潔な空気を保つ〜</small></span>
+  </a>
+  <span class="hd-r">
+    <a class="hd-tel" href="tel:09041434127">☎090-4143-4127</a>
+    <a class="hd-go" href="#" data-web>▶今すぐ申し込む</a>
+  </span>
+</header>
+
+<!-- 1. ファーストビュー（Canva） -->
+<div class="shot"><a href="#" data-web><img src="img/01-hero.jpg" alt="福岡市・近郊 エアコンクリーニング 6,700円〜（税込）。分解した部品をその場でお見せします。家庭用も業務用もOK、土日祝も受付"></a></div>
+
+<div class="band"><small>福岡市内＋近郊</small><b>年間取扱 2,000台</b></div>
+
+<!-- 2. 要注意チェック（Canva） -->
+<div class="shot" style="margin-top:14px"><img src="img/02-check.jpg" alt="1つでもあてはまったら要注意。効きが悪い、変なにおい、咳やくしゃみ、赤ちゃんやペットがいる、何年も掃除していない。これ、1台のエアコンから出た水です" loading="lazy"></div>
+
+<!-- 3. 中の汚れ（本サイトの写真） -->
+<section class="sec" style="background:var(--cream)">
+  <h2 class="big">カバーを外すと、<br><em>こうなっています</em></h2>
+  <div class="ba">
+    <figure><span class="tag bf">BEFORE</span><img src="https://kucho-hotline.jp/_astro/dirty-fan.BRDnFXU4_73VO7.webp" alt="黒カビの付いた送風ファン" loading="lazy"><figcaption>送風ファン。黒いものはカビです</figcaption></figure>
+    <figure><span class="tag bf">BEFORE</span><img src="https://kucho-hotline.jp/_astro/dirty-coil.hdx8eGcn_Z19KXFs.webp" alt="ほこりの詰まった熱交換器" loading="lazy"><figcaption>熱交換器。ほこりが詰まっています</figcaption></figure>
+  </div>
+  <div class="ba" style="grid-template-columns:1fr;margin-top:10px">
+    <figure><span class="tag af">AFTER</span><img src="https://kucho-hotline.jp/_astro/kanzen-clean.DtZdfbcO_fJuwK.webp" alt="洗浄後の熱交換器" style="aspect-ratio:4/3" loading="lazy"><figcaption>洗浄後。ここまで戻ります</figcaption></figure>
+  </div>
+  <p style="font-size:13px;color:var(--muted);text-align:center;margin:8px 0 0">お客様のお宅で実際に撮った写真です</p>
+</section>
+
+<div class="cta">
+  <p>汚れが気になったら、<span class="y">まずは台数を選ぶだけ</span></p>
+  <a class="btn web" href="#" data-web>▶ 今すぐ申し込む<small>その場で概算金額が出ます</small></a>
+  <a class="btn tel" href="tel:09041434127">☎ 090-4143-4127<small>受付 9:00〜18:00（土日祝も対応）</small></a>
+</div>
+
+<!-- 4. 選ばれる理由 -->
+<section class="sec">
+  <h2 class="big">掃除して帰るだけの業者には、<br><span class="g">なりません</span></h2>
+  <figure style="margin:0 0 14px"><img src="https://kucho-hotline.jp/_astro/strength-2.JZlcwHfH_Z1N6p2l.webp" alt="お手入れの仕方をお客様にご説明しているところ" style="border-radius:12px;width:100%" loading="lazy"></figure>
+  <div class="safe">
+    <div><b>分解して、お見せします</b><span>どこがどれだけ汚れていたのか、外した部品をその場でご覧いただきます。お手が離せないときは、作業後にお写真でも確認できます。</span></div>
+    <div><b>お手入れのコツ、お教えします</b><span>フィルターだけでなく、手の届く部分のお手入れの仕方と、カビの防ぎ方をお伝えしてから帰ります。</span></div>
+    <div><b>家庭用も、業務用も</b><span>ご家庭の壁掛けから、店舗・事務所の業務用まで。伺うのは代表か、代表が直接指導して育てたスタッフです。</span></div>
+    <div><b>追加料金はかかりません</b><span>作業の前に現物を確認し、お見積りをご説明してから始めます。そこから金額が増えることはありません。</span></div>
+    <div><b>損害賠償保険に加入</b><span>万一、エアコンや家財を傷つけてしまったときは、保険でご対応します。</span></div>
+  </div>
+</section>
+
+<!-- 5. 料金 -->
+<section class="sec" style="background:var(--g-bg)">
+  <h2 class="big">料金は<em>これだけ</em></h2>
+  <div class="price">
+    <div class="row"><div><b>通常タイプ</b><small>フィルターを自分で外して洗えるタイプ</small></div><div class="yen">6,700<span>円</span></div></div>
+    <div class="row"><div><b>お掃除機能付き</b><small>フィルター自動おそうじ機能があるタイプ</small></div><div class="yen">12,700<span>円</span></div></div>
+    <div class="row rec"><div><b>完全分解洗浄</b><small>ドレンパンと送風ファンを外して奥まで洗う</small></div><div class="yen"><span>＋</span>8,000<span>円</span></div></div>
+  </div>
+  <ul class="notes">
+    <li>すべて壁掛け1台・税込です。</li>
+    <li>お掃除機能付きか分からなくても大丈夫です。折り返しのお電話で確認します。</li>
+    <li>一部の機種（エオリアXなど）は＋5,000円、霧ヶ峰FZ・エアレストは完全分解洗浄のみです。</li>
+    <li>駐車場がない場合のコインパーキング代は、お客様のご負担です。</li>
+  </ul>
+</section>
+
+<div class="cta">
+  <p>ご相談だけでも、<span class="y">かまいません</span></p>
+  <a class="btn web" href="#" data-web>▶ 今すぐ申し込む<small>台数を選ぶとその場で概算金額</small></a>
+  <a class="btn tel" href="tel:09041434127">☎ 090-4143-4127<small>受付 9:00〜18:00（土日祝も対応）</small></a>
+</div>
+
+<!-- 6. 作業の流れ -->
+<div class="band"><small>1つ1つ安心の手順で</small><b>作業の流れ</b></div>
+<section class="sec">
+  <ol class="flow">
+    <li><img src="https://kucho-hotline.jp/_astro/flow-1.gFivnRzQ_SHa2x.webp" alt="" loading="lazy"><div><b>ご挨拶と、エアコンの確認</b></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/flow-2.DJLjOSzQ_LFnOQ.webp" alt="" loading="lazy"><div><b>カバーを開けて、今の状態をご覧いただきます</b></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/about.D29FSuzv_XIesS.webp" alt="" loading="lazy"><div><b>作業の内容と、お見積りのご説明</b><span>ここでお伝えした金額から増えません</span></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/flow-4.O-nVnUF0_14YxeP.webp" alt="" loading="lazy"><div><b>お部屋とエアコンの養生</b></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/flow-5.DrcES7Ja_ZMohsN.webp" alt="" loading="lazy"><div><b>内部の高圧洗浄</b></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/flow-6.CzUVOzbq_Z1QW8Rc.webp" alt="" loading="lazy"><div><b>取り外した部材を、1点ずつ洗う</b></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/flow-7.BOT5qTzh_2nQ1NV.webp" alt="" loading="lazy"><div><b>拭き上げて、組み上げる</b></div></li>
+    <li><img src="https://kucho-hotline.jp/_astro/flow-8.DAWM-buk_1DAPu9.webp" alt="" loading="lazy"><div><b>仕上がりのご確認と、メンテナンスのコツ</b></div></li>
+  </ol>
+</section>
+
+<!-- 7. よくある質問 -->
+<section class="sec" style="background:var(--cream)">
+  <h2 class="big">よくあるご質問</h2>
+  <details class="qa"><summary>作業のあとで、追加料金がかかることはありますか？</summary><div>ありません。作業の前に現物を確認し、お見積りをご説明してから始めます。ご予約の内容と現物が違った場合も、作業を始める前にご相談します。</div></details>
+  <details class="qa"><summary>キャンセルしたいときは？</summary><div>作業日の3日前までのご連絡は、キャンセル料をいただきません。それ以降は料金を全額頂戴しております。やむを得ないご事情のときは、一度お電話でご相談ください。</div></details>
+  <details class="qa"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
+  <details class="qa"><summary>お掃除機能付きかどうか、分かりません</summary><div>分からなくて大丈夫です。予約フォームの備考欄に「お掃除機能付きか分からない」と書いていただければ、折り返しのご連絡のときに確認します。</div></details>
+  <details class="qa"><summary>駐車場がありません</summary><div>近くのコインパーキングを利用します。その料金はお客様のご負担となります。停められる場所があれば、ご予約のときにお知らせください。</div></details>
+  <p style="text-align:center;font-size:13px;margin:12px 0 0"><a href="https://kucho-hotline.jp/faq/" target="_blank" rel="noopener">ほかのご質問はこちら</a></p>
+</section>
+
+<!-- 8. 対応エリア -->
+<section class="sec">
+  <h2 class="big">対応エリア</h2>
+  <div class="area">
+    <h3>福岡市</h3><p>東区 / 博多区 / 中央区 / 南区 / 城南区 / 早良区 / 西区</p>
+    <h3>福岡市近郊</h3><p>春日市 / 大野城市 / 那珂川市 / 太宰府市 / 筑紫野市 / 古賀市 / 福津市 / 宗像市</p>
+    <h3>糟屋郡</h3><p>宇美町 / 篠栗町 / 志免町 / 須恵町 / 新宮町 / 久山町 / 粕屋町</p>
+    <p style="margin-top:10px;font-size:13px;color:var(--muted)">エリア外の方も、日程によっては伺えることがあります。一度ご相談ください。</p>
+  </div>
+</section>
+
+<div class="cta">
+  <p>空気が変わると、<span class="y">毎日が変わります</span></p>
+  <a class="btn web" href="#" data-web>▶ 今すぐ申し込む<small>その場で概算金額が出ます</small></a>
+  <a class="btn tel" href="tel:09041434127">☎ 090-4143-4127<small>受付 9:00〜18:00（土日祝も対応）</small></a>
+</div>
+
+<footer>© 空調のホットライン　<a href="https://kucho-hotline.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a></footer>
+</div>
+
+<div class="fixbar"><div class="in">
+  <a class="t" href="tel:09041434127">☎ 電話する<small>9:00〜18:00 土日祝OK</small></a>
+  <a class="w" href="#" data-web>▶ 今すぐ申し込む<small>台数を選ぶだけ</small></a>
+</div></div>
+
+<script>
+  // 申し込み先：本サイトの予約フォーム（広告の効果が分かるように印を付ける）
+  var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";
+  document.querySelectorAll("[data-web]").forEach(function(a){ a.href = RESERVE_URL; });
+</script>
+</body>
+</html>
