@@ -182,6 +182,19 @@
   .opts button{font:inherit;font-weight:900;font-size:16px;background:#fff;color:var(--g-d);border:2px solid var(--g);border-radius:12px;padding:11px 14px;cursor:pointer;min-height:48px;line-height:1.3;flex:1 1 calc(50% - 8px)}
   .opts button.wide{flex-basis:100%}
   .opts button.main{background:linear-gradient(#f5a12a,#e46f00);border-color:#e46f00;color:#fff}
+  .est-t{margin:0 0 6px;font-size:12px;font-weight:900;color:var(--g-d)}
+  .erow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed #e6d48a}
+  .erow.sub{padding-left:12px}
+  .erow.sub .el b{font-size:13px}
+  .el{flex:1;min-width:0}.el b{display:block;font-size:14px;line-height:1.35}.el small{font-size:11px;color:var(--muted)}
+  .es{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+  .es button{width:40px;height:40px;border-radius:50%;border:0;background:var(--g);color:#fff;font-size:24px;font-weight:900;line-height:1;padding:0;cursor:pointer;box-shadow:0 2px 0 var(--g-d)}
+  .es button:disabled{background:#d6dcd3;box-shadow:none}
+  .es output{min-width:28px;text-align:center;font-size:22px;font-weight:900}
+  .ebiz{display:block;width:100%;margin:8px 0 0;font:inherit;font-size:13px;font-weight:900;color:var(--g-d);background:#fff;border:2px dashed var(--g);border-radius:10px;padding:8px;cursor:pointer}
+  .efood{display:flex;gap:6px;align-items:center;margin:8px 0 0;font-size:13px;font-weight:700}
+  .efood input{width:20px;height:20px}
+  .eoff{color:var(--red);font-weight:900;margin-top:8px}
   .opts.step{flex-direction:column}
   .stp{display:flex;align-items:center;justify-content:center;gap:14px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px}
   .stp button{flex:0 0 64px;width:64px;height:64px;border-radius:50%;font-size:34px;line-height:1;padding:0;background:var(--g);color:#fff;border:0;box-shadow:0 3px 0 var(--g-d)}
@@ -411,7 +424,7 @@
 
   var log = document.getElementById("log");
   var A = fresh();
-  function fresh(){ return { kind: "", units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", area: "", biz: { c4: 0, tsuri: 0, other: 0, food: false } }; }
+  function fresh(){ return { kind: "", units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", bk: 0, area: "", biz: { c4: 0, tsuri: 0, other: 0, food: false } }; }
   var started = false, booked = false, gen = 0;
 
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
@@ -547,42 +560,75 @@
     var n = A.units, os = A.osouji, base = 0, add = 0, off = 0, biz = 0, b = A.biz;
     if (n) {
       base = (n - os) * PRICE.normal + os * PRICE.osouji + (A.hi || 0) * PRICE.hi;
-      add = A.bunkai === "yes" ? n * PRICE.bunkai : 0;
+      add = (A.bk || 0) * PRICE.bunkai;
       off = (n - 1) * PRICE.multi;
     }
     biz = b.c4 * PRICE.c4 + b.tsuri * PRICE.tsuri + (b.food ? (b.c4 + b.tsuri) * PRICE.food : 0);
     return { base: base, add: add, off: off, biz: biz, total: base + add - off + biz };
   }
-  function rough(){ return A.osoujiUnknown || A.hiUnknown || A.biz.other > 0 || (A.units > 0 && !A.bunkai); }
+  function rough(){ return A.osoujiUnknown || A.hiUnknown || A.biz.other > 0; }
   function summary(){
     var b = A.biz, s = [];
-    if (A.units) s.push("壁掛け" + A.units + "台" + (A.osouji ? "（お掃除機能付き" + A.osouji + (A.hi ? "・うち高機能" + A.hi : "") + "）" : "") + (A.bunkai === "yes" ? "＋完全分解" : ""));
+    if (A.units) s.push("壁掛け" + A.units + "台" + (A.osouji ? "（お掃除機能付き" + A.osouji + (A.hi ? "・うち高機能" + A.hi : "") + "）" : "") + (A.bk ? "＋完全分解" + A.bk : ""));
     if (b.c4) s.push("天井埋め込み" + b.c4 + "台");
     if (b.tsuri) s.push("天吊り" + b.tsuri + "台");
     if (b.other) s.push("床置き・その他" + b.other + "台");
     return s.join("・");
   }
 
-  async function estimate(){
-    var c = calc(), n = A.units, b = A.biz;
-    var lines = [];
-    if (n) lines.push([n - A.osouji ? "通常タイプ " + (n - A.osouji) + "台" : "", A.osouji ? "お掃除機能付き " + A.osouji + "台" : ""].filter(Boolean).join("／") + (A.hi ? "（うち手間のかかるシリーズ " + A.hi + "台・＋5,000円）" : "") + (A.bunkai === "yes" ? "＋完全分解洗浄" : ""));
-    if (b.c4) lines.push("天井埋め込み（4方向） " + b.c4 + "台");
-    if (b.tsuri) lines.push("天吊り " + b.tsuri + "台");
-    if (b.other) lines.push("床置き・ビルトインなど " + b.other + "台（現地でお見積り）");
-    if ((b.c4 || b.tsuri) && b.food) lines.push("飲食店 ＋3,000円×" + (b.c4 + b.tsuri) + "台");
+  // 概算の枠：その場で＋−して金額を直せる
+  var estEl = null, bizOpen = false;
+  function estRows(){
+    var b = A.biz, R = [];
+    R.push({ label: A.osoujiUnknown ? "壁掛け（お掃除機能付きか確認中）" : "壁掛け・通常タイプ", unit: "6,700円", get: function(){ return A.units - A.osouji; }, max: 30,
+      set: function(v){ A.units = A.osouji + v; A.bk = Math.min(A.bk, A.units); } });
+    R.push({ label: "壁掛け・お掃除機能付き", unit: "12,700円", get: function(){ return A.osouji; }, max: 30,
+      set: function(v){ A.units += v - A.osouji; A.osouji = v; A.osoujiUnknown = false; A.hi = Math.min(A.hi, v); A.bk = Math.min(A.bk, A.units); } });
+    if (A.osouji) R.push({ sub: true, label: "うちエオリアX・白くまくんX・ノクリアX・霧ヶ峰FZ", unit: "＋5,000円", get: function(){ return A.hi; }, max: A.osouji, set: function(v){ A.hi = v; A.hiUnknown = false; } });
+    if (A.units) R.push({ sub: true, label: "完全分解洗浄にする台数", unit: "＋8,000円", get: function(){ return A.bk; }, max: A.units, set: function(v){ A.bk = v; } });
+    if (bizOpen || bizN()) {
+      R.push({ label: "天井埋め込み（4方向）", unit: "17,000円〜", get: function(){ return b.c4; }, max: 30, set: function(v){ b.c4 = v; } });
+      R.push({ label: "天吊り", unit: "19,000円〜", get: function(){ return b.tsuri; }, max: 30, set: function(v){ b.tsuri = v; } });
+      R.push({ label: "床置き・ビルトイン", unit: "お見積り", get: function(){ return b.other; }, max: 30, set: function(v){ b.other = v; } });
+    }
+    return R;
+  }
+  function renderEst(){
+    if (!estEl) return;
+    var c = calc(), b = A.biz, R = estRows();
+    var h = '<p class="est-t">＋−で台数を変えると、金額がすぐ変わります</p><div class="erows">';
+    R.forEach(function(r, i){
+      var v = r.get();
+      h += '<div class="erow' + (r.sub ? " sub" : "") + '"><div class="el"><b>' + r.label + '</b><small>1台 ' + r.unit + '</small></div>' +
+        '<div class="es"><button type="button" data-i="' + i + '" data-d="-1"' + (v <= 0 ? " disabled" : "") + ' aria-label="へらす">−</button><output>' + v + '</output><button type="button" data-i="' + i + '" data-d="1"' + (v >= r.max ? " disabled" : "") + ' aria-label="ふやす">＋</button></div></div>';
+    });
+    h += "</div>";
+    if (!bizOpen && !bizN()) h += '<button type="button" class="ebiz">＋ お店・事務所の業務用エアコンも追加</button>';
+    if (b.c4 || b.tsuri) h += '<label class="efood"><input type="checkbox"' + (b.food ? " checked" : "") + '> 飲食店です（業務用1台につき＋3,000円）</label>';
+    if (c.off) h += '<div class="eoff">台数割 −' + yen(c.off) + '円（壁掛け2台目から1台300円引き）</div>';
+    h += c.total ? '<div class="sum">' + yen(c.total) + '<small>円（税込）' + (rough() || b.c4 || b.tsuri ? "〜" : "") + '</small></div>'
+      : '<div class="sum" style="font-size:22px">' + (anyN() ? "現地でお見積り" : "台数を選んでください") + '</div>';
     var note = [];
     if (A.osoujiUnknown) note.push("お掃除機能付きだった場合は、1台につき＋6,000円になります（作業前に確認してお伝えします）");
     if (A.osoujiUnknown || A.hiUnknown) note.push("エオリア CS-X・白くまくん X・ノクリア AS-X（XW）・霧ヶ峰 FZ だった場合は、1台につき＋5,000円です");
     if (A.hi || A.hiUnknown || A.osoujiUnknown) note.push("霧ヶ峰 FZ とシャープのエアレストは、完全分解洗浄のみのお取り扱いです");
-    if (A.bunkai === "ask") note.push("完全分解洗浄（1台＋8,000円）にするかは、エアコンを見てからご相談できます");
-    if (b.c4 || b.tsuri || b.other) note.push("業務用は機種や設置状況でお見積りします。お写真を送っていただければ、おおよその金額をお伝えできます");
+    if (A.bunkai === "ask" && !A.bk) note.push("完全分解洗浄（1台＋8,000円）にするかは、エアコンを見てからご相談できます");
+    if (bizN()) note.push("業務用は機種や設置状況でお見積りします。お写真を送っていただければ、おおよその金額をお伝えできます");
     note.push("作業の前に現物を確認してお見積りをご説明します。そこから金額は増えません");
-    await say("<p>ありがとうございます！概算はこちらです。</p>" +
-      '<div class="est">' + lines.join("<br>") +
-      (c.off ? '<div style="color:var(--red);font-weight:900">台数割 −' + yen(c.off) + '円（壁掛け2台目から1台300円引き）</div>' : "") +
-      (c.total ? '<div class="sum">' + yen(c.total) + '<small>円（税込）' + (rough() || b.c4 || b.tsuri ? "〜" : "") + '</small></div>' : '<div class="sum" style="font-size:22px">現地でお見積り</div>') +
-      '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:12px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul></div>");
+    h += '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:12px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul>";
+    estEl.innerHTML = h;
+    estEl.querySelectorAll(".es button").forEach(function(btn){
+      btn.onclick = function(){ var r = R[+btn.dataset.i]; var v = Math.max(0, Math.min(r.max, r.get() + (+btn.dataset.d))); r.set(v); renderEst(); band(); };
+    });
+    var eb = estEl.querySelector(".ebiz"); if (eb) eb.onclick = function(){ bizOpen = true; renderEst(); };
+    var ef = estEl.querySelector(".efood input"); if (ef) ef.onchange = function(){ b.food = ef.checked; renderEst(); band(); };
+  }
+
+  async function estimate(){
+    if (A.bunkai === "yes") A.bk = A.units;
+    bizOpen = A.kind !== "wall";
+    var m = await say("<p>ありがとうございます！概算はこちらです。</p><div class=\"est\"></div>");
+    estEl = m.querySelector(".est"); renderEst(); band();
     await wait(300);
     await say("<p>対応エリアは<b>福岡市と近郊</b>です。お住まいはどちらですか？</p>");
     A.area = await ask([
@@ -618,7 +664,7 @@
     var c = anyN() ? calc() : null;
     var body = "【エアコンクリーニング予約希望】\nお名前：" + name + "\n電話：" + tel + "\n希望日：" + (day || "相談したい") +
       (A.units ? "\n壁掛け：" + A.units + "台（お掃除機能付き：" + (A.osoujiUnknown ? "分からない" : A.osouji + "台") + (A.hi ? "・うちエオリアX等 " + A.hi + "台" : A.hiUnknown ? "・エオリアX等か分からない" : "") + "）" +
-        "\n完全分解：" + ({ yes: "する", no: "しない", ask: "相談したい" }[A.bunkai]) : "") +
+        "\n完全分解：" + (A.bk ? A.bk + "台" : A.bunkai === "ask" ? "相談したい" : "しない") : "") +
       (bizN() ? "\n業務用：天井埋め込み" + A.biz.c4 + "台・天吊り" + A.biz.tsuri + "台・床置きなど" + A.biz.other + "台" + (A.biz.food ? "（飲食店）" : "") : "") +
       (c ? "\n地域：" + A.area + "\n概算：" + (c.total ? yen(c.total) + "円" + (rough() || A.biz.c4 || A.biz.tsuri ? "〜" : "") : "現地でお見積り") + (c.off ? "（台数割" + yen(c.off) + "円引き後）" : "") : "") +
       "\n（チラシのページを見ました）";
@@ -655,7 +701,7 @@
   }
   document.getElementById("pbRedo").onclick = function(){
     gen++; booked = false;
-    A = fresh();
+    A = fresh(); estEl = null;
     log.innerHTML = "";
     band();
     run();
