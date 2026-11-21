@@ -119,6 +119,19 @@
   details.qa div::before{content:"A";position:absolute;left:12px;top:0;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;text-align:center;line-height:24px;font-size:13px;font-weight:700}
 
   .area{background:var(--cream);border-radius:12px;padding:14px 16px;font-size:14px}
+  .rv-src{text-align:center;font-size:13px;margin:-6px 0 12px;color:var(--muted)}
+  .rv-src b{color:#E8A400;font-size:16px}
+  .rv-free-img{display:block;width:100%;height:auto;border-radius:12px;margin:0 0 14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  .rv-list{display:grid;gap:12px}
+  figure.rv{margin:0;background:#fff;border-radius:14px;padding:14px 14px 12px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:4px solid var(--g-l)}
+  figure.rv:nth-child(even){border-top-color:#F4A6B8}
+  .rv-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:12px;color:var(--muted);margin-bottom:6px}
+  .rv-st{color:#F5B400;font-size:15px;letter-spacing:1px}
+  .rv-free{background:var(--red);color:#fff;font-weight:900;border-radius:999px;padding:1px 9px}
+  figure.rv blockquote{margin:0;font-size:14.5px;line-height:1.85}
+  figure.rv mark{background:linear-gradient(transparent 45%,#FFE14D 45%);font-weight:900;color:inherit;padding:0 1px}
+  .rv-list.closed figure.more{display:none}
+  .rv-more{display:block;width:100%;margin:14px 0 0;font:inherit;font-weight:900;font-size:16px;color:var(--g-d);background:#fff;border:2px solid var(--g);border-radius:12px;min-height:50px;cursor:pointer}
   .area h3{margin:8px 0 2px;font-size:15px;color:var(--g-d)}
   .area p{margin:0}
 
@@ -188,11 +201,11 @@
   @media (prefers-reduced-motion:reduce){.btn.web::after{animation:none;display:none}}
 </style>
 </head>
-<body>
+<body id="top">
 <div class="page">
 
 <header>
-  <a class="brand" href="https://kucho-hotline.jp/" target="_blank" rel="noopener">
+  <a class="brand" href="#top">
     <img src="https://kucho-hotline.jp/_astro/logo.Bkw95_dZ_Z1w7PSA.webp" alt="空調のホットライン">
     <span><b>空調のホットライン</b><small>〜清潔な空気を保つ〜</small></span>
   </a>
@@ -262,6 +275,28 @@
   </div>
 </section>
 
+<!-- 4-2. お客様の声（くらしのマーケットの口コミ・原文そのまま・お名前は伏せる） -->
+<section class="sec" id="voice" style="background:#EAF4FB">
+  <h2 class="big">お客様の声</h2>
+  <p class="rv-src">くらしのマーケットでの評価 <b>★4.91</b>（口コミ801件・2026年11月時点）<br>いただいた口コミを、原文のまま載せています（お名前は伏せています）</p>
+  <img class="rv-free-img" src="img/free-clean.jpg" alt="トイレ・お風呂の排水溝・お風呂の換気扇 無料で施工中！" width="989" height="528" loading="lazy">
+  <div class="rv-list" id="rvList">
+  <figure class="rv"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span><span class="rv-free">お風呂・トイレも</span></div><blockquote>今まで数回エアコンクリーニングを依頼しましたが、素人目にみても、とても丁寧で隅々まできちんとお掃除してもらいました。担当のひろせさんは依頼したエアコン以外のエアコンもクリーニングが必要か確認してくださったり、自宅でのお手入れの仕方も丁寧に説明してくださいました。<mark>最後は試運転の時間にお風呂の排水口とトイレ掃除までしていただきました。</mark>エアコンクリーニングは次も必ず依頼したいです。</blockquote></figure>
+  <figure class="rv"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span></div><blockquote>階段5階のエレベーター無しでしたが、重い荷物や大きいものを準備するため料金も追加されず、何度も昇り降りして頂き、 事前に部屋の状況、湿度、エアコンホースの取り付け角度、また室外機に至るまで(なぜこのようになったか。この場合どう対処していくか)様々な知識を教えていただきました。 カビ、匂い、汚れに対応すべく準備を周辺と周囲細部にわたる養生から始まり、 作業を見せていただきました。 明るくお話をしてもらい、 時に説明を受けつつ、 家庭用エアコン以外のエアコンから色々聞いたこと全てを、プロとしての経験してきた知識や 今後役に立つことまで終始教えていただきました。 手際も作業時間も早く、とても、スムーズに、、 そしてかなり匂いも消え綺麗になってしまいました。 あっという間で見合った料金の調整までしていただき大変助かり、満足しました。 今後とも何卒よろしくお願いいたします。</blockquote></figure>
+  <figure class="rv"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け・4台）</span><span class="rv-free">お風呂・トイレも</span></div><blockquote>秋元さん、このたびはありがとうございました。 第一印象からとても良かったんです。最後まで爽やかに作業をしていただきました。 4台のエアコンのクリーニングをお願いしたのですが、それぞれの今の状態やメンテナンスの仕方なども教えていただき、作業後はビフォーアフターの写真も見せながら丁寧な報告までしていただきました。 おまけに！<mark>洗い場で使われていた風呂場も高圧洗浄機で清掃していただいており、床がピカピカです！</mark>これには大感動です。 エアコンの中が綺麗になり、これで気持ちよく暖房も使えて歳を越せそうです。 写真は勝手に激写しました笑 丁寧に養生していただいたので私たちは全く困ることもありませんでした。初めてのエアコンクリーニング依頼でしたが、また次回もお願いしたいと思っております。 このたびは本当にありがとうございました。</blockquote></figure>
+  <figure class="rv"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け・2台）</span></div><blockquote>エアコン2台の分解洗浄をお願いしました。当日は主人が立ち会いましたが、周囲が汚れないよう養生もしっかりしてくださり、作業がとても丁寧だったと聞いております。スタッフさんの人柄も良く、安心してお任せできました。また、1台は汚れの具合を見て「分解洗浄までは必要ない」と正直に提案してくださり、当初の予定よりも費用を抑えることができました。今後のメンテナンスやお手入れのアドバイスも細かくしていただき、家族共々大変満足しています。 良心的で信頼できる業者さんに出会えてよかったです。</blockquote></figure>
+  <figure class="rv"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span><span class="rv-free">お風呂・トイレも</span></div><blockquote>エアコン内部のカビとにおいを解消したくお願いしました。とても丁寧に洗浄していただきました。 作業の合間にカビが発生する原因と解決方法などにっいてもご説明頂き技術と知識が本当に素晴らしかったです。<mark>最後に故障がないかの確認で15分送風している間にお風呂場とお手洗いの簡単な清掃までしていただきお値段以上の対応にびっくりしました。</mark> また是非お願いしたいです。</blockquote></figure>
+  <figure class="rv"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span></div><blockquote>我が家のエアコンの現状を丁寧に説明してくださった上で、こんな作業をします、そしてこんな作業をやってきいますとわかりやすく教えてくださりながら工程をすすめてくださいました。 完了したときには、今後自分でも簡単にお掃除できるようにと方法をレクチャーしてくださり、さらに一度一緒にやってみましょう！とフィルターの外し方取り付け方など丁寧に教えてくださいました。(なんなら別室の別機種エアコンの掃除方法も、軽い気持ちで聞いたにも関わらずとても丁寧に教えてくださいました……感謝しかないです……) 心からオススメできる方です！お仕事に誇りを持っていらっしゃるなぁと思いました。</blockquote></figure>
+  <figure class="rv more"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span><span class="rv-free">お風呂・トイレも</span></div><blockquote>エアコンクリーニングの依頼を初めてお願いしたいと思いくらしのマーケットの中から秋元さんに依頼しました。 予約した際も即対応していただき、予約日程もとてもスムーズに対応していただき、暖房を使用する前にお願いしたかったので日程もこちらに合わせていただき早急な対応をしてもらいました。 予約時間前にも電話でご連絡してもらい、時間前に来てもらって初めましてでしたがとても感じの良い方で安心しました。 最初から最後まで丁寧に説明してもらったのでこちらが納得しながらの作業で勧めてもらいました。 テキパキと作業もされて<mark>最後にはお風呂の排水口のお掃除までしていただき、排水口のネットまで交換して下さいました。</mark> ビフォーアフターの写真も見せてもらいながらの説明で凄く綺麗になり、安心して今からの冬の季節にエアコンを使用出来るのでお願いしてよかったです。 色々なアドバイスもしてもらい参考にさせていただきます。 ありがとうございました。</blockquote></figure>
+  <figure class="rv more"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span></div><blockquote>ペットの毛や汚れが気になり、毎年エアコンクリーニングをプロにお願いしているのですが、今までで一番満足度の高い業者さんでした。 夕方16時という遅い時間からのスタートだったにもかかわらず、手際よく、とても丁寧に分解清掃してくださいました。 清掃の前後にはわかりやすい説明もあり、お人柄も技術も素晴らしかったです。我が家のエアコンは年中フル稼働なので、またぜひお願いしたいと思います！</blockquote></figure>
+  <figure class="rv more"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け・2台）</span><span class="rv-free">お風呂・トイレも</span></div><blockquote>ダイキン「うるさら」を含む2台の洗浄を依頼しました。 設置環境が厳しく（天井との隙間が狭い）、分解の難易度が非常に高い状況でしたが、最後まで諦めずに完全分解を実施していただきました。圧倒的な技術力と執念に感服です。 当日は妻が立ち会いましたが、暑い中での長時間作業にも関わらず、子供のちょっかいに笑顔で付き合ってくださるなど、終始気持ちの良い対応だったそうです。さらに、<mark>洗浄で使用した浴室の排水溝まで綺麗に清掃して退室されるなど</mark>、細部まで行き届いた配慮がありました。 技術、ホスピタリティともに申し分なく、妻ともども大変感謝しております。</blockquote></figure>
+  <figure class="rv more"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span></div><blockquote>作業がとても丁寧で、今後のお手入れ方法や便利な機能についても教えていただき、とても参考になりました。 完全分解洗浄も予約していましたが、実際の状態を確認した上で今回は不要と判断してくださり、無理にオプションを勧められることもなく、とても信頼できました。 次回は2年後くらいを予定していますが、その際もぜひお願いしたいです。ありがとうございました！</blockquote></figure>
+  <figure class="rv more"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け・3回目）</span><span class="rv-free">お風呂・トイレも</span></div><blockquote>今回3度目の依頼でしたがいつものように手際よくスムーズにお掃除して頂きました 排水のホースが詰まっていたようで更に丁寧に高圧洗浄で対応して頂き排水もできるようになりました <mark>帰られた後に浴室の排水溝が綺麗に掃除されてて驚きました</mark> きっと以前も掃除されてたのかと申し訳なく思いました 本当にありがとうございました</blockquote></figure>
+  <figure class="rv more"><div class="rv-h"><span class="rv-st">★★★★★</span><span>エアコンクリーニング（壁掛け）</span></div><blockquote>購入２年目のエアコンを自分で掃除しようと思ったら…中がカビだらけで断念(笑)初めて業者さんに頼むことを決意！正直な気持ち…値段が安いから少し不安がありました。が！凄く親切な方だったし、仕事も丁寧！こちらの質問にもちゃんと答えてくれて、排水が出来ないベランダだった為、ベランダが汚れましたが、それも綺麗にしてくれて(ホントすみません)来年も是非！頼みたいと思います。たばこを吸うご家庭はマジで！業者さんにエアコン掃除をお願いした方がいいです！綺麗になりますよ(*´▽｀*)</blockquote></figure>
+  </div>
+  <button type="button" class="rv-more" id="rvMore">口コミをもっと読む（あと6件）</button>
+</section>
+
 <!-- 5. 料金 -->
 <section class="sec" style="background:var(--g-bg)">
   <h2 class="big">料金は<em>これだけ</em></h2>
@@ -326,7 +361,6 @@
   <details class="qa" data-cat="お部屋・ご家族" data-short="ペットや子どもがいる"><summary>ペットや赤ちゃんがいます。使う洗剤は安全ですか？</summary><div>ペットや小さなお子さまがいても作業できます。作業中は別のお部屋にいていただけると安心です。使う洗剤のことも、ご予約のときにお気軽にお尋ねください。</div></details>
   <details class="qa" data-cat="お部屋・ご家族" data-short="傷がついたら？"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
   </div>
-  <p style="text-align:center;font-size:13px;margin:12px 0 0"><a href="https://kucho-hotline.jp/faq/" target="_blank" rel="noopener">ほかのご質問はこちら</a></p>
 </section>
 
 <!-- 8. 対応エリア -->
@@ -360,6 +394,7 @@
   var PHONE = "090-4143-4127", TEL = "09041434127";
   var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";   // 本サイトの予約フォーム
   var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300, hi: 5000 };   // hi＝手間のかかるシリーズの上乗せ   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
+  (function(){ var l=document.getElementById("rvList"), b=document.getElementById("rvMore"); if(!l||!b) return; l.classList.add("closed"); b.onclick=function(){ l.classList.remove("closed"); b.remove(); }; })();
   var ICON = "img/nekobe/nekobe-face.webp";
 
   var log = document.getElementById("log");
@@ -505,8 +540,7 @@
       "\n（チラシのページを見ました）";
     var sms = "sms:" + TEL + (/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?") + "body=" + encodeURIComponent(body);
     var m = await say("<p><b>" + esc(name) + "さま、ありがとうございます！</b></p><p>下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しお電話します。</p>" +
-      '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 今すぐ電話で予約する（' + PHONE + '）</a>' +
-      '<a class="form" href="' + RESERVE_URL + '" target="_blank" rel="noopener">パソコンの方は 予約フォームはこちら ›</a></div>');
+      '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 今すぐ電話で予約する（' + PHONE + '）</a></div>');
     show(m);
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
