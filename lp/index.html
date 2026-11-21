@@ -165,6 +165,8 @@
   form.ask input{display:block;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px}
   form.ask button{width:100%;font:inherit;font-weight:900;font-size:17px;border:0;border-radius:999px;padding:13px;color:#fff;background:linear-gradient(#f5a12a,#e46f00);cursor:pointer}
   form.ask .err{color:var(--red);font-size:13px;margin:0 0 6px;min-height:1em}
+  .redo{text-align:center;margin:10px 0 0}
+  .redo button{font:inherit;font-size:14px;font-weight:700;color:var(--g-d);background:#fff;border:1px solid var(--g);border-radius:999px;padding:8px 16px;cursor:pointer}
   .done a{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:999px;padding:13px;margin:6px 0 0}
   .done .sms{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
   .done .call{border:2px solid var(--g);color:var(--g-d);background:#fff}
@@ -198,6 +200,7 @@
 <section class="talk" id="talk">
   <div class="talk-hd"><b>ボタンを押すだけ・30秒</b><h2>あなたのエアコン、<br><span>いくらになる？</span></h2></div>
   <div class="log" id="log" aria-live="polite"></div>
+  <p class="redo" id="redo" hidden><button type="button">↺ 台数から選び直す</button></p>
 </section>
 
 
@@ -292,15 +295,26 @@
 <!-- 7. よくある質問（会話型） -->
 <section class="sec" style="background:var(--cream)">
   <h2 class="big">よくあるご質問</h2>
-  <p style="text-align:center;font-size:14px;margin:-6px 0 12px">気になる質問を押すと、その場でお答えします</p>
+  <p style="text-align:center;font-size:14px;margin:-6px 0 12px">これまでお客様からいただいた質問を、多い順にまとめました。<br>気になる話題を押すと、その場でお答えします</p>
   <div class="log" id="faqlog" aria-live="polite"></div>
   <div id="faqsrc">
-  <details class="qa" data-short="追加料金は？"><summary>作業のあとで、追加料金がかかることはありますか？</summary><div>ありません。作業の前に現物を確認し、お見積りをご説明してから始めます。ご予約の内容と現物が違った場合も、作業を始める前にご相談します。</div></details>
-  <details class="qa" data-short="何台か頼むと安くなる？"><summary>何台かまとめて頼むと、安くなりますか？</summary><div>はい、<b>台数割</b>があります。2台目からは1台ごとに<b>300円引き</b>です。たとえば通常タイプ3台なら、20,100円から600円引いて<b>19,500円</b>（税込）です。料金のチャットで台数を選ぶと、値引き後の金額が出ます。</div></details>
-  <details class="qa" data-short="キャンセルは？"><summary>キャンセルしたいときは？</summary><div>作業日の3日前までのご連絡は、キャンセル料をいただきません。それ以降は料金を全額頂戴しております。やむを得ないご事情のときは、一度お電話でご相談ください。</div></details>
-  <details class="qa" data-short="傷がついたら？"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
-  <details class="qa" data-short="お掃除機能付きか分からない"><summary>お掃除機能付きかどうか、分かりません</summary><div>分からなくて大丈夫です。料金のチャットで「分からない」を選んでいただければ、折り返しのご連絡のときに一緒に確認します。</div></details>
-  <details class="qa" data-short="駐車場がない"><summary>駐車場がありません</summary><div>近くのコインパーキングを利用します。その料金はお客様のご負担となります。停められる場所があれば、ご予約のときにお知らせください。</div></details>
+  <details class="qa" data-cat="料金・お支払い" data-short="お掃除機能付きか分からない"><summary>お掃除機能付きかどうか分かりません／型番を見てお掃除機能付きか教えてほしい</summary><div>分からなくて大丈夫です。料金のチャットで「分からない」を選んでいただければ、折り返しのご連絡のときに一緒に確認します。型番が読めるときは写真を送ってください。</div></details>
+  <details class="qa" data-cat="料金・お支払い" data-short="追加料金は？"><summary>あとから追加料金がかかることはありますか？当日オプションを足せますか？</summary><div>ありません。作業の前に現物を確認し、お見積りをご説明してから始めます。ご予約の内容と現物が違った場合も、作業を始める前にご相談します。</div></details>
+  <details class="qa" data-cat="料金・お支払い" data-short="支払い方法は？"><summary>支払いは現金ですか？カードや振込はできますか？</summary><div>現金またはPayPayで、作業が終わってからのお支払いです。店舗・事務所で請求書払いをご希望のときはご相談ください。</div></details>
+  <details class="qa" data-cat="料金・お支払い" data-short="何台か頼むと安くなる？"><summary>何台かまとめて頼むと安くなりますか？</summary><div>はい、<b>台数割</b>があります。2台目からは1台ごとに300円引きです。たとえば通常タイプ3台なら、20,100円から600円引いて19,500円（税込）です。料金のチャットで台数を選ぶと、値引き後の金額が出ます。</div></details>
+  <details class="qa" data-cat="料金・お支払い" data-short="出張費はかかる？"><summary>出張費はかかりますか？</summary><div>対応エリア内であれば、出張費はいただいていません。エリアの外でも一度ご相談ください。</div></details>
+  <details class="qa" data-cat="予約・当日のこと" data-short="駐車場がない"><summary>駐車場がありません。どこに停めますか？駐車代はいくら？</summary><div>近くのコインパーキングを利用します。その料金はお客様のご負担となります。停められる場所があれば、ご予約のときにお知らせください。</div></details>
+  <details class="qa" data-cat="予約・当日のこと" data-short="日程を変えたい・キャンセルしたい"><summary>日程を変更できますか？キャンセルはいつまで無料？</summary><div>作業日の3日前までのご連絡は、キャンセル料をいただきません。それ以降は料金を全額頂戴しております。日程の変更もお早めにご連絡ください。やむを得ないご事情のときは、一度お電話でご相談ください。</div></details>
+  <details class="qa" data-cat="予約・当日のこと" data-short="到着は何時ごろ？"><summary>何時ごろ来ますか？午前中に来てほしい／○時以降にしてほしい</summary><div>ご希望の時間帯をお聞きして調整します。前の現場の状況で前後することがあるため、当日、到着時間が分かり次第ご連絡します。</div></details>
+  <details class="qa" data-cat="予約・当日のこと" data-short="時間はどれくらい？"><summary>作業時間はどのくらいですか？何時に終わりますか？</summary><div>1台あたり、通常クリーニングで約1〜2時間、お掃除機能付きで約1.5〜3時間、完全分解洗浄で約2〜4時間が目安です（汚れの具合によります）。2台目からも台数分のお時間をいただきます。</div></details>
+  <details class="qa" data-cat="エアコンのこと" data-short="においは取れる？"><summary>カビのにおいが気になります。クリーニングで取れますか？</summary><div>においの元になるカビや汚れを洗い流すので、多くの場合はにおいが軽くなります。ただ、エアコンの部品にしみついたにおいは、完全には取れないこともあります。</div></details>
+  <details class="qa" data-cat="エアコンのこと" data-short="うちの機種でもできる？"><summary>うちのエアコン（型番）は対応していますか？対象外の機種ですか？</summary><div>ほとんどの壁掛けエアコンに対応しています。一部の機種（エオリアXなど）は＋5,000円、霧ヶ峰FZ・エアレストは完全分解洗浄のみです。型番が分からなければ、本体の写真を送っていただければ確認します。</div></details>
+  <details class="qa" data-cat="エアコンのこと" data-short="故障・水漏れしている"><summary>水漏れしている／エラーが出る／お掃除機能が動かない。クリーニングで直りますか？</summary><div>動かない・エラーが出ているときは、先に修理が必要なことがあります。症状をお電話でお聞かせください。水漏れは汚れのつまりが原因のこともあるので、見てからご説明します。</div></details>
+  <details class="qa" data-cat="エアコンのこと" data-short="業務用もできる？"><summary>店や事務所の天井のエアコンもできますか？</summary><div>できます。店舗や事務所の業務用エアコンも1台から対応します（天井埋込4方向 17,000円〜）。</div></details>
+  <details class="qa" data-cat="エアコンのこと" data-short="古いエアコンでもできる？"><summary>10年以上たったエアコンでもクリーニングできますか？</summary><div>できます。ただ、古い機種はプラスチックの部品がもろくなっていることがあるため、作業の前に状態を見てご説明します。</div></details>
+  <details class="qa" data-cat="お部屋・ご家族" data-short="エアコンの下に家具がある"><summary>エアコンの真下にベッド・机・テレビがあって動かせません。大丈夫ですか？</summary><div>多くの場合は大丈夫です。上の小物だけ片付けていただければ、家具はビニールで覆って守りながら作業します。通常クリーニングは本体の左右に10cmほど空いていればできます。完全分解洗浄は本体の左に1mの空間が要ります。心配なときは写真を送ってください。</div></details>
+  <details class="qa" data-cat="お部屋・ご家族" data-short="ペットや子どもがいる"><summary>ペットや赤ちゃんがいます。使う洗剤は安全ですか？</summary><div>ペットや小さなお子さまがいても作業できます。作業中は別のお部屋にいていただけると安心です。使う洗剤のことも、ご予約のときにお気軽にお尋ねください。</div></details>
+  <details class="qa" data-cat="お部屋・ご家族" data-short="傷がついたら？"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
   </div>
   <p style="text-align:center;font-size:13px;margin:12px 0 0"><a href="https://kucho-hotline.jp/faq/" target="_blank" rel="noopener">ほかのご質問はこちら</a></p>
 </section>
@@ -340,7 +354,7 @@
 
   var log = document.getElementById("log");
   var A = { units: 0, osouji: 0, osoujiUnknown: false, bunkai: "", area: "" };
-  var started = false, booked = false;
+  var started = false, booked = false, gen = 0;
 
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
   function yen(n){ return n.toLocaleString("ja-JP"); }
@@ -352,7 +366,9 @@
     m.innerHTML = '<div class="ava"><img src="' + ICON + '" alt=""></div><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div>';
     log.appendChild(m);
     if (started) show(m);
+    var g = gen;
     await wait(started ? 500 : 0);
+    if (g !== gen) { m.remove(); return new Promise(function(){}); }
     m.querySelector(".bub").innerHTML = html;
     return m;
   }
@@ -372,7 +388,7 @@
         b.type = "button";
         if (o.cls) b.className = o.cls;
         b.innerHTML = o.label + (o.sub ? "<small>" + o.sub + "</small>" : "");
-        b.onclick = function(){ started = true; box.remove(); me(o.label.replace(/<[^>]+>/g, "")); res(o.v); };
+        b.onclick = function(){ started = true; redo.hidden = false; box.remove(); me(o.label.replace(/<[^>]+>/g, "")); res(o.v); };
         box.appendChild(b);
       });
       log.appendChild(box);
@@ -486,15 +502,26 @@
     });
   });
 
+  var redo = document.getElementById("redo");
+  redo.querySelector("button").onclick = function(){
+    gen++; booked = false;
+    A = { units: 0, osouji: 0, osoujiUnknown: false, bunkai: "", area: "" };
+    log.innerHTML = "";
+    redo.hidden = true;
+    run();
+    document.getElementById("talk").scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   run();
 
-  // ===== よくある質問も会話で =====
+  // ===== よくある質問も会話で（話題 → 質問 → 答え） =====
   (function(){
     var flog = document.getElementById("faqlog"), src = document.getElementById("faqsrc");
     if (!flog || !src) return;
     var QS = [].map.call(src.querySelectorAll("details.qa"), function(d){
-      return { q: d.querySelector("summary").textContent, short: d.dataset.short || d.querySelector("summary").textContent, a: d.querySelector("div").innerHTML, asked: false };
+      return { cat: d.dataset.cat || "その他", q: d.querySelector("summary").textContent, short: d.dataset.short || d.querySelector("summary").textContent, a: d.querySelector("div").innerHTML, asked: false };
     });
+    var CATS = [];
+    QS.forEach(function(x){ if (CATS.indexOf(x.cat) < 0) CATS.push(x.cat); });
     src.hidden = true;
     var live = false;
     function bot(html, typing){
@@ -515,40 +542,60 @@
       m.querySelector(".bub").textContent = t;
       flog.appendChild(m);
     }
-    function chips(){
+    function btn(box, label, cls, fn){
+      var b = document.createElement("button");
+      b.type = "button"; if (cls) b.className = cls;
+      b.innerHTML = label;
+      b.onclick = function(){ box.remove(); fn(); };
+      box.appendChild(b);
+    }
+    function tail(box){
+      btn(box, "料金を出して予約へ進む<small>ボタンで答えるだけ・30秒</small>", "main wide", function(){ document.querySelector("[data-web]").click(); setTimeout(cats, 400); });
+      btn(box, "電話で聞く<small>" + PHONE + "</small>", "wide", function(){ location.href = "tel:" + TEL; setTimeout(cats, 400); });
+    }
+    function left(c){ return QS.filter(function(x){ return !x.asked && (!c || x.cat === c); }); }
+    function cats(){
       var box = document.createElement("div");
       box.className = "opts";
-      QS.forEach(function(x){
-        if (x.asked) return;
-        var b = document.createElement("button");
-        b.type = "button";
-        b.className = "wide";
-        b.textContent = x.short;
-        b.onclick = function(){ box.remove(); answer(x); };
-        box.appendChild(b);
+      CATS.forEach(function(c){
+        var n = left(c).length;
+        if (!n) return;
+        btn(box, c + "<small>" + n + "つの質問</small>", "", function(){ live = true; user(c + "について"); pick(c); });
       });
-      var go = document.createElement("button");
-      go.type = "button"; go.className = "main wide";
-      go.innerHTML = "料金を出して予約へ進む<small>ボタンで答えるだけ・30秒</small>";
-      go.onclick = function(){ document.querySelector("[data-web]").click(); };
-      box.appendChild(go);
-      var tel = document.createElement("button");
-      tel.type = "button"; tel.className = "wide";
-      tel.innerHTML = "電話で聞く<small>" + PHONE + "</small>";
-      tel.onclick = function(){ location.href = "tel:" + TEL; };
-      box.appendChild(tel);
+      tail(box);
       flog.appendChild(box);
       if (live) show(box);
     }
-    function answer(x){
-      live = true; x.asked = true;
-      user(x.q);
-      var left = QS.filter(function(y){ return !y.asked; }).length;
-      bot("<p>" + x.a + "</p>", true).then(function(){
-        return bot(left ? "<p>ほかに気になることはありますか？</p>" : "<p>ご質問はぜんぶ見ていただきました。ほかに気になることは、お電話でお気軽にどうぞ。</p>", true);
-      }).then(chips);
+    function pick(c){
+      bot("<p>" + c + "ですね。どれが気になりますか？</p>", true).then(function(){
+        var box = document.createElement("div");
+        box.className = "opts";
+        left(c).forEach(function(x){ btn(box, x.short, "wide", function(){ answer(x); }); });
+        btn(box, "ほかの話題にする", "wide", function(){ bot("<p>ほかの話題からどうぞ。</p>", true).then(cats); });
+        flog.appendChild(box);
+        show(box);
+      });
     }
-    bot("<p>ご予約の前に、よく聞かれることをまとめました。<b>気になる質問を押してください</b>。</p>", false).then(chips);
+    function answer(x){
+      x.asked = true;
+      user(x.q);
+      bot("<p>" + x.a + "</p>", true).then(function(){
+        var more = left(x.cat).length;
+        if (more) {
+          return bot("<p>ほかに気になることはありますか？</p>", true).then(function(){
+            var box = document.createElement("div");
+            box.className = "opts";
+            left(x.cat).forEach(function(y){ btn(box, y.short, "wide", function(){ answer(y); }); });
+            btn(box, "ほかの話題にする", "wide", function(){ bot("<p>ほかの話題からどうぞ。</p>", true).then(cats); });
+            tail(box);
+            flog.appendChild(box);
+            show(box);
+          });
+        }
+        return bot(left().length ? "<p>この話題の質問はここまでです。ほかの話題もどうぞ。</p>" : "<p>ご質問はぜんぶ見ていただきました。ほかに気になることは、お電話でお気軽にどうぞ。</p>", true).then(cats);
+      });
+    }
+    bot("<p>ご予約の前に、<b>これまでお客様からよく聞かれたこと</b>をまとめました。気になる話題を押してください。</p>", false).then(cats);
   })();
 
   // ビフォーアフター：つまみ・指・マウスで左右に動かす。画面に入ったら一度だけ揺れて「動かせる」と気づかせる
