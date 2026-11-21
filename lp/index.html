@@ -126,8 +126,16 @@
   footer a{color:#fff}
 
   /* 下に固定のボタン */
-  .fixbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+  .fixbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
   .fixbar .in{display:flex;gap:8px;width:100%;max-width:620px}
+  .pband{display:flex;align-items:center;gap:8px;width:100%;max-width:620px;background:#FFF8D6;border:2px solid #e0b400;border-radius:10px;padding:5px 8px 5px 12px;margin:0 0 7px;box-sizing:border-box}
+  .pband[hidden]{display:none}
+  .pb-l{flex:1;min-width:0;line-height:1.2}
+  .pb-l small{display:block;font-size:10px;font-weight:700;color:var(--muted)}
+  .pb-l b{font-size:21px;font-weight:900;color:var(--red);margin-right:6px}
+  .pb-l span{font-size:11px;font-weight:700}
+  .pband button{font:inherit;font-size:13px;font-weight:900;color:var(--g-d);background:#fff;border:2px solid var(--g);border-radius:999px;padding:7px 11px;cursor:pointer;white-space:nowrap}
+  .page.has-band{padding-bottom:150px}
   .fixbar a{flex:1;text-align:center;text-decoration:none;font-weight:900;border-radius:10px;padding:10px 4px;font-size:15px;line-height:1.2}
   .fixbar small{display:block;font-size:10px;font-weight:700}
   .fixbar .t{background:#fff;color:var(--g-d);border:2px solid var(--g)}
@@ -165,8 +173,6 @@
   form.ask input{display:block;width:100%;font:inherit;font-size:16px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px}
   form.ask button{width:100%;font:inherit;font-weight:900;font-size:17px;border:0;border-radius:999px;padding:13px;color:#fff;background:linear-gradient(#f5a12a,#e46f00);cursor:pointer}
   form.ask .err{color:var(--red);font-size:13px;margin:0 0 6px;min-height:1em}
-  .redo{text-align:center;margin:10px 0 0}
-  .redo button{font:inherit;font-size:14px;font-weight:700;color:var(--g-d);background:#fff;border:1px solid var(--g);border-radius:999px;padding:8px 16px;cursor:pointer}
   .done a{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:999px;padding:13px;margin:6px 0 0}
   .done .sms{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
   .done .call{border:2px solid var(--g);color:var(--g-d);background:#fff}
@@ -200,7 +206,6 @@
 <section class="talk" id="talk">
   <div class="talk-hd"><b>ボタンを押すだけ・30秒</b><h2>あなたのエアコン、<br><span>いくらになる？</span></h2></div>
   <div class="log" id="log" aria-live="polite"></div>
-  <p class="redo" id="redo" hidden><button type="button">↺ 台数から選び直す</button></p>
 </section>
 
 
@@ -339,7 +344,7 @@
 <footer>© 空調のホットライン　<a href="https://kucho-hotline.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a></footer>
 </div>
 
-<div class="fixbar"><div class="in">
+<div class="fixbar"><div class="pband" id="pband" hidden><div class="pb-l"><small>いまの概算（税込）</small><b id="pbSum">0円</b><span id="pbSub"></span></div><button type="button" id="pbRedo">↺ 選び直す</button></div><div class="in">
   <a class="t" href="tel:09041434127">☎ 電話する<small>9:00〜18:00 土日祝OK</small></a>
   <a class="w" href="#" data-web>▶ 今すぐ申し込む<small>台数を選ぶだけ</small></a>
 </div></div>
@@ -388,7 +393,7 @@
         b.type = "button";
         if (o.cls) b.className = o.cls;
         b.innerHTML = o.label + (o.sub ? "<small>" + o.sub + "</small>" : "");
-        b.onclick = function(){ started = true; redo.hidden = false; box.remove(); me(o.label.replace(/<[^>]+>/g, "")); res(o.v); };
+        b.onclick = function(){ started = true; setTimeout(band, 0); box.remove(); me(o.label.replace(/<[^>]+>/g, "")); res(o.v); };
         box.appendChild(b);
       });
       log.appendChild(box);
@@ -502,12 +507,21 @@
     });
   });
 
-  var redo = document.getElementById("redo");
-  redo.querySelector("button").onclick = function(){
+  // ===== 下の帯：いまの概算と「選び直す」 =====
+  var pband = document.getElementById("pband"), page = document.querySelector(".page");
+  function band(){
+    if (!A.units) { pband.hidden = true; if (page) page.classList.remove("has-band"); return; }
+    var c = calc(), n = A.units, os = A.osouji;
+    var sub = (n === 4 ? "4台以上" : n + "台") + (os ? "（お掃除機能付き" + os + "）" : "") + (A.bunkai === "yes" ? "＋完全分解" : "") + (c.off ? "・台数割−" + yen(c.off) + "円" : "");
+    document.getElementById("pbSum").textContent = yen(c.total) + "円" + (n === 4 || A.osoujiUnknown || !A.bunkai ? "〜" : "");
+    document.getElementById("pbSub").textContent = sub;
+    pband.hidden = false; if (page) page.classList.add("has-band");
+  }
+  document.getElementById("pbRedo").onclick = function(){
     gen++; booked = false;
     A = { units: 0, osouji: 0, osoujiUnknown: false, bunkai: "", area: "" };
     log.innerHTML = "";
-    redo.hidden = true;
+    band();
     run();
     document.getElementById("talk").scrollIntoView({ behavior: "smooth", block: "start" });
   };
