@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>エアコンクリーニング｜空調のホットライン</title>
+<meta name="description" content="エアコンクリーニング。分解した部品をその場でお見せし、お手入れのコツまでお伝えします。">
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --green: #82CA57; --green-d: #4f9a2a; --green-l: #eef8e7;
+    --ink: #1f2a1b; --muted: #5d6a57; --bg: #ffffff; --card: #ffffff;
+    --line: #dfe8d8; --warn: #e8590c; --tel: #1f6feb;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+    color: var(--ink); background: var(--bg); line-height: 1.6; font-size: 16px; padding-bottom: 84px; }
+  img { max-width: 100%; display: block; }
+  .ba img, .staff img { width: 100%; height: auto; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  section { padding: 36px 16px; }
+  h2 { font-size: 24px; line-height: 1.35; text-align: center; margin: 0 0 18px; }
+  h2 small { display: block; font-size: 13px; color: var(--green-d); letter-spacing: .12em; font-weight: 700; }
+  .mark { background: linear-gradient(transparent 60%, #fff27a 60%); }
+
+  /* ヘッダー */
+  header { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; }
+  header .logo { font-weight: 800; color: var(--green-d); font-size: 17px; }
+  header a { color: var(--tel); font-weight: 700; text-decoration: none; font-size: 15px; }
+
+  /* ファーストビュー */
+  .hero { position: relative; background: var(--green-l); padding: 0 0 24px; }
+  .hero .pic { aspect-ratio: 4 / 3; background: #dff0d3 center / cover no-repeat; }
+  .hero .copy { margin: -56px 16px 0; position: relative; background: #fff; border-radius: 20px; padding: 18px 18px 20px;
+    box-shadow: 0 8px 24px rgba(40, 80, 20, .15); text-align: center; }
+  .hero h1 { font-size: 28px; line-height: 1.3; margin: 4px 0 8px; }
+  .hero .area { display: inline-block; background: var(--green); color: #fff; font-weight: 700; border-radius: 999px; padding: 2px 14px; font-size: 14px; }
+  .price-big { font-size: 15px; margin: 6px 0 14px; white-space: nowrap; }
+  .price-big small { font-size: 11px; }
+  .price-big b { font-size: 44px; color: var(--warn); letter-spacing: -.02em; }
+  .badges { display: flex; gap: 8px; justify-content: center; margin: 0 0 14px; }
+  .badges span { flex: 1; background: var(--green-l); border-radius: 12px; padding: 8px 4px; font-size: 13px; font-weight: 700; line-height: 1.3; }
+  .badges span b { display: block; font-size: 20px; color: var(--green-d); }
+
+  .btn { display: block; text-align: center; text-decoration: none; font-weight: 800; border-radius: 999px; padding: 15px 18px; font-size: 18px; }
+  .btn.main { background: var(--warn); color: #fff; box-shadow: 0 4px 0 #b44406; }
+  .btn.tel { background: #fff; color: var(--tel); border: 2px solid var(--tel); margin-top: 10px; font-size: 17px; }
+  .btn small { display: block; font-size: 12px; font-weight: 600; opacity: .9; }
+
+  /* お悩み */
+  .worry { background: #f6f7f5; }
+  .worry ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .worry li { background: #fff; border-radius: 16px; padding: 14px 6px; text-align: center; font-weight: 700; font-size: 14px; line-height: 1.35; }
+  .worry li svg { width: 56px; height: 56px; margin: 0 auto 6px; display: block; }
+  .arrow { text-align: center; font-size: 15px; font-weight: 700; margin: 18px 0 0; }
+  .arrow::before { content: ""; display: block; margin: 0 auto 10px; width: 0; height: 0;
+    border-left: 28px solid transparent; border-right: 28px solid transparent; border-top: 20px solid var(--green); }
+
+  .ba { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); }
+  .ba-cap { display: grid; grid-template-columns: 1fr 1fr; text-align: center; font-weight: 800; }
+  .ba-cap span:first-child { background: #555; color: #fff; padding: 6px; }
+  .ba-cap span:last-child { background: var(--green); color: #fff; padding: 6px; }
+  .note { font-size: 12px; color: var(--muted); margin: 6px 2px 0; }
+
+  /* 強み */
+  .points { display: grid; gap: 14px; }
+  .point { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; background: var(--green-l); border-radius: 16px; padding: 14px; }
+  .point .n { width: 64px; height: 64px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 13px; line-height: 1.1; text-align: center; }
+  .point .n b { font-size: 24px; display: block; }
+  .point h3 { margin: 0 0 2px; font-size: 18px; }
+  .point p { margin: 0; font-size: 14px; color: var(--muted); }
+  .staff { margin-top: 16px; border-radius: 16px; overflow: hidden; }
+
+  /* 料金 */
+  .price { background: var(--green-l); }
+  .plans { display: grid; gap: 12px; }
+  .plan { background: #fff; border-radius: 18px; padding: 16px; display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; border: 2px solid transparent; }
+  .plan.rec { border-color: var(--warn); position: relative; }
+  .plan.rec::after { content: "おすすめ"; position: absolute; top: -10px; right: 14px; background: var(--warn); color: #fff; font-size: 12px; font-weight: 800; border-radius: 999px; padding: 2px 10px; }
+  .plan svg { width: 76px; height: 56px; }
+  .plan h3 { margin: 0; font-size: 16px; }
+  .plan .yen { font-size: 30px; font-weight: 800; color: var(--warn); line-height: 1.2; }
+  .plan .yen small { font-size: 13px; color: var(--ink); font-weight: 700; }
+  .plan p { margin: 0; font-size: 13px; color: var(--muted); }
+
+  /* 流れ */
+  .flow { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .flow li { counter-increment: s; display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: center; border: 1px solid var(--line); border-radius: 16px; padding: 12px; }
+  .flow li::before { content: "STEP\A" counter(s); white-space: pre; width: 56px; height: 56px; border-radius: 14px; background: var(--green); color: #fff; font-weight: 800; font-size: 12px; line-height: 1.2; display: grid; place-items: center; text-align: center; }
+  .flow b { display: block; font-size: 16px; }
+  .flow span { font-size: 13px; color: var(--muted); }
+
+  /* エリア */
+  .area-box h3 { font-size: 15px; margin: 14px 0 6px; color: var(--green-d); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; font-size: 14px; }
+
+  /* よくある質問 */
+  details { border-bottom: 1px solid var(--line); padding: 12px 4px; }
+  summary { font-weight: 700; cursor: pointer; }
+  summary::before { content: "Q. "; color: var(--green-d); }
+  details p { margin: 8px 0 0; font-size: 14px; color: var(--muted); }
+
+  .last { background: var(--green); color: #fff; text-align: center; }
+  .last h2 { color: #fff; }
+  .last p { margin: 0 0 16px; }
+  footer { text-align: center; font-size: 12px; color: var(--muted); padding: 20px 16px; }
+  footer a { color: var(--muted); }
+
+  /* 下に固定のボタン */
+  .fixed { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(255,255,255,.96); border-top: 1px solid var(--line);
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: 1fr 1.6fr; gap: 8px; }
+  .fixed .btn { padding: 11px 6px; font-size: 15px; margin: 0; }
+  .fixed .btn.tel { border-width: 2px; }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <span class="logo" data-c="name">空調のホットライン</span>
+  <a class="js-tel" href="#">📞 電話で相談</a>
+</header>
+
+<main class="wrap">
+  <!-- 1. ファーストビュー -->
+  <div class="hero">
+    <div class="pic" style="background-image:url(img/hero.jpg)" role="img" aria-label="きれいなエアコンの下でくつろぐ家族のイラスト"></div>
+    <div class="copy">
+      <span class="area"><span data-c="areaLabel">福岡市・近郊</span>のエアコンクリーニング</span>
+      <h1>そのエアコン、<br><span class="mark">中はまっ黒</span>かも。</h1>
+      <p class="price-big">壁掛けエアコン 1台 <b data-p="wall">6,200</b>円〜<small>（税込）</small></p>
+      <div class="badges">
+        <span data-show="yearUnits"><b><span data-c="yearUnits">2,000</span>台</b>年間の作業</span>
+        <span><b>分解</b>して見せます</span>
+        <span><b>土日祝</b>も受付</span>
+      </div>
+      <a class="btn main" href="reserve/">かんたん予約（1分）<small>会話に答えるだけ・概算がすぐ出ます</small></a>
+      <a class="btn tel js-tel" href="#">📞 電話で相談する</a>
+    </div>
+  </div>
+
+  <!-- 2. お悩み -->
+  <section class="worry">
+    <h2><small>CHECK</small>こんなこと、ありませんか？</h2>
+    <ul>
+      <li><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#fde7d9"/><path d="M20 40c4-6 8-6 12 0s8 6 12 0" stroke="#b5651d" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M24 22c2 4-2 6 0 10M32 18c2 4-2 6 0 10M40 22c2 4-2 6 0 10" stroke="#8a8a8a" stroke-width="3" fill="none" stroke-linecap="round"/></svg>つけると<br>においがする</li>
+      <li><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#e9ecef"/><rect x="12" y="16" width="40" height="16" rx="6" fill="#fff" stroke="#555" stroke-width="3"/><circle cx="22" cy="42" r="3" fill="#222"/><circle cx="32" cy="48" r="3" fill="#222"/><circle cx="42" cy="41" r="3" fill="#222"/></svg>黒いつぶが<br>出てくる</li>
+      <li><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#dbeafe"/><rect x="28" y="12" width="8" height="30" rx="4" fill="#fff" stroke="#1f6feb" stroke-width="3"/><circle cx="32" cy="46" r="8" fill="#ef4444" stroke="#1f6feb" stroke-width="3"/><path d="M44 20h8M44 28h6" stroke="#1f6feb" stroke-width="3" stroke-linecap="round"/></svg>効きが悪い<br>電気代が高い</li>
+    </ul>
+    <p class="arrow">見えない奥の「カビとほこり」が原因かもしれません</p>
+    <div class="ba" style="margin-top:16px">
+      <div class="ba-cap"><span>洗う前</span><span>洗ったあと</span></div>
+      <img src="img/before-after.jpg" alt="カビで黒いファンが、洗浄できれいになるイメージのイラスト" loading="lazy">
+    </div>
+    <p class="note">※イメージのイラストです。</p>
+  </section>
+
+  <!-- 3. 選ばれる理由 -->
+  <section>
+    <h2><small>POINT</small>掃除して帰るだけ、<br>にはしません。</h2>
+    <div class="points">
+      <div class="point"><div class="n"><span>理由<b>1</b></span></div><div><h3>分解した部品をお見せします</h3><p>どこに、どれだけ汚れがたまっていたか。その場でいっしょに確かめられます。</p></div></div>
+      <div class="point"><div class="n"><span>理由<b>2</b></span></div><div><h3>お手入れのコツをお伝えします</h3><p>カビをためにくい使い方を、作業のあとにお話しします。次の掃除までが長持ちします。</p></div></div>
+      <div class="point"><div class="n"><span>理由<b>3</b></span></div><div><h3>たくさんの現場の経験</h3><p data-c2="yearUnits">年間 約<span data-c="yearUnits">2,000</span>台。ご家庭の壁掛けから、お店・事務所の業務用まで対応しています。</p></div></div>
+    </div>
+    <div class="staff"><img src="img/staff.jpg" alt="作業スタッフが分解した部品を見せて説明するイラスト" loading="lazy"></div>
+    <p class="note">※イメージのイラストです。</p>
+  </section>
+
+  <!-- 4. 料金 -->
+  <section class="price">
+    <h2><small>PRICE</small>料金はこれだけ<br><span style="font-size:15px">（すべて税込・1台あたり）</span></h2>
+    <div class="plans">
+      <div class="plan">
+        <svg viewBox="0 0 76 56" aria-hidden="true"><rect x="4" y="10" width="68" height="26" rx="8" fill="#fff" stroke="#4f9a2a" stroke-width="3"/><path d="M12 30h52" stroke="#82CA57" stroke-width="3"/><path d="M24 42v8M38 42v10M52 42v8" stroke="#9fd3f5" stroke-width="3" stroke-linecap="round"/></svg>
+        <div><h3>壁掛け（通常タイプ）</h3><div class="yen"><span data-p="wall">6,200</span><small>円</small></div><p>作業 約1〜2時間</p></div>
+      </div>
+      <div class="plan">
+        <svg viewBox="0 0 76 56" aria-hidden="true"><rect x="4" y="10" width="68" height="26" rx="8" fill="#fff" stroke="#4f9a2a" stroke-width="3"/><circle cx="60" cy="18" r="4" fill="#82CA57"/><path d="M12 30h52" stroke="#82CA57" stroke-width="3"/><path d="M26 4l3 5M38 2v6M50 4l-3 5" stroke="#f2b705" stroke-width="3" stroke-linecap="round"/></svg>
+        <div><h3>お掃除機能付き</h3><div class="yen"><span data-p="auto">12,200</span><small>円</small></div><p>作業 約1.5〜3時間</p></div>
+      </div>
+      <div class="plan rec">
+        <svg viewBox="0 0 76 56" aria-hidden="true"><rect x="4" y="6" width="30" height="20" rx="5" fill="#fff" stroke="#4f9a2a" stroke-width="3"/><rect x="42" y="6" width="30" height="20" rx="5" fill="#fff" stroke="#4f9a2a" stroke-width="3"/><circle cx="20" cy="42" r="10" fill="#fff" stroke="#4f9a2a" stroke-width="3"/><path d="M20 32v20M10 42h20" stroke="#82CA57" stroke-width="3"/><rect x="40" y="34" width="32" height="16" rx="4" fill="#eef8e7" stroke="#4f9a2a" stroke-width="3"/></svg>
+        <div><h3>完全分解洗浄</h3><div class="yen"><small>上の料金に</small> +<span data-p="bunkai">8,000</span><small>円</small></div><p>ファンまで外して洗う、いちばん深い洗浄。作業 約2〜4時間</p></div>
+      </div>
+    </div>
+    <p class="note">※機種によって分解できる範囲が違います。業務用（天井埋め込みなど）はお見積りします。</p>
+    <a class="btn main" href="reserve/" style="margin-top:16px">台数を選んで概算を見る</a>
+  </section>
+
+  <!-- 5. 流れ -->
+  <section>
+    <h2><small>FLOW</small>ご予約から作業まで</h2>
+    <ol class="flow">
+      <li><div><b>かんたん予約 または お電話</b><span>会話に答えるだけ。台数を選ぶと概算が出ます。</span></div></li>
+      <li><div><b>日にちのご連絡</b><span>ご希望の日をもとに、担当者から連絡して決めます。</span></div></li>
+      <li><div><b>分解して洗浄</b><span>外した部品と汚れを、その場でお見せします。</span></div></li>
+      <li><div><b>お手入れのコツをお伝えして完了</b><span>お支払いは作業のあとです。</span></div></li>
+    </ol>
+  </section>
+
+  <!-- 6. エリア -->
+  <section class="price area-box">
+    <h2><small>AREA</small>うかがえる地域</h2>
+    <div id="areas"></div>
+    <p class="note">※上にない地域も、まずはご相談ください。</p>
+  </section>
+
+  <!-- 7. よくある質問 -->
+  <section>
+    <h2><small>Q&amp;A</small>よくある質問</h2>
+    <details><summary>どのくらい時間がかかりますか？</summary><p>通常タイプで約1〜2時間、お掃除機能付きで約1.5〜3時間、完全分解は約2〜4時間が目安です。</p></details>
+    <details><summary>追加の料金はかかりますか？</summary><p>料金表の金額（税込）が基本です。駐車場がない場合のコインパーキング代など、別にかかるものは事前にお伝えします。</p></details>
+    <details><summary>立ち会いは必要ですか？</summary><p>はい、作業の前後に状態をいっしょに確かめていただくため、立ち会いをお願いしています。</p></details>
+    <details><summary>古いエアコンでも大丈夫ですか？</summary><p>機種や状態によっては分解できる範囲が変わります。メーカーと型番がわかれば、予約のときにお知らせください。</p></details>
+  </section>
+
+  <!-- 8. 最後のひと押し -->
+  <section class="last">
+    <h2>暖房を使う前に、<br>いちど中まできれいに。</h2>
+    <p>会話に答えるだけで、1分で予約できます。</p>
+    <a class="btn main" href="reserve/">かんたん予約へ</a>
+    <a class="btn tel js-tel" href="#" style="background:#fff">📞 電話で相談する</a>
+    <p class="js-hours" style="font-size:13px;margin-top:8px"></p>
+  </section>
+</main>
+
+<footer>
+  <span data-c="name">空調のホットライン</span> ／ <span data-c="address">福岡市東区</span><br>
+  <a href="https://kucho-hotline.jp/" id="siteLink">くわしい説明はこちら（公式サイト）</a><br>
+  <a href="signup.html">紹介者になる（紹介料20%・登録無料）</a>
+</footer>
+
+<div class="fixed">
+  <a class="btn tel js-tel" href="#">📞 電話</a>
+  <a class="btn main" href="reserve/">かんたん予約（1分）</a>
+</div>
+
+<script src="config.js?v=2"></script>
+<script>
+(function () {
+  var S = window.SHOP;
+  var yen = function (n) { return Number(n).toLocaleString('ja-JP'); };
+  document.title = 'エアコンクリーニング ' + (S.city || '') + '｜' + S.name;
+  document.querySelectorAll('[data-c]').forEach(function (el) { var v = S[el.dataset.c]; if (v != null && v !== '') el.textContent = v; });
+  if (!S.yearUnits) document.querySelectorAll('[data-show="yearUnits"],[data-c2="yearUnits"]').forEach(function (el) { el.hidden = true; });
+  var PR = { wall: S.prices.wall, auto: S.prices.wall + S.prices.autoAdd, bunkai: S.prices.bunkaiAdd };
+  document.querySelectorAll('[data-p]').forEach(function (el) { el.textContent = yen(PR[el.dataset.p]); });
+  var sl = document.getElementById('siteLink'); if (S.siteUrl) sl.href = S.siteUrl; else sl.hidden = true;
+  document.querySelectorAll('.js-tel').forEach(function (a) { a.href = 'tel:' + S.phone.replace(/-/g, ''); });
+  document.querySelectorAll('.js-hours').forEach(function (p) { p.textContent = '電話受付 ' + S.hours; });
+  var box = document.getElementById('areas'), html = '';
+  Object.keys(S.areas).forEach(function (g) {
+    html += '<h3>' + g + '</h3><div class="chips">' + S.areas[g].map(function (c) { return '<span>' + c + '</span>'; }).join('') + '</div>';
+  });
+  box.innerHTML = html;
+  // 広告から来た印（?src= や utm_）を予約ページへ引き継ぐ
+  if (location.search) document.querySelectorAll('a[href="reserve/"]').forEach(function (a) { a.href = 'reserve/' + location.search; });
+})();
+</script>
+</body>
+</html>
