@@ -257,6 +257,9 @@
     <div class="row"><div><b>お掃除機能付き</b><small>フィルター自動おそうじ機能があるタイプ</small></div><div class="yen">12,700<span>円</span></div></div>
     <div class="row rec"><div><b>完全分解洗浄</b><small>ドレンパンと送風ファンを外して奥まで洗う</small></div><div class="yen"><span>＋</span>8,000<span>円</span></div></div>
   </div>
+  <div class="price" style="margin-top:10px">
+    <div class="row rec"><div><b>台数割</b><small>2台目から、1台ごとに</small></div><div class="yen"><span>−</span>300<span>円</span></div></div>
+  </div>
   <ul class="notes">
     <li>すべて壁掛け1台・税込です。</li>
     <li>お掃除機能付きか分からなくても大丈夫です。折り返しのお電話で確認します。</li>
@@ -293,6 +296,7 @@
   <div class="log" id="faqlog" aria-live="polite"></div>
   <div id="faqsrc">
   <details class="qa" data-short="追加料金は？"><summary>作業のあとで、追加料金がかかることはありますか？</summary><div>ありません。作業の前に現物を確認し、お見積りをご説明してから始めます。ご予約の内容と現物が違った場合も、作業を始める前にご相談します。</div></details>
+  <details class="qa" data-short="何台か頼むと安くなる？"><summary>何台かまとめて頼むと、安くなりますか？</summary><div>はい、<b>台数割</b>があります。2台目からは1台ごとに<b>300円引き</b>です。たとえば通常タイプ3台なら、20,100円から600円引いて<b>19,500円</b>（税込）です。料金のチャットで台数を選ぶと、値引き後の金額が出ます。</div></details>
   <details class="qa" data-short="キャンセルは？"><summary>キャンセルしたいときは？</summary><div>作業日の3日前までのご連絡は、キャンセル料をいただきません。それ以降は料金を全額頂戴しております。やむを得ないご事情のときは、一度お電話でご相談ください。</div></details>
   <details class="qa" data-short="傷がついたら？"><summary>作業中にエアコンや家財を傷つけられたら？</summary><div>損害賠償保険に加入しています。万一のときは保険でご対応します。</div></details>
   <details class="qa" data-short="お掃除機能付きか分からない"><summary>お掃除機能付きかどうか、分かりません</summary><div>分からなくて大丈夫です。料金のチャットで「分からない」を選んでいただければ、折り返しのご連絡のときに一緒に確認します。</div></details>
@@ -331,7 +335,7 @@
   // ===== 設定 =====
   var PHONE = "090-4143-4127", TEL = "09041434127";
   var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";   // 本サイトの予約フォーム
-  var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000 };          // 税込・壁掛け1台
+  var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300 };   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
   var ICON = "https://kucho-hotline.jp/_astro/logo.Bkw95_dZ_Z1w7PSA.webp";
 
   var log = document.getElementById("log");
@@ -406,7 +410,8 @@
   function calc(){
     var n = A.units, os = A.osouji, base = (n - os) * PRICE.normal + os * PRICE.osouji;
     var add = A.bunkai === "yes" ? n * PRICE.bunkai : 0;
-    return { base: base, add: add, total: base + add };
+    var off = (n - 1) * PRICE.multi;
+    return { base: base, add: add, off: off, total: base + add - off };
   }
 
   async function estimate(){
@@ -419,6 +424,7 @@
     note.push("作業の前に現物を確認してお見積りをご説明します。そこから金額は増えません");
     await say("<p>ありがとうございます！概算はこちらです。</p>" +
       '<div class="est">' + lines + (A.bunkai === "yes" ? "＋完全分解洗浄" : "") +
+      (c.off ? '<div style="color:var(--red);font-weight:900">台数割 −' + yen(c.off) + '円（2台目から1台300円引き）</div>' : "") +
       '<div class="sum">' + yen(c.total) + '<small>円（税込）' + (n === 4 || A.osoujiUnknown ? "〜" : "") + '</small></div>' +
       '<ul style="margin:6px 0 0;padding-left:1.2em;font-size:12px">' + note.map(function(t){ return "<li>" + t + "</li>"; }).join("") + "</ul></div>");
     await wait(300);
@@ -456,7 +462,7 @@
     var c = A.units ? calc() : null;
     var body = "【エアコンクリーニング予約希望】\nお名前：" + name + "\n電話：" + tel + "\n希望日：" + (day || "相談したい") +
       (A.units ? "\n台数：" + A.units + (A.units === 4 ? "台以上" : "台") + "（お掃除機能付き：" + (A.osoujiUnknown ? "分からない" : A.osouji + "台") + "）" +
-        "\n完全分解：" + ({ yes: "する", no: "しない", ask: "相談したい" }[A.bunkai]) + "\n地域：" + A.area + "\n概算：" + yen(c.total) + "円" : "") +
+        "\n完全分解：" + ({ yes: "する", no: "しない", ask: "相談したい" }[A.bunkai]) + "\n地域：" + A.area + "\n概算：" + yen(c.total) + "円" + (c.off ? "（台数割" + yen(c.off) + "円引き後）" : "") : "") +
       "\n（チラシのページを見ました）";
     var sms = "sms:" + TEL + (/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?") + "body=" + encodeURIComponent(body);
     var m = await say("<p><b>" + esc(name) + "さま、ありがとうございます！</b></p><p>下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しお電話します。</p>" +
