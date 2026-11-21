@@ -205,12 +205,21 @@
 <!-- 3. 中の汚れ（本サイトの写真） -->
 <section class="sec" style="background:var(--cream)">
   <h2 class="big">カバーを外すと、<br><em>こうなっています</em></h2>
-  <div class="cmp" id="cmp" style="--pos:50%">
+  <div class="cmp" style="--pos:50%;aspect-ratio:4/3">
+    <img class="cmp-after" src="img/ba-louver-after.jpg" alt="洗浄後の吹き出し口" loading="lazy" draggable="false">
+    <img class="cmp-before" src="img/ba-louver-before.jpg" alt="黒カビだらけの吹き出し口" loading="lazy" draggable="false">
+    <span class="tag bf">BEFORE</span><span class="tag af">AFTER</span>
+    <span class="cmp-line" aria-hidden="true"><span class="cmp-knob">‹ ›</span></span>
+    <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="洗う前と洗った後を比べる（吹き出し口）">
+  </div>
+  <div class="cmp-cap"><span>← 指でずらして比べられます →</span><span>吹き出し口</span></div>
+
+  <div class="cmp" style="--pos:50%;margin-top:16px">
     <img class="cmp-after" src="https://kucho-hotline.jp/_astro/kanzen-clean.DtZdfbcO_fJuwK.webp" alt="洗浄後の熱交換器" loading="lazy" draggable="false">
     <img class="cmp-before" src="https://kucho-hotline.jp/_astro/dirty-coil.hdx8eGcn_Z19KXFs.webp" alt="ほこりの詰まった熱交換器" loading="lazy" draggable="false">
     <span class="tag bf">BEFORE</span><span class="tag af">AFTER</span>
     <span class="cmp-line" aria-hidden="true"><span class="cmp-knob">‹ ›</span></span>
-    <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="洗う前と洗った後を比べる">
+    <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="洗う前と洗った後を比べる（熱交換器）">
   </div>
   <div class="cmp-cap"><span>← 指でずらして比べられます →</span><span>熱交換器（エアコンの中）</span></div>
   <div class="ba" style="grid-template-columns:1fr;margin-top:14px">
@@ -467,9 +476,8 @@
 
   run();
 
-  // ビフォーアフター：つまみ・指・マウスで左右に動かす。最初に少しだけ動いて「動かせる」と気づかせる
-  (function(){
-    var box = document.getElementById("cmp"); if (!box) return;
+  // ビフォーアフター：つまみ・指・マウスで左右に動かす。画面に入ったら一度だけ揺れて「動かせる」と気づかせる
+  document.querySelectorAll(".cmp").forEach(function(box){
     var r = box.querySelector(".cmp-range"), moved = false;
     function set(v){ v = Math.max(0, Math.min(100, v)); box.style.setProperty("--pos", v + "%"); r.value = v; }
     r.addEventListener("input", function(){ moved = true; set(+r.value); });
@@ -485,7 +493,7 @@
       }, { threshold: 0.6 });
       io.observe(box);
     }
-  })();
+  });
 })();
 </script>
 </body>
