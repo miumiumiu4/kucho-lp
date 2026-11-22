@@ -452,7 +452,7 @@
   var PHONE = "090-4143-4127", TEL = "09041434127";
   // 予約の受け口：本サイト（kucho-hotline.jp/reserve/）と同じ Google Apps Script の /exec の URL を入れる。
   // 入れると予約シートに1行ずつたまる。空のあいだは、ショートメッセージで送る形になる
-  var GAS_URL = "";
+  var GAS_URL = "https://script.google.com/macros/s/AKfycbzYjC6d5XruZT-Vt46055OvX9xrZisM6V30DVX4SIrzNMZTvW-ngvnRAZ96Hz9lAdk/exec";   // 11/22 さとぴーOK（本サイトの /reserve/ で公開されているものと同じ）
   var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300, hi: 5000, c4: 17000, tsuri: 19000, food: 3000 };   // hi＝手間のかかるシリーズの上乗せ   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
   (function(){ var l=document.getElementById("rvList"), b=document.getElementById("rvMore"); if(!l||!b) return; l.classList.add("closed"); b.onclick=function(){ l.classList.remove("closed"); b.remove(); }; })();
   var ICON = "img/nekobe/nekobe-face.webp";
