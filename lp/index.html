@@ -776,6 +776,7 @@
           "<p>内容を確認して、こちらから<b>お電話かメール</b>で日程を確定します。" + (nl ? "お便りもお楽しみに🐾" : "") + "</p>" +
           '<div class="done"><a class="call" href="tel:' + TEL + '">☎ 急ぎのときはお電話で（' + PHONE + '）</a></div>');
         show(m);
+        afterFaq();
         return;
       }
       sending = false; go.disabled = false; go.textContent = "この内容で予約する";
@@ -792,6 +793,32 @@
     var m2 = await say("<p><b>" + esc(g("name")) + "さま、ありがとうございます！</b></p><p>" + (GAS_URL ? "ごめんなさい、通信がうまくいきませんでした。" : "") + "下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しご連絡します。</p>" +
       '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 電話で予約する（' + PHONE + '）</a></div>');
     show(m2);
+  }
+
+  // 予約が終わったあと：当日までに気になることを、よくある質問から選んで聞ける
+  async function afterFaq(){
+    var QS = [].map.call(document.querySelectorAll("#faqsrc details.qa"), function(d){
+      return { cat: d.dataset.cat || "その他", short: d.dataset.short || d.querySelector("summary").textContent, a: d.querySelector("div").innerHTML, asked: false };
+    });
+    if (!QS.length) return;
+    var CATS = ["予約・当日のこと"];
+    QS.forEach(function(x){ if (CATS.indexOf(x.cat) < 0) CATS.push(x.cat); });
+    var left = function(c){ return QS.filter(function(x){ return !x.asked && x.cat === c; }); };
+    await wait(700);
+    await say("<p>当日までに気になることはありますか？よく聞かれる質問から選べます🐾</p>");
+    while (true) {
+      var cs = CATS.filter(function(c){ return left(c).length; });
+      if (!cs.length) break;
+      var c = await ask(cs.map(function(c){ return { v: c, label: c, sub: left(c).length + "つの質問" }; }).concat([{ v: "", label: "大丈夫です", cls: "wide" }]));
+      if (!c) break;
+      var x = await ask(left(c).map(function(x){ return { v: x, label: x.short, cls: "wide" }; }).concat([{ v: null, label: "ほかの話題にする", cls: "wide" }]));
+      if (!x) { await say("<p>ほかの話題からどうぞ。</p>"); continue; }
+      x.asked = true;
+      await say(x.a);
+      await wait(400);
+      await say("<p>ほかにも気になることはありますか？</p>");
+    }
+    await say("<p>では、当日お会いできるのを楽しみにしています！ほかに聞きたいことができたら、お気軽にお電話ください。</p>");
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
