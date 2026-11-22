@@ -217,6 +217,32 @@
   form.ask input{display:block;width:100%;font:inherit;font-size:18px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px}
   form.ask button{width:100%;font:inherit;font-weight:900;font-size:19px;border:0;border-radius:999px;padding:13px;color:#fff;background:linear-gradient(#f5a12a,#e46f00);cursor:pointer}
   form.ask .err{color:var(--red);font-size:15px;margin:0 0 6px;min-height:1em}
+  form.ask label small,form.ask .fq small{display:block;font-weight:500;font-size:14px;color:var(--muted)}
+  form.ask .opt{font-weight:500;font-size:13px;color:var(--muted);margin-left:6px}
+  form.ask .fq{font-weight:700;font-size:15px;margin:0 0 12px}
+  form.ask select,form.ask textarea{display:block;width:100%;font:inherit;font-size:18px;padding:10px;border:1px solid #cfd8cb;border-radius:8px;margin-top:3px;background:#fff}
+  form.ask .dt{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+  form.ask .dt input,form.ask .dt select{margin-top:0;font-size:16px;padding:9px 6px;min-width:0}
+  form.ask .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+  form.ask .chips label{margin:0;font-weight:700}
+  form.ask .chips input{position:absolute;opacity:0;width:1px;height:1px}
+  form.ask .chips span{display:inline-block;border:2px solid #cfd8cb;border-radius:999px;padding:7px 12px;font-size:15px;cursor:pointer;background:#fff}
+  form.ask .chips input:checked+span{border-color:var(--g);background:var(--g);color:#fff}
+  form.ask .chips input:focus-visible+span{outline:3px solid #f5a12a}
+  form.ask button.addday,form.ask .nudge button{width:auto;font-size:15px;padding:7px 14px;margin-top:6px;background:#fff;color:var(--g-d);border:2px solid var(--g)}
+  form.ask [hidden]{display:none!important}
+  form.ask .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  form.ask label.nl{display:flex;gap:10px;align-items:flex-start;background:#fff8e6;border:2px dashed #f5a12a;border-radius:12px;padding:12px;margin:4px 0 12px;cursor:pointer}
+  form.ask label.nl input{width:26px;height:26px;flex:none;margin:2px 0 0;accent-color:#e46f00}
+  form.ask label.nl b{font-size:17px}
+  form.ask label.nl small{font-size:14px;color:#5a4a2a;margin-top:4px}
+  form.ask label.nl small b{font-size:14px}
+  form.ask .nl-ex{color:var(--muted)!important}
+  form.ask .nudge{background:#fff8e6;border-radius:12px;padding:10px 12px;margin:0 0 10px}
+  form.ask .nudge p{margin:0 0 4px;font-weight:700}
+  form.ask .nudge button[data-nl="1"]{background:linear-gradient(#f5a12a,#e46f00);color:#fff;border-color:#e46f00;margin-right:6px}
+  form.ask .fine{font-size:13px;color:var(--muted);margin:8px 0 0}
+  .rno{font-size:18px}
   .done a{display:block;text-align:center;text-decoration:none;font-weight:900;border-radius:999px;padding:13px;margin:6px 0 0}
   .done .sms{background:linear-gradient(#f5a12a,#e46f00);color:#fff}
   .done .call{border:2px solid var(--g);color:var(--g-d);background:#fff}
@@ -424,7 +450,9 @@
 (function(){
   // ===== 設定 =====
   var PHONE = "090-4143-4127", TEL = "09041434127";
-  var RESERVE_URL = "https://kucho-hotline.jp/reserve/?from=lp";   // 本サイトの予約フォーム
+  // 予約の受け口：本サイト（kucho-hotline.jp/reserve/）と同じ Google Apps Script の /exec の URL を入れる。
+  // 入れると予約シートに1行ずつたまる。空のあいだは、ショートメッセージで送る形になる
+  var GAS_URL = "";
   var PRICE = { normal: 6700, osouji: 12700, bunkai: 8000, multi: 300, hi: 5000, c4: 17000, tsuri: 19000, food: 3000 };   // hi＝手間のかかるシリーズの上乗せ   // multi＝2台目から1台ごとの値引き          // 税込・壁掛け1台
   (function(){ var l=document.getElementById("rvList"), b=document.getElementById("rvMore"); if(!l||!b) return; l.classList.add("closed"); b.onclick=function(){ l.classList.remove("closed"); b.remove(); }; })();
   var ICON = "img/nekobe/nekobe-face.webp";
@@ -650,35 +678,120 @@
   async function book(){
     if (booked) { show(document.querySelector("form.ask")); return; }
     booked = true; started = true;
-    await say("<p>このまま<b>ご予約</b>できます。下の3つだけ入れてください。<b>折り返しお電話</b>して、日程を決めます。</p>");
+    await say("<p>このまま<b>ご予約</b>できます。下を入れて送ってください。" + (GAS_URL ? "<b>受付番号</b>がすぐ出て、" : "") + "こちらから確認のご連絡をします。</p>");
     var f = document.createElement("form");
     f.className = "ask"; f.noValidate = true;
+    var tm = '<option value="">時間を選ぶ</option>' + TIMES.map(function(t){ return '<option>' + t + '</option>'; }).join("");
+    var chips = function(n, list){ return '<div class="chips">' + list.map(function(v){ return '<label><input type="radio" name="' + n + '" value="' + v + '"><span>' + v + '</span></label>'; }).join("") + '</div>'; };
+    var dt = function(i, more){ return '<div class="dt' + (more ? ' more" hidden' : '"') + '><input type="date" name="date' + i + '" min="' + DMIN + '" max="' + DMAX + '" aria-label="第' + i + '希望日"><select name="time' + i + '" aria-label="第' + i + '希望の時間">' + tm + '</select></div>'; };
     f.innerHTML =
       '<label>お名前<input name="name" autocomplete="name" placeholder="例）山田 花子"></label>' +
       '<label>電話番号<input name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="例）090-1234-5678"></label>' +
-      '<label>ご希望の日（いくつでも）<input name="day" placeholder="例）11/28の午前、土日ならいつでも"></label>' +
-      '<p class="err" role="alert"></p><button type="submit">この内容で予約する</button>';
+      '<label>メールアドレス<input name="email" type="email" inputmode="email" autocomplete="email" placeholder="例）hanako@example.com"><small>予約の控えをお送りします</small></label>' +
+      '<label>郵便番号<span class="opt">わかれば</span><input name="zip" inputmode="numeric" autocomplete="postal-code" placeholder="例）812-0011"></label>' +
+      '<label>ご住所<input name="address" autocomplete="street-address" placeholder="例）福岡市博多区〇〇1-2-3 〇〇マンション101"></label>' +
+      '<div class="fq">お住まいのタイプ' + chips("housing", ["戸建て", "マンション・アパート", "店舗・事務所など"]) + '</div>' +
+      '<div class="fq">駐車場' + chips("parking", ["敷地内に駐車できる", "近くのコインパーキングを使う", "わからない・相談したい"]) + '</div>' +
+      '<div class="fq">ご希望の日<small>' + dstr(DMIN) + '〜' + dstr(DMAX) + ' から選べます</small>' + dt(1) + dt(2, 1) + dt(3, 1) +
+        '<button type="button" class="addday">＋ 別の候補日も入れる</button></div>' +
+      '<label>ご要望など<span class="opt">なくてOK</span><textarea name="note" rows="2" placeholder="例）在宅は午後から／エアコンの型番は〇〇"></textarea></label>' +
+      '<input name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">' +
+      '<label class="nl"><input type="checkbox" name="nl" value="1"><span><b>🐾 ねこべえの「おうち ちょい得便り」も受け取る</b>' +
+        '<small>お片づけ・お掃除の<b>小ワザだけ</b>を、ときどきお届けします。<b>売り込みのメールは送りません。</b>1年後には「そろそろエアコンのお手入れどき」もお知らせします。メールの下を1回押すだけで、いつでも止められます。</small>' +
+        '<small class="nl-ex">たとえば…「網戸・換気扇・お風呂の排水口、いちばんラクな順番は？」「年末の大掃除を30分短くする段取り」</small></span></label>' +
+      '<div class="nudge" hidden><p>🐾 お便り、受け取らなくて大丈夫ですか？<br>お掃除の小ワザだけで、売り込みはゼロです。</p><button type="button" data-nl="1">受け取る</button><button type="button" data-nl="0">今回はいい</button></div>' +
+      '<p class="err" role="alert"></p><button type="submit" class="go">この内容で予約する</button>' +
+      '<p class="fine">送り主は空調のホットラインです。いただいた内容は、ご予約のご連絡と、お便りを希望された方へのお届けにだけ使います（<a href="https://kucho-hotline.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a>）。</p>';
     log.appendChild(f); show(f);
+    f.querySelector(".addday").onclick = function(){ var h = f.querySelector(".dt.more[hidden]"); if (h) h.hidden = false; if (!f.querySelector(".dt.more[hidden]")) this.remove(); };
+    f.querySelectorAll(".nudge button").forEach(function(btn){ btn.onclick = function(){ f.elements.nl.checked = btn.dataset.nl === "1"; nudged = true; f.querySelector(".nudge").hidden = true; send(f); }; });
     f.addEventListener("submit", function(e){ e.preventDefault(); send(f); });
   }
 
+  var TIMES = ["9時〜12時", "12時〜15時", "15時〜18時", "どの時間でも可"];
+  function jday(n){ return new Date(Date.now() + 9 * 3600e3 + n * 864e5).toISOString().slice(0, 10); }
+  var DMIN = jday(2), DMAX = jday(90), nudged = false, sending = false;
+  var RID = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "r" + Date.now().toString(36) + Math.random().toString(36).slice(2);
+  function dstr(d){ var p = d.split("-"); return (+p[1]) + "/" + (+p[2]); }
+  var REF = (function(){ var k = "kh_lp_ref", r = ""; try { var q = new URLSearchParams(location.search).get("ref");
+    if (q) { r = q.trim().slice(0, 30); localStorage.setItem(k, JSON.stringify({ code: r, at: Date.now() })); }
+    else { var o = JSON.parse(localStorage.getItem(k) || "null"); if (o && Date.now() - o.at < 90 * 864e5) r = o.code; } } catch (e) {} return r; })();
+
+  // 本サイトの予約フォームと同じ形の台数（壁掛けは本サイトの上限10台まで。超えた分は備考へ）
+  function counts(){
+    var u = Math.min(A.units, 10), au = Math.min(A.osouji, u);
+    return { units: u, auto: au, kanzen: Math.min(A.bk || 0, u), highEnd: Math.min(A.hi || 0, au), set3: 0, coat: 0, outdoor: 0, drain: 0, drainCap: 0, putty: 0, puttyBoth: 0, high1: 0, high2: 0 };
+  }
+  function lpNote(nl, free){
+    var b = A.biz, c = calc(), L = [];
+    L.push("【お便り】" + (nl ? "受け取る（予約時にチェック）" : "受け取らない"));
+    L.push("【チラシのページから】" + (summary() || "台数未選択") + "／概算 " + (c.total ? yen(c.total) + "円" + (rough() || b.c4 || b.tsuri ? "〜" : "") : "現地でお見積り"));
+    if (A.units > 10) L.push("壁掛けは合計" + A.units + "台（フォームの上限10台を超えています）");
+    if (A.osoujiUnknown) L.push("お掃除機能付きか分からない");
+    if (A.hiUnknown) L.push("エオリアX等の高機能機種か分からない");
+    if (A.bunkai === "ask" && !A.bk) L.push("完全分解は相談したい");
+    if (bizN()) L.push("業務用：天井埋め込み" + b.c4 + "台・天吊り" + b.tsuri + "台・床置きなど" + b.other + "台" + (b.food ? "（飲食店）" : ""));
+    if (A.area) L.push("地域：" + A.area);
+    if (free) L.push("――お客様より――\n" + free);
+    return L.join("\n");
+  }
+
   async function send(f){
-    var d = new FormData(f), name = (d.get("name")||"").trim(), tel = (d.get("tel")||"").trim(), day = (d.get("day")||"").trim();
-    var err = f.querySelector(".err");
-    if (!name || tel.replace(/[^0-9]/g, "").length < 10) { err.textContent = "お名前と電話番号を入れてください。"; return; }
-    f.querySelectorAll("input,button").forEach(function(x){ x.disabled = true; });
-    me("この内容で予約します");
-    var c = anyN() ? calc() : null;
-    var body = "【エアコンクリーニング予約希望】\nお名前：" + name + "\n電話：" + tel + "\n希望日：" + (day || "相談したい") +
-      (A.units ? "\n壁掛け：" + A.units + "台（お掃除機能付き：" + (A.osoujiUnknown ? "分からない" : A.osouji + "台") + (A.hi ? "・うちエオリアX等 " + A.hi + "台" : A.hiUnknown ? "・エオリアX等か分からない" : "") + "）" +
-        "\n完全分解：" + (A.bk ? A.bk + "台" : A.bunkai === "ask" ? "相談したい" : "しない") : "") +
-      (bizN() ? "\n業務用：天井埋め込み" + A.biz.c4 + "台・天吊り" + A.biz.tsuri + "台・床置きなど" + A.biz.other + "台" + (A.biz.food ? "（飲食店）" : "") : "") +
-      (c ? "\n地域：" + A.area + "\n概算：" + (c.total ? yen(c.total) + "円" + (rough() || A.biz.c4 || A.biz.tsuri ? "〜" : "") : "現地でお見積り") + (c.off ? "（台数割" + yen(c.off) + "円引き後）" : "") : "") +
-      "\n（チラシのページを見ました）";
+    if (sending) return;
+    var E = f.elements;
+    var g = function(n){ if (n === "housing" || n === "parking") { var c = f.querySelector('input[name="' + n + '"]:checked'); return c ? c.value : ""; } return E[n] ? String(E[n].value || "").trim() : ""; };
+    var err = f.querySelector(".err"), msg = "";
+    var inR = function(d){ return d >= DMIN && d <= DMAX; };
+    var zip = g("zip").replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 65248); }).replace(/[－ー‐−]/g, "-");
+    if (!g("name")) msg = "お名前を入れてください。";
+    else if (g("tel").replace(/[^0-9０-９]/g, "").length < 10) msg = "電話番号をご確認ください。";
+    else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(g("email"))) msg = "メールアドレスをご確認ください（予約の控えをお送りします）。";
+    else if (zip && !/^\d{3}-?\d{4}$/.test(zip)) msg = "郵便番号は7桁の数字でお願いします。";
+    else if (!g("address")) msg = "ご住所を入れてください。";
+    else if (!g("housing")) msg = "お住まいのタイプを選んでください。";
+    else if (!g("parking")) msg = "駐車場について選んでください。";
+    else if (!g("date1")) msg = "ご希望の日を選んでください。";
+    else if (!inR(g("date1"))) msg = "ご希望の日は " + dstr(DMIN) + " 以降でお選びください。";
+    else if (!g("time1")) msg = "ご希望の時間を選んでください。";
+    else if ((g("date2") && !inR(g("date2"))) || (g("date3") && !inR(g("date3")))) msg = "候補日は選べる範囲の日付でお願いします。";
+    err.textContent = msg;
+    if (msg) return;
+    if (!E.nl.checked && !nudged) { var n = f.querySelector(".nudge"); n.hidden = false; show(n); return; }
+    var nl = E.nl.checked;
+    var note = lpNote(nl, g("note"));
+    if (GAS_URL) {
+      sending = true;
+      var go = f.querySelector(".go"); go.disabled = true; go.textContent = "送信しています…";
+      var c = calc(), res = null;
+      var data = { requestId: RID, website: g("website"), name: g("name"), tel: g("tel"), email: g("email"), zip: zip, address: g("address"), housing: g("housing"), parking: g("parking"),
+        date1: g("date1"), time1: g("time1"), date2: g("date2"), time2: g("time2"), date3: g("date3"), time3: g("time3"),
+        note: note, ref: REF, counts: counts(), clientTotal: c.total - c.biz };
+      try { res = await (await fetch(GAS_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })).json(); } catch (e) { res = null; }
+      if (res && res.ok) {
+        f.querySelectorAll("input,select,textarea,button").forEach(function(x){ x.disabled = true; });
+        go.textContent = "送信しました";
+        me("この内容で予約します");
+        var m = await say("<p><b>" + esc(g("name")) + "さま、ご予約ありがとうございます！</b></p>" +
+          (res.receiptNo ? '<p class="rno">受付番号：<b>' + esc(res.receiptNo) + "</b></p>" : "") +
+          "<p>内容を確認して、こちらから<b>お電話かメール</b>で日程を確定します。" + (nl ? "お便りもお楽しみに🐾" : "") + "</p>" +
+          '<div class="done"><a class="call" href="tel:' + TEL + '">☎ 急ぎのときはお電話で（' + PHONE + '）</a></div>');
+        show(m);
+        return;
+      }
+      sending = false; go.disabled = false; go.textContent = "この内容で予約する";
+      if (res && res.error) { err.textContent = "⚠ " + res.error; return; }
+    }
+    // 受け口が無い・送れなかったとき：入れた内容をショートメッセージで送れるようにする
+    var body = "【エアコンクリーニング予約希望】\nお名前：" + g("name") + "\n電話：" + g("tel") + "\nメール：" + g("email") + "\n住所：" + (zip ? "〒" + zip + " " : "") + g("address") +
+      "\n" + g("housing") + "／駐車場：" + g("parking") +
+      "\n希望日：" + g("date1") + " " + g("time1") + (g("date2") ? "／" + g("date2") + " " + g("time2") : "") + (g("date3") ? "／" + g("date3") + " " + g("time3") : "") +
+      "\n" + note;
     var sms = "sms:" + TEL + (/iPhone|iPad|Mac/.test(navigator.userAgent) ? "&" : "?") + "body=" + encodeURIComponent(body);
-    var m = await say("<p><b>" + esc(name) + "さま、ありがとうございます！</b></p><p>下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しお電話します。</p>" +
-      '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 今すぐ電話で予約する（' + PHONE + '）</a></div>');
-    show(m);
+    f.querySelectorAll("input,select,textarea,button").forEach(function(x){ x.disabled = true; });
+    me("この内容で予約します");
+    var m2 = await say("<p><b>" + esc(g("name")) + "さま、ありがとうございます！</b></p><p>" + (GAS_URL ? "ごめんなさい、通信がうまくいきませんでした。" : "") + "下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しご連絡します。</p>" +
+      '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 電話で予約する（' + PHONE + '）</a></div>');
+    show(m2);
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
