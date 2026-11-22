@@ -161,6 +161,12 @@
   .fixbar small{display:block;font-size:12px;font-weight:700}
   .fixbar .t{background:#fff;color:var(--g-d);border:2px solid var(--g)}
   .fixbar .w{background:linear-gradient(#f5a12a,#e46f00);color:#fff;border:2px solid #e46f00;flex:1.3}
+  .fixbar .w.send{background:linear-gradient(#e8452c,#c4301a);border-color:#c4301a;animation:pulse 1.6s ease-in-out infinite}
+  .fixbar .w.done{background:#fff;color:var(--g-d);border-color:var(--g);animation:none}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,69,44,.45)}50%{box-shadow:0 0 0 6px rgba(232,69,44,0)}}
+  .flash{animation:flash 1.4s ease-out 2;border-radius:10px}
+  @keyframes flash{0%{box-shadow:0 0 0 0 rgba(245,161,42,.9)}100%{box-shadow:0 0 0 14px rgba(245,161,42,0)}}
+  @media (prefers-reduced-motion:reduce){.fixbar .w.send,.flash{animation:none}}
 
   /* ===== 案内係との会話 ===== */
   .talk{background:linear-gradient(#F2F8EE,#fff);padding:26px 12px 18px;scroll-margin-top:64px}
@@ -460,7 +466,7 @@
   var log = document.getElementById("log");
   var A = fresh();
   function fresh(){ return { kind: "", units: 0, osouji: 0, osoujiUnknown: false, hi: 0, hiUnknown: false, bunkai: "", bk: 0, area: "", biz: { c4: 0, tsuri: 0, other: 0, food: false } }; }
-  var started = false, booked = false, gen = 0;
+  var started = false, booked = false, gen = 0, doneEl = null, doneNo = "";
 
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
   function yen(n){ return n.toLocaleString("ja-JP"); }
@@ -706,6 +712,8 @@
     f.querySelector(".addday").onclick = function(){ var h = f.querySelector(".dt.more[hidden]"); if (h) h.hidden = false; if (!f.querySelector(".dt.more[hidden]")) this.remove(); };
     f.querySelectorAll(".nudge button").forEach(function(btn){ btn.onclick = function(){ f.elements.nl.checked = btn.dataset.nl === "1"; nudged = true; f.querySelector(".nudge").hidden = true; send(f); }; });
     f.addEventListener("submit", function(e){ e.preventDefault(); send(f); });
+    f.addEventListener("input", guide); f.addEventListener("change", guide);
+    guide();
   }
 
   var TIMES = ["9時〜12時", "12時〜15時", "15時〜18時", "どの時間でも可"];
@@ -761,7 +769,7 @@
     var note = lpNote(nl, g("note"));
     if (GAS_URL) {
       sending = true;
-      var go = f.querySelector(".go"); go.disabled = true; go.textContent = "送信しています…";
+      var go = f.querySelector(".go"); go.disabled = true; go.textContent = "送信しています…"; guide();
       var c = calc(), res = null;
       var data = { requestId: RID, website: g("website"), name: g("name"), tel: g("tel"), email: g("email"), zip: zip, address: g("address"), housing: g("housing"), parking: g("parking"),
         date1: g("date1"), time1: g("time1"), date2: g("date2"), time2: g("time2"), date3: g("date3"), time3: g("time3"),
@@ -776,10 +784,11 @@
           "<p>内容を確認して、こちらから<b>お電話かメール</b>で日程を確定します。" + (nl ? "お便りもお楽しみに🐾" : "") + "</p>" +
           '<div class="done"><a class="call" href="tel:' + TEL + '">☎ 急ぎのときはお電話で（' + PHONE + '）</a></div>');
         show(m);
+        doneEl = m; doneNo = res.receiptNo || "受付済み"; guide();
         afterFaq();
         return;
       }
-      sending = false; go.disabled = false; go.textContent = "この内容で予約する";
+      sending = false; go.disabled = false; go.textContent = "この内容で予約する"; guide();
       if (res && res.error) { err.textContent = "⚠ " + res.error; return; }
     }
     // 受け口が無い・送れなかったとき：入れた内容をショートメッセージで送れるようにする
@@ -793,6 +802,7 @@
     var m2 = await say("<p><b>" + esc(g("name")) + "さま、ありがとうございます！</b></p><p>" + (GAS_URL ? "ごめんなさい、通信がうまくいきませんでした。" : "") + "下のボタンを押すと、入れた内容が<b>ショートメッセージ</b>に入って開きます。そのまま<b>送信</b>してください。届いたら折り返しご連絡します。</p>" +
       '<div class="done"><a class="sms" href="' + sms + '">💬 予約内容を送る</a><a class="call" href="tel:' + TEL + '">☎ 電話で予約する（' + PHONE + '）</a></div>');
     show(m2);
+    doneEl = m2; doneNo = ""; guide();
   }
 
   // 予約が終わったあと：当日までに気になることを、よくある質問から選んで聞ける
@@ -828,6 +838,8 @@
     a.addEventListener("click", function(e){
       e.preventDefault();
       started = true;
+      if (doneEl) { toDone(); return; }
+      if (curForm()) { if (sending) return; var f = curForm(); if (a === wBtn && !missing(f).length) { mark(f.querySelector(".go")); send(f); } else toForm(); return; }
       var box = log.querySelector(".opts");
       if (box && !anyN()) { document.getElementById("talk").scrollIntoView({ behavior: "smooth" }); return; }
       if (anyN() && !booked) { var b = log.querySelector(".opts"); if (b) b.remove(); book(); return; }
@@ -835,6 +847,53 @@
       if (booked) show(log.lastElementChild);
     });
   });
+
+  // ===== 予約を入れはじめて、まだ送っていない人へ =====
+  // 下の帯のオレンジのボタンを「予約を送る」に変える。下の方を読みに行っても、押せばすぐ続きへ戻れる
+  var wBtn = document.querySelector(".fixbar .w"), wHTML = wBtn.innerHTML;
+  function curForm(){ return doneEl ? null : log.querySelector("form.ask"); }
+  // まだ入っていない必須の欄（送るときの確かめと同じ順）
+  function missing(f){
+    var E = f.elements, out = [];
+    var v = function(n){ return String(E[n].value || "").trim(); };
+    var r = function(n){ return f.querySelector('input[name="' + n + '"]:checked'); };
+    if (!v("name")) out.push(E["name"]);
+    if (v("tel").replace(/[^0-9０-９]/g, "").length < 10) out.push(E.tel);
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v("email"))) out.push(E.email);
+    if (!v("address")) out.push(E.address);
+    if (!r("housing")) out.push(f.querySelector('input[name="housing"]'));
+    if (!r("parking")) out.push(f.querySelector('input[name="parking"]'));
+    if (!v("date1")) out.push(E.date1);
+    if (!v("time1")) out.push(E.time1);
+    return out;
+  }
+  function mark(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); setTimeout(function(){ el.classList.remove("flash"); }, 3000); }
+  // 次に入れる欄へ。全部入っていれば送信ボタンへ
+  function toForm(){
+    var f = curForm(); if (!f) return false;
+    var m = missing(f), el = m[0] || f.querySelector(".go");
+    var box = el.type === "radio" ? el.closest(".fq") : el.closest(".dt") || el.closest("label") || el;
+    lift(box);
+    mark(box);
+    if (/^(text|tel|email)$/.test(el.type)) setTimeout(function(){ try { el.focus({ preventScroll: true }); } catch (e) {} }, 500);
+    return true;
+  }
+  function toDone(){ if (doneEl) lift(doneEl); }
+  // 見せたい所の上の端を、画面の上から少し下に合わせる（背の高い欄でも頭が切れない）
+  function lift(el){ window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 90, behavior: "smooth" }); }
+  function guide(){
+    var f = curForm(), h = wHTML, c = "";
+    if (doneEl && doneNo) { h = "✓ ご予約済み<small>受付番号 " + doneNo + "</small>"; c = "done"; }
+    else if (doneEl) { h = "💬 予約内容を送る<small>送るボタンへ戻ります</small>"; c = "send"; }
+    else if (f && sending) { h = "送信しています…<small>そのままお待ちください</small>"; c = "send"; }
+    else if (f) {
+      var n = missing(f).length;
+      h = n ? "▶ 予約の入力へ戻る<small>あと" + n + "つで送れます</small>" : "▶ 予約を送る<small>入力は全部すんでいます</small>";
+      c = "send";
+    }
+    wBtn.innerHTML = h;
+    wBtn.classList.toggle("send", c === "send"); wBtn.classList.toggle("done", c === "done");
+  }
 
   // ===== 下の帯：いまの概算と「選び直す」 =====
   var pband = document.getElementById("pband"), page = document.querySelector(".page");
@@ -847,10 +906,11 @@
     pband.hidden = false; if (page) page.classList.add("has-band");
   }
   document.getElementById("pbRedo").onclick = function(){
-    gen++; booked = false;
+    gen++; booked = false; sending = false; nudged = false;
+    if (doneEl) { doneEl = null; doneNo = ""; RID = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "r" + Date.now().toString(36) + Math.random().toString(36).slice(2); }
     A = fresh(); estEl = null;
     log.innerHTML = "";
-    band();
+    band(); guide();
     run();
     document.getElementById("talk").scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -892,9 +952,16 @@
       b.onclick = function(){ box.remove(); fn(); };
       box.appendChild(b);
     }
+    // 予約の状態でボタンを変える。押したら上の会話へ移り、下の質問コーナーは静かに出し直す（画面を戻さない）
+    function quiet(){ live = false; cats(); }
+    function go(el){ el.scrollIntoView({ behavior: "smooth", block: "center" }); }
     function tail(box){
-      btn(box, "料金を出して予約へ進む<small>ボタンで答えるだけ・30秒</small>", "main wide", function(){ document.querySelector("[data-web]").click(); setTimeout(cats, 400); });
-      btn(box, "電話で聞く<small>" + PHONE + "</small>", "wide", function(){ location.href = "tel:" + TEL; setTimeout(cats, 400); });
+      var form = document.querySelector("#log form.ask");
+      if (doneEl && doneNo) btn(box, "ご予約は受け付けています<small>受付番号 " + doneNo + "・内容を見る</small>", "main wide", function(){ toDone(); quiet(); });
+      else if (doneEl) btn(box, "予約内容の送信に戻る<small>ショートメッセージで送るボタンがあります</small>", "main wide", function(){ toDone(); quiet(); });
+      else if (form) btn(box, "入力中の予約に戻る<small>" + (missing(form).length ? "入れた内容はそのまま・続きの欄へ" : "入力は全部すんでいます・送信ボタンへ") + "</small>", "main wide", function(){ toForm(); quiet(); });
+      else btn(box, "料金を出して予約へ進む<small>ボタンで答えるだけ・30秒</small>", "main wide", function(){ document.querySelector("[data-web]").click(); quiet(); });
+      btn(box, "電話で聞く<small>" + PHONE + "</small>", "wide", function(){ location.href = "tel:" + TEL; quiet(); });
     }
     function left(c){ return QS.filter(function(x){ return !x.asked && (!c || x.cat === c); }); }
     function cats(){
