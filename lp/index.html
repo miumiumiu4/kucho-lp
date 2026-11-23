@@ -235,6 +235,20 @@
   form.ask .chips span{display:inline-block;border:2px solid #cfd8cb;border-radius:999px;padding:7px 12px;font-size:15px;cursor:pointer;background:#fff}
   form.ask .chips input:checked+span{border-color:var(--g);background:var(--g);color:#fff}
   form.ask .chips input:focus-visible+span{outline:3px solid #f5a12a}
+  form.ask .slots{margin-top:6px}
+  form.ask .slots .ld{color:var(--muted);font-weight:500;margin:4px 0}
+  form.ask .srow{display:grid;grid-template-columns:5.2em 1fr 1fr 1fr;gap:5px;align-items:center;margin:0 0 5px}
+  form.ask .srow b{font-size:15px;white-space:nowrap}
+  form.ask .srow b.sat{color:#1d5fb8}
+  form.ask .srow b.sun{color:var(--red)}
+  form.ask .srow button{width:auto;margin:0;font:inherit;font-size:14px;font-weight:700;line-height:1.15;padding:8px 2px;border-radius:8px;border:2px solid var(--g);background:#fff;color:var(--g-d);cursor:pointer;min-height:44px}
+  form.ask .srow button small{display:block;font-size:11px;font-weight:700}
+  form.ask .srow button:disabled{border-color:#e2e6df;color:#b9c0b5;background:#f6f7f5;cursor:default}
+  form.ask .srow button.on{background:var(--g);color:#fff}
+  form.ask .shead{display:grid;grid-template-columns:5.2em 1fr 1fr 1fr;gap:5px;font-size:12px;font-weight:700;color:var(--muted);text-align:center;margin:0 0 4px}
+  form.ask .spick{background:#F2F8EE;border-radius:10px;padding:8px 10px;margin:8px 0 0;font-size:15px;font-weight:700}
+  form.ask .spick:empty{display:none}
+  form.ask .smore{width:100%!important}
   form.ask button.addday,form.ask .nudge button{width:auto;font-size:15px;padding:7px 14px;margin-top:6px;background:#fff;color:var(--g-d);border:2px solid var(--g)}
   form.ask [hidden]{display:none!important}
   form.ask .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
@@ -684,6 +698,7 @@
   async function book(){
     if (booked) { show(document.querySelector("form.ask")); return; }
     booked = true; started = true;
+    loadSlots();
     await say("<p>このまま<b>ご予約</b>できます。下を入れて送ってください。" + (GAS_URL ? "<b>受付番号</b>がすぐ出て、" : "") + "こちらから確認のご連絡をします。</p>");
     var f = document.createElement("form");
     f.className = "ask"; f.noValidate = true;
@@ -698,7 +713,8 @@
       '<label>ご住所<input name="address" autocomplete="street-address" placeholder="例）福岡市博多区〇〇1-2-3 〇〇マンション101"></label>' +
       '<div class="fq">お住まいのタイプ' + chips("housing", ["戸建て", "マンション・アパート", "店舗・事務所など"]) + '</div>' +
       '<div class="fq">駐車場' + chips("parking", ["敷地内に駐車できる", "近くのコインパーキングを使う", "わからない・相談したい"]) + '</div>' +
-      '<div class="fq">ご希望の日<small>' + dstr(DMIN) + '〜' + dstr(DMAX) + ' から選べます</small>' + dt(1) + dt(2, 1) + dt(3, 1) +
+      '<div class="fq slotq">ご希望の日と時間<small>空いている枠だけ押せます。第3希望まで選べます（1つでもOK）</small><div class="slots"><p class="ld">空き状況を読み込んでいます…</p></div><div class="spick"></div></div>' +
+      '<div class="fq dayq" hidden>ご希望の日<small>' + dstr(DMIN) + '〜' + dstr(DMAX) + ' から選べます</small>' + dt(1) + dt(2, 1) + dt(3, 1) +
         '<button type="button" class="addday">＋ 別の候補日も入れる</button></div>' +
       '<label>ご要望など<span class="opt">なくてOK</span><textarea name="note" rows="2" placeholder="例）在宅は午後から／エアコンの型番は〇〇"></textarea></label>' +
       '<input name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">' +
@@ -709,10 +725,88 @@
       '<p class="err" role="alert"></p><button type="submit" class="go">この内容で予約する</button>' +
       '<p class="fine">送り主は空調のホットラインです。いただいた内容は、ご予約のご連絡と、お便りを希望された方へのお届けにだけ使います（<a href="https://kucho-hotline.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a>）。</p>';
     log.appendChild(f); show(f);
+    slotUI(f);
     f.querySelector(".addday").onclick = function(){ var h = f.querySelector(".dt.more[hidden]"); if (h) h.hidden = false; if (!f.querySelector(".dt.more[hidden]")) this.remove(); };
     f.querySelectorAll(".nudge button").forEach(function(btn){ btn.onclick = function(){ f.elements.nl.checked = btn.dataset.nl === "1"; nudged = true; f.querySelector(".nudge").hidden = true; send(f); }; });
     f.addEventListener("submit", function(e){ e.preventDefault(); send(f); });
     f.addEventListener("input", guide); f.addEventListener("change", guide);
+    guide();
+  }
+
+  // ===== 空き枠：秋元さんの予定表から（窓口は5分ごとに作り直し）=====
+  // wall＝壁掛け（3人のだれかが空き）／business＝業務用（秋元・江副のどちらかが空き）
+  var SLOT_URL = "https://script.google.com/macros/s/AKfycbw5iC1Io4L7IThdrnhjlWldHKdukjQVwsEAzo1wu8rXTn795tq7lqAzFbZQI0LlUH6Z/exec";   // 11/24 秋元さんの窓口（バージョン2）
+  var SLOT3 = ["9時〜12時", "12時〜15時", "15時〜18時"], slotP = null, slotMode = false;
+  function loadSlots(fresh){
+    if (!SLOT_URL) return Promise.resolve(null);
+    if (slotP && !fresh) return slotP;
+    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, 9000);
+    var p = fetch(SLOT_URL + (fresh ? (SLOT_URL.indexOf("?") < 0 ? "?" : "&") + "t=" + Date.now() : ""), ctl ? { signal: ctl.signal } : {})
+      .then(function(r){ return r.json(); }).then(function(j){ clearTimeout(tm); return j && j.ok ? j : null; }).catch(function(){ clearTimeout(tm); return null; });
+    if (!fresh) slotP = p;
+    return p;
+  }
+  function freeList(j){
+    if (!j) return null;
+    var L = bizN() ? (j.business || j.free) : (j.wall || j.free);
+    if (!Array.isArray(L)) return null;
+    var m = {};
+    L.forEach(function(d){ if (d && d.date >= DMIN && d.date <= DMAX && Array.isArray(d.slots)) { var s = d.slots.filter(function(x){ return SLOT3.indexOf(x) >= 0; }); if (s.length) m[d.date] = s; } });
+    return m;
+  }
+  var WD = ["日", "月", "火", "水", "木", "金", "土"];
+  function wday(d){ var p = d.split("-"); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).getUTCDay(); }
+  async function slotUI(f){
+    var box = f.querySelector(".slots"), pick = f.querySelector(".spick"), picks = [], shown = 10;
+    var m = freeList(await loadSlots());
+    var days = m ? Object.keys(m).sort() : [];
+    if (!days.length) {   // 読めない・空きが無い：日付を入れてもらう形に戻す
+      slotMode = false; f.querySelector(".slotq").remove(); f.querySelector(".dayq").hidden = false; guide(); return;
+    }
+    slotMode = true;
+    var E = f.elements;
+    function write(){
+      for (var i = 1; i <= 3; i++) { var x = picks[i - 1]; E["date" + i].value = x ? x.d : ""; E["time" + i].value = x ? x.t : ""; }
+      pick.innerHTML = picks.map(function(x, i){ return "第" + (i + 1) + "希望　" + dstr(x.d) + "（" + WD[wday(x.d)] + "）" + x.t; }).join("<br>");
+      f.dispatchEvent(new Event("change"));
+    }
+    function draw(){
+      if (!days.length) { box.innerHTML = '<p class="ld">いま選べる空き枠がありません。お手数ですが、お電話（' + PHONE + '）でご相談ください。</p>'; return; }
+      var h = '<div class="shead"><span></span><span>9〜12時</span><span>12〜15時</span><span>15〜18時</span></div>';
+      days.slice(0, shown).forEach(function(d){
+        var w = wday(d);
+        h += '<div class="srow"><b' + (w === 6 ? ' class="sat"' : w === 0 ? ' class="sun"' : "") + '>' + dstr(d) + "（" + WD[w] + "）</b>";
+        SLOT3.forEach(function(t){
+          var ok = m[d].indexOf(t) >= 0, k = -1;
+          picks.forEach(function(x, i){ if (x.d === d && x.t === t) k = i; });
+          h += '<button type="button" data-d="' + d + '" data-t="' + t + '"' + (ok ? "" : " disabled") + (k >= 0 ? ' class="on"' : "") + ">" +
+            (k >= 0 ? "第" + (k + 1) + "希望" : ok ? "空き" : "−") + "</button>";
+        });
+        h += "</div>";
+      });
+      if (days.length > shown) h += '<button type="button" class="addday smore">もっと先の日を見る</button>';
+      box.innerHTML = h;
+      box.querySelectorAll(".srow button").forEach(function(b){ b.onclick = function(){
+        var d = b.dataset.d, t = b.dataset.t, k = -1;
+        picks.forEach(function(x, i){ if (x.d === d && x.t === t) k = i; });
+        if (k >= 0) picks.splice(k, 1);
+        else if (picks.length < 3) picks.push({ d: d, t: t });
+        else { pick.innerHTML = "第3希望まで選べます。変えるときは、選んだ枠をもう一度押して外してください。"; return; }
+        write(); draw();
+      }; });
+      var mo = box.querySelector(".smore"); if (mo) mo.onclick = function(){ shown += 10; draw(); };
+    }
+    draw();
+    f._slots = { recheck: async function(){
+      // 送る直前にもう一度、空きを確かめる（ほかの人が先に入れた枠を外す）
+      var m2 = freeList(await loadSlots(true));
+      if (!m2) return 0;
+      var gone = picks.filter(function(x){ return !(m2[x.d] && m2[x.d].indexOf(x.t) >= 0); });
+      if (!gone.length) return 0;
+      picks = picks.filter(function(x){ return gone.indexOf(x) < 0; });
+      m = m2; days = Object.keys(m).sort(); write(); draw();
+      return gone.length;
+    } };
     guide();
   }
 
@@ -758,13 +852,20 @@
     else if (!g("address")) msg = "ご住所を入れてください。";
     else if (!g("housing")) msg = "お住まいのタイプを選んでください。";
     else if (!g("parking")) msg = "駐車場について選んでください。";
-    else if (!g("date1")) msg = "ご希望の日を選んでください。";
+    else if (!g("date1")) msg = slotMode ? "ご希望の日と時間を、空き枠から選んでください。" : "ご希望の日を選んでください。";
     else if (!inR(g("date1"))) msg = "ご希望の日は " + dstr(DMIN) + " 以降でお選びください。";
     else if (!g("time1")) msg = "ご希望の時間を選んでください。";
     else if ((g("date2") && !inR(g("date2"))) || (g("date3") && !inR(g("date3")))) msg = "候補日は選べる範囲の日付でお願いします。";
     err.textContent = msg;
     if (msg) return;
     if (!E.nl.checked && !nudged) { var n = f.querySelector(".nudge"); n.hidden = false; show(n); return; }
+    if (slotMode && f._slots) {
+      sending = true; var gb = f.querySelector(".go"); gb.disabled = true; gb.textContent = "空きを確かめています…";
+      var gone = await f._slots.recheck();
+      sending = false; gb.disabled = false; gb.textContent = "この内容で予約する";
+      if (gone) { err.textContent = "選んだ枠のうち" + gone + "つが、ちょうど埋まってしまいました。ほかの空き枠を選んでください。"; show(f.querySelector(".slotq")); guide(); return; }
+      if (!g("date1")) { err.textContent = "ご希望の日と時間を選んでください。"; return; }
+    }
     var nl = E.nl.checked;
     var note = lpNote(nl, g("note"));
     if (GAS_URL) {
@@ -873,6 +974,7 @@
     var f = curForm(); if (!f) return false;
     var m = missing(f), el = m[0] || f.querySelector(".go");
     var box = el.type === "radio" ? el.closest(".fq") : el.closest(".dt") || el.closest("label") || el;
+    if (slotMode && (el === f.elements.date1 || el === f.elements.time1)) box = f.querySelector(".slotq") || box;
     lift(box);
     mark(box);
     if (/^(text|tel|email)$/.test(el.type)) setTimeout(function(){ try { el.focus({ preventScroll: true }); } catch (e) {} }, 500);
@@ -906,7 +1008,7 @@
     pband.hidden = false; if (page) page.classList.add("has-band");
   }
   document.getElementById("pbRedo").onclick = function(){
-    gen++; booked = false; sending = false; nudged = false;
+    gen++; booked = false; sending = false; nudged = false; slotMode = false;
     if (doneEl) { doneEl = null; doneNo = ""; RID = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "r" + Date.now().toString(36) + Math.random().toString(36).slice(2); }
     A = fresh(); estEl = null;
     log.innerHTML = "";
