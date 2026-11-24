@@ -246,6 +246,7 @@
   form.ask .srow button:disabled{border-color:#e2e6df;color:#b9c0b5;background:#f6f7f5;cursor:default}
   form.ask .srow button.on{background:var(--g);color:#fff}
   form.ask .shead{display:grid;grid-template-columns:5.2em 1fr 1fr 1fr;gap:5px;font-size:12px;font-weight:700;color:var(--muted);text-align:center;margin:0 0 4px}
+  form.ask .zipw{background:#fff3e0;border-left:4px solid #e46f00;border-radius:6px;padding:6px 8px;margin-top:6px;color:#7a3b00!important;font-weight:700}
   form.ask .spick{background:#F2F8EE;border-radius:10px;padding:8px 10px;margin:8px 0 0;font-size:15px;font-weight:700}
   form.ask .spick:empty{display:none}
   form.ask .smore{width:100%!important}
@@ -709,7 +710,7 @@
       '<label>お名前<input name="name" autocomplete="name" placeholder="例）山田 花子"></label>' +
       '<label>電話番号<input name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="例）090-1234-5678"></label>' +
       '<label>メールアドレス<input name="email" type="email" inputmode="email" autocomplete="email" placeholder="例）hanako@example.com"><small>予約の控えをお送りします</small></label>' +
-      '<label>郵便番号<span class="opt">わかれば</span><input name="zip" inputmode="numeric" autocomplete="postal-code" placeholder="例）812-0011"></label>' +
+      '<label>郵便番号<span class="opt">わかれば</span><input name="zip" inputmode="numeric" autocomplete="postal-code" placeholder="例）812-0011"><small class="zipw" role="status" hidden></small></label>' +
       '<label>ご住所<input name="address" autocomplete="street-address" placeholder="例）福岡市博多区〇〇1-2-3 〇〇マンション101"></label>' +
       '<div class="fq">お住まいのタイプ' + chips("housing", ["戸建て", "マンション・アパート", "店舗・事務所など"]) + '</div>' +
       '<div class="fq">駐車場' + chips("parking", ["敷地内に駐車できる", "近くのコインパーキングを使う", "わからない・相談したい"]) + '</div>' +
@@ -726,6 +727,7 @@
       '<p class="fine">送り主は空調のホットラインです。いただいた内容は、ご予約のご連絡と、お便りを希望された方へのお届けにだけ使います（<a href="https://kucho-hotline.jp/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a>）。</p>';
     log.appendChild(f); show(f);
     slotUI(f);
+    zipUI(f);
     f.querySelector(".addday").onclick = function(){ var h = f.querySelector(".dt.more[hidden]"); if (h) h.hidden = false; if (!f.querySelector(".dt.more[hidden]")) this.remove(); };
     f.querySelectorAll(".nudge button").forEach(function(btn){ btn.onclick = function(){ f.elements.nl.checked = btn.dataset.nl === "1"; nudged = true; f.querySelector(".nudge").hidden = true; send(f); }; });
     f.addEventListener("submit", function(e){ e.preventDefault(); send(f); });
@@ -813,6 +815,31 @@
     guide();
   }
 
+  // ===== 郵便番号：福岡県（頭が80〜83）以外ならお知らせ、住所の頭を自動で入れる =====
+  var zipOut = "";
+  function zip7(v){ return String(v || "").replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 65248); }).replace(/[^0-9]/g, ""); }
+  function zipUI(f){
+    var z = f.elements.zip, ad = f.elements.address, w = f.querySelector(".zipw"), last = "";
+    function check(){
+      var d = zip7(z.value);
+      if (d.length !== 7) { w.hidden = true; zipOut = ""; return; }
+      if (d === last) return;
+      last = d;
+      var pre = +d.slice(0, 2);
+      zipOut = (pre >= 80 && pre <= 83) ? "" : d.slice(0, 3) + "-" + d.slice(3);
+      w.hidden = !zipOut;
+      if (zipOut) w.textContent = "対応エリア（福岡市と近郊）の外のようです。このまま送っていただければ、伺えるかどうかをお電話で確かめます。";
+      if (!ad.value.trim()) {   // 住所の頭（県・市・町）を入れる
+        var cb = "khz" + Date.now(), sc = document.createElement("script");
+        window[cb] = function(r){ try { var x = r && r.results && r.results[0]; if (x && !ad.value.trim()) { ad.value = x.address1 + x.address2 + x.address3; f.dispatchEvent(new Event("change")); } } catch (e) {} delete window[cb]; sc.remove(); };
+        sc.src = "https://zipcloud.ibsnet.co.jp/api/search?zipcode=" + d + "&callback=" + cb;
+        sc.onerror = function(){ delete window[cb]; sc.remove(); };
+        document.head.appendChild(sc);
+      }
+    }
+    z.addEventListener("input", check); z.addEventListener("change", check); z.addEventListener("blur", check);
+  }
+
   var TIMES = ["9時〜12時", "12時〜15時", "15時〜18時", "どの時間でも可"];
   function jday(n){ return new Date(Date.now() + 9 * 3600e3 + n * 864e5).toISOString().slice(0, 10); }
   var DMIN = jday(2), DMAX = jday(90), nudged = false, sending = false;
@@ -837,6 +864,7 @@
     if (A.bunkai === "ask" && !A.bk) L.push("完全分解は相談したい");
     if (bizN()) L.push("業務用：天井埋め込み" + b.c4 + "台・天吊り" + b.tsuri + "台・床置きなど" + b.other + "台" + (b.food ? "（飲食店）" : ""));
     if (A.area) L.push("地域：" + A.area);
+    if (zipOut) L.push("※郵便番号 " + zipOut + " は対応エリアの外の可能性（お電話で確認）");
     if (free) L.push("――お客様より――\n" + free);
     return L.join("\n");
   }
@@ -1011,7 +1039,7 @@
     pband.hidden = false; if (page) page.classList.add("has-band");
   }
   document.getElementById("pbRedo").onclick = function(){
-    gen++; booked = false; sending = false; nudged = false; slotMode = false;
+    gen++; booked = false; sending = false; nudged = false; slotMode = false; zipOut = "";
     if (doneEl) { doneEl = null; doneNo = ""; RID = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : "r" + Date.now().toString(36) + Math.random().toString(36).slice(2); }
     A = fresh(); estEl = null;
     log.innerHTML = "";
