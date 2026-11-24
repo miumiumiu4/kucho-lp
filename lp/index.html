@@ -745,7 +745,7 @@
     if (!SLOT_URL) return Promise.resolve(null);
     if (slotP && !fresh) return slotP;
     var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, 9000);
-    var p = fetch(SLOT_URL + (fresh ? (SLOT_URL.indexOf("?") < 0 ? "?" : "&") + "t=" + Date.now() : ""), ctl ? { signal: ctl.signal } : {})
+    var p = fetch(SLOT_URL + (fresh ? (SLOT_URL.indexOf("?") < 0 ? "?" : "&") + "fresh=1&t=" + Date.now() : ""), ctl ? { signal: ctl.signal } : {})
       .then(function(r){ return r.json(); }).then(function(j){ clearTimeout(tm); return j && j.ok ? j : null; }).catch(function(){ clearTimeout(tm); return null; });
     if (!fresh) slotP = p;
     return p;
