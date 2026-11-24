@@ -737,6 +737,8 @@
   // wall＝壁掛け（3人のだれかが空き）／business＝業務用（秋元・江副のどちらかが空き）
   var SLOT_URL = "https://script.google.com/macros/s/AKfycbw5iC1Io4L7IThdrnhjlWldHKdukjQVwsEAzo1wu8rXTn795tq7lqAzFbZQI0LlUH6Z/exec";   // 11/24 秋元さんの窓口（バージョン2）
   var SLOT3 = ["9時〜12時", "12時〜15時", "15時〜18時"], slotP = null, slotMode = false;
+  // 空き枠表に出さない日：年末年始（月-日）と、何週先まで出すか（予定表がまだ白紙の先の月を「空き」と見せないため）
+  var CLOSED = ["12-31", "01-01", "01-02", "01-03"], SLOT_DAYS = 28;
   function loadSlots(fresh){
     if (!SLOT_URL) return Promise.resolve(null);
     if (slotP && !fresh) return slotP;
@@ -751,7 +753,8 @@
     var L = bizN() ? (j.business || j.free) : (j.wall || j.free);
     if (!Array.isArray(L)) return null;
     var m = {};
-    L.forEach(function(d){ if (d && d.date >= DMIN && d.date <= DMAX && Array.isArray(d.slots)) { var s = d.slots.filter(function(x){ return SLOT3.indexOf(x) >= 0; }); if (s.length) m[d.date] = s; } });
+    var last = jday(SLOT_DAYS);
+    L.forEach(function(d){ if (d && d.date >= DMIN && d.date <= DMAX && d.date <= last && CLOSED.indexOf(String(d.date).slice(5)) < 0 && Array.isArray(d.slots)) { var s = d.slots.filter(function(x){ return SLOT3.indexOf(x) >= 0; }); if (s.length) m[d.date] = s; } });
     return m;
   }
   var WD = ["日", "月", "火", "水", "木", "金", "土"];
