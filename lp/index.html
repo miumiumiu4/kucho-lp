@@ -744,7 +744,7 @@
   function loadSlots(fresh){
     if (!SLOT_URL) return Promise.resolve(null);
     if (slotP && !fresh) return slotP;
-    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, 9000);
+    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, 12000);
     var p = fetch(SLOT_URL + (fresh ? (SLOT_URL.indexOf("?") < 0 ? "?" : "&") + "fresh=1&t=" + Date.now() : ""), ctl ? { signal: ctl.signal } : {})
       .then(function(r){ return r.json(); }).then(function(j){ clearTimeout(tm); return j && j.ok ? j : null; }).catch(function(){ clearTimeout(tm); return null; });
     if (!fresh) slotP = p;
@@ -764,6 +764,7 @@
   async function slotUI(f){
     var box = f.querySelector(".slots"), pick = f.querySelector(".spick"), picks = [], shown = 10;
     var m = freeList(await loadSlots());
+    for (var tr = 0; tr < 2 && !m; tr++) { await wait(2500); m = freeList(await loadSlots(true)); }   // 読めなかったら少し待ってもう一度（2回まで）
     var days = m ? Object.keys(m).sort() : [];
     if (!days.length) {   // 読めない・空きが無い：日付を入れてもらう形に戻す
       slotMode = false; f.querySelector(".slotq").remove(); f.querySelector(".dayq").hidden = false; guide(); return;
