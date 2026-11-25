@@ -1016,7 +1016,7 @@
     if (slotMode && (el === f.elements.date1 || el === f.elements.time1)) box = f.querySelector(".slotq") || box;
     lift(box);
     mark(box);
-    if (/^(text|tel|email)$/.test(el.type)) setTimeout(function(){ try { el.focus({ preventScroll: true }); } catch (e) {} }, 500);
+    // 自分で欄にカーソルを入れない（iPhone で、あとから欄をタップしても「連絡先から自動入力」の候補が出なくなるため）
     return true;
   }
   function toDone(){ if (doneEl) lift(doneEl); }
