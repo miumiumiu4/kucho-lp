@@ -821,7 +821,7 @@
   var zipOut = "";
   function zip7(v){ return String(v || "").replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 65248); }).replace(/[^0-9]/g, ""); }
   function zipUI(f){
-    var z = f.elements.zip, ad = f.elements.address, w = f.querySelector(".zipw"), last = "";
+    var z = f.elements.zip, ad = f.elements.address, w = f.querySelector(".zipw"), last = "", auto = "";
     function check(){
       var d = zip7(z.value);
       if (d.length !== 7) { w.hidden = true; zipOut = ""; return; }
@@ -831,9 +831,10 @@
       zipOut = (pre >= 80 && pre <= 83) ? "" : d.slice(0, 3) + "-" + d.slice(3);
       w.hidden = !zipOut;
       if (zipOut) w.textContent = "対応エリア（福岡市と近郊）の外のようです。このまま送っていただければ、伺えるかどうかをお電話で確かめます。";
-      if (!ad.value.trim()) {   // 住所の頭（県・市・町）を入れる
+      var free = function(){ var a = ad.value.trim(); return !a || a === auto; };   // 空か、前に自動で入れたままなら入れ直す
+      if (free()) {   // 住所の頭（県・市・町）を入れる
         var cb = "khz" + Date.now(), sc = document.createElement("script");
-        window[cb] = function(r){ try { var x = r && r.results && r.results[0]; if (x && !ad.value.trim()) { ad.value = x.address1 + x.address2 + x.address3; f.dispatchEvent(new Event("change")); } } catch (e) {} delete window[cb]; sc.remove(); };
+        window[cb] = function(r){ try { var x = r && r.results && r.results[0]; if (x && free()) { auto = x.address1 + x.address2 + x.address3; ad.value = auto; ad.dispatchEvent(new Event("input", { bubbles: true })); f.dispatchEvent(new Event("change")); } } catch (e) {} delete window[cb]; sc.remove(); };
         sc.src = "https://zipcloud.ibsnet.co.jp/api/search?zipcode=" + d + "&callback=" + cb;
         sc.onerror = function(){ delete window[cb]; sc.remove(); };
         document.head.appendChild(sc);
