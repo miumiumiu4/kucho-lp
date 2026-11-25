@@ -164,8 +164,9 @@
   .fixbar .w.send{background:linear-gradient(#e8452c,#c4301a);border-color:#c4301a;animation:pulse 1.6s ease-in-out infinite}
   .fixbar .w.done{background:#fff;color:var(--g-d);border-color:var(--g);animation:none}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,69,44,.45)}50%{box-shadow:0 0 0 6px rgba(232,69,44,0)}}
-  .flash{animation:flash 1.4s ease-out 2;border-radius:10px}
-  @keyframes flash{0%{box-shadow:0 0 0 0 rgba(245,161,42,.9)}100%{box-shadow:0 0 0 14px rgba(245,161,42,0)}}
+  .flash{animation:flash .8s ease-in-out 5;border-radius:10px}
+  @keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(232,69,44,0);background-color:transparent}50%{box-shadow:0 0 0 5px rgba(232,69,44,.85);background-color:rgba(255,214,150,.55)}}
+  .err a{color:inherit;font-weight:900}
   @media (prefers-reduced-motion:reduce){.fixbar .w.send,.flash{animation:none}}
 
   /* ===== 案内係との会話 ===== */
@@ -889,13 +890,18 @@
     else if (!g("time1")) msg = "ご希望の時間を選んでください。";
     else if ((g("date2") && !inR(g("date2"))) || (g("date3") && !inR(g("date3")))) msg = "候補日は選べる範囲の日付でお願いします。";
     err.textContent = msg;
-    if (msg) return;
+    if (msg) {
+      // 足りない所へ自動で移動して点滅させる（どこを直せばよいか迷わないように）
+      if (missing(f).length) { var a = document.createElement("a"); a.href = "#"; a.textContent = "▲ その場所へ"; a.onclick = function(e){ e.preventDefault(); toForm(); }; err.appendChild(document.createTextNode(" ")); err.appendChild(a); setTimeout(toForm, 400); }
+      else mark(err);
+      return;
+    }
     if (!E.nl.checked && !nudged) { var n = f.querySelector(".nudge"); n.hidden = false; show(n); return; }
     if (slotMode && f._slots) {
       sending = true; var gb = f.querySelector(".go"); gb.disabled = true; gb.textContent = "空きを確かめています…（10秒ほど）";
       var gone = await f._slots.recheck();
       sending = false; gb.disabled = false; gb.textContent = "この内容で予約する";
-      if (gone) { err.textContent = "選んだ枠のうち" + gone + "つが、ちょうど埋まってしまいました。ほかの空き枠を選んでください。"; show(f.querySelector(".slotq")); guide(); return; }
+      if (gone) { err.textContent = "選んだ枠のうち" + gone + "つが、ちょうど埋まってしまいました。ほかの空き枠を選んでください。"; var sq = f.querySelector(".slotq"); lift(sq); mark(sq); guide(); return; }
       if (!g("date1")) { err.textContent = "ご希望の日と時間を選んでください。"; return; }
     }
     var nl = E.nl.checked;
@@ -1000,7 +1006,7 @@
     if (!v("time1")) out.push(E.time1);
     return out;
   }
-  function mark(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); setTimeout(function(){ el.classList.remove("flash"); }, 3000); }
+  function mark(el){ el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); setTimeout(function(){ el.classList.remove("flash"); }, 4200); }
   // 次に入れる欄へ。全部入っていれば送信ボタンへ
   function toForm(){
     var f = curForm(); if (!f) return false;
