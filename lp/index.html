@@ -737,14 +737,14 @@
 
   // ===== 空き枠：秋元さんの予定表から（窓口は5分ごとに作り直し）=====
   // wall＝壁掛け（3人のだれかが空き）／business＝業務用（秋元・江副のどちらかが空き）
-  var SLOT_URL = "https://script.google.com/macros/s/AKfycbw5iC1Io4L7IThdrnhjlWldHKdukjQVwsEAzo1wu8rXTn795tq7lqAzFbZQI0LlUH6Z/exec";   // 11/24 秋元さんの窓口（バージョン2）
+  var SLOT_URL = "https://script.google.com/macros/s/AKfycbw5iC1Io4L7IThdrnhjlWldHKdukjQVwsEAzo1wu8rXTn795tq7lqAzFbZQI0LlUH6Z/exec";   // 秋元さんの窓口（11/25 バージョン3：fresh=1 でその場計算、5〜10秒）
   var SLOT3 = ["9時〜12時", "12時〜15時", "15時〜18時"], slotP = null, slotMode = false;
   // 空き枠表に出さない日：年末年始（月-日）と、何週先まで出すか（予定表がまだ白紙の先の月を「空き」と見せないため）
   var CLOSED = ["12-31", "01-01", "01-02", "01-03"], SLOT_DAYS = 28;
   function loadSlots(fresh){
     if (!SLOT_URL) return Promise.resolve(null);
     if (slotP && !fresh) return slotP;
-    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, 12000);
+    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, fresh ? 15000 : 12000);   // その場計算（fresh=1）は10秒ほどかかるので長めに待つ
     var p = fetch(SLOT_URL + (fresh ? (SLOT_URL.indexOf("?") < 0 ? "?" : "&") + "fresh=1&t=" + Date.now() : ""), ctl ? { signal: ctl.signal } : {})
       .then(function(r){ return r.json(); }).then(function(j){ clearTimeout(tm); return j && j.ok ? j : null; }).catch(function(){ clearTimeout(tm); return null; });
     if (!fresh) slotP = p;
@@ -892,7 +892,7 @@
     if (msg) return;
     if (!E.nl.checked && !nudged) { var n = f.querySelector(".nudge"); n.hidden = false; show(n); return; }
     if (slotMode && f._slots) {
-      sending = true; var gb = f.querySelector(".go"); gb.disabled = true; gb.textContent = "空きを確かめています…";
+      sending = true; var gb = f.querySelector(".go"); gb.disabled = true; gb.textContent = "空きを確かめています…（10秒ほど）";
       var gone = await f._slots.recheck();
       sending = false; gb.disabled = false; gb.textContent = "この内容で予約する";
       if (gone) { err.textContent = "選んだ枠のうち" + gone + "つが、ちょうど埋まってしまいました。ほかの空き枠を選んでください。"; show(f.querySelector(".slotq")); guide(); return; }
