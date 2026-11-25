@@ -703,16 +703,16 @@
     loadSlots();
     await say("<p>このまま<b>ご予約</b>できます。下を入れて送ってください。" + (GAS_URL ? "<b>受付番号</b>がすぐ出て、" : "") + "こちらから確認のご連絡をします。</p>");
     var f = document.createElement("form");
-    f.className = "ask"; f.noValidate = true;
+    f.className = "ask"; f.noValidate = true; f.method = "post"; f.action = "#"; f.setAttribute("autocomplete", "on"); f.id = "yoyaku";
     var tm = '<option value="">時間を選ぶ</option>' + TIMES.map(function(t){ return '<option>' + t + '</option>'; }).join("");
     var chips = function(n, list){ return '<div class="chips">' + list.map(function(v){ return '<label><input type="radio" name="' + n + '" value="' + v + '"><span>' + v + '</span></label>'; }).join("") + '</div>'; };
     var dt = function(i, more){ return '<div class="dt' + (more ? ' more" hidden' : '"') + '><input type="date" name="date' + i + '" min="' + DMIN + '" max="' + DMAX + '" aria-label="第' + i + '希望日"><select name="time' + i + '" aria-label="第' + i + '希望の時間">' + tm + '</select></div>'; };
     f.innerHTML =
-      '<label>お名前<input name="name" autocomplete="name" placeholder="例）山田 花子"></label>' +
-      '<label>電話番号<input name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="例）090-1234-5678"></label>' +
-      '<label>メールアドレス<input name="email" type="email" inputmode="email" autocomplete="email" placeholder="例）hanako@example.com"><small>予約の控えをお送りします</small></label>' +
-      '<label>郵便番号<span class="opt">わかれば</span><input name="zip" inputmode="numeric" autocomplete="postal-code" placeholder="例）812-0011"><small class="zipw" role="status" hidden></small></label>' +
-      '<label>ご住所<input name="address" autocomplete="street-address" placeholder="例）福岡市博多区〇〇1-2-3 〇〇マンション101"></label>' +
+      '<label>お名前<input name="name" id="kh-name" type="text" autocomplete="name" placeholder="例）山田 花子"></label>' +
+      '<label>電話番号<input name="tel" id="kh-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="例）090-1234-5678"></label>' +
+      '<label>メールアドレス<input name="email" id="kh-email" type="email" inputmode="email" autocomplete="email" placeholder="例）hanako@example.com"><small>予約の控えをお送りします</small></label>' +
+      '<label>郵便番号<span class="opt">わかれば</span><input name="zip" id="kh-zip" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="例）812-0011"><small class="zipw" role="status" hidden></small></label>' +
+      '<label>ご住所<input name="address" id="kh-address" type="text" autocomplete="street-address" placeholder="例）福岡市博多区〇〇1-2-3 〇〇マンション101"></label>' +
       '<div class="fq">お住まいのタイプ' + chips("housing", ["戸建て", "マンション・アパート", "店舗・事務所など"]) + '</div>' +
       '<div class="fq">駐車場' + chips("parking", ["敷地内に駐車できる", "近くのコインパーキングを使う", "わからない・相談したい"]) + '</div>' +
       '<div class="fq slotq">ご希望の日と時間<small>空いている枠だけ押せます。第3希望まで選べます（1つでもOK）</small><div class="slots"><p class="ld">空き状況を読み込んでいます…</p></div><div class="spick"></div></div>' +
